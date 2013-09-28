@@ -15,9 +15,9 @@ The source image of the sprite sheets that will be used in the project
 The main project of the FYP, containing all the files necessary for doing game development. We use **starling framework** on Flash to build the game.
 
 
-* Sprite sheet : 
+* media: 
 
-The sprite sheet that will be used in the FYP. All the image of the sprite sheets are taken from the **Image** folder.
+All the media file that used in the src project.
 
 
 * Source folder :
