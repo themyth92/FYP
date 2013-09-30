@@ -29,14 +29,15 @@ package Screens.LoadingScreen
 		private var _fileIndex     : uint;
 		private var _fileInfo      : Array;
 		
-		public function TextureLoader(loaderObject: LoaderObject)
+		public static const TEXTURE_LOADED:String  = 'textureLoaded';
+		public static const TEXTURE_LOADING:String = 'textureLoading'; 
+		
+		public function TextureLoader()
 		{
 			super(); 
 			
-			this._loaderObject  = loaderObject;
-			this._fileIndex     = 0;
-			this._loaderObject  = LoaderObject;		
-			this._fileInfo      = new Array([Constant.SPRITE_ONE_PNG_ADDR, Constant.SPRITE_ONE_XML_ADDR]);		
+			this._fileIndex     = 0;	
+			this._fileInfo      = new Array([Constant.SPRITE_ONE_PNG_ADDR, Constant.SPRITE_ONE_XML_ADDR],[Constant.SPRITE_THREE_PNG_ADDR, Constant.SPRITE_THREE_XML_ADDR],[Constant.SPRITE_TWO_PNG_ADDR, Constant.SPRITE_TWO_XML_ADDR],[Constant.SPRITE_FOUR_PNG_ADDR, Constant.SPRITE_FOUR_XML_ADDR]);		
 			this._numberOfFiles = this._fileInfo.length;
 		}
 		
@@ -61,21 +62,37 @@ package Screens.LoadingScreen
 		private function onXMLLoadComplete(event:Event):void{		
 			
 			_xml       = new XML(event.target.data);
-			_xmlLoader.removeEventListener(Event.COMPLETE, onXMLComplete);
+			_xmlLoader.removeEventListener(Event.COMPLETE, onXMLLoadComplete);
 			_xmlLoader = null;
 				
-			_loader.load(new URLRequest(_fileInfo[_filendex][Constant.PNG_ADDR]);		
+			_loader.load(new URLRequest(_fileInfo[_fileIndex][Constant.PNG_ADDR]));		
 		}
 		
-		private function onLoadProgress():void{
-			
-			this._loaderObject.visible = true;		
+		private function onLoadProgress(e:ProgressEvent):void{
+			var pcent:Number = e.target.bytesLoaded / e.target.bytesTotal * 100;
+			trace(pcent);
 		}
 		
 		private function onLoadComplete(event:Event):void{
 			
 			var bitmap : Bitmap = event.currentTarget.content as Bitmap;
 			
+			var textureAtlas: TextureAtlas = new TextureAtlas(Texture.fromBitmap(bitmap), _xml);
+			
+			Assets.storeGameTextureAtlas(textureAtlas, Constant.SPRITE_ONE);
+			
+			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
+			_loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
+			_loader = null;
+			
+			if(_fileIndex < _numberOfFiles - 1){
+				this._fileIndex ++;
+				this.loadTexture();
+			}	
+			else{
+				
+				dispatchEvent(new Event(TextureLoader.TEXTURE_LOADED));	
+			}
 		}
 	}
 }
