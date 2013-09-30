@@ -19,14 +19,6 @@ package object
 		public function LoaderObject()
 		{
 			super();
-			
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		}
-		
-		private function onAddedToStage(event:Event):void{
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			
-			createLoaderAnimation();
 		}
 		
 		public function createLoaderAnimation():void{
@@ -44,6 +36,11 @@ package object
 			
 			this.addChild(_loaderText);
 			this.addChild(_loaderObject);
+		}
+		
+		public function removeLoaderAnimation():void{
+			this.removeChild(_loaderText);
+			this.removeChild(_loaderObject);
 		}
 	}
 }

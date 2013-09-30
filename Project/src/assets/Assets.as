@@ -78,5 +78,9 @@ package assets
 			
 			return _gameTextureAtlas[screen];
 		}
+		
+		public static function storeGameTextureAtlas(TextureAtlas textureAtlas, String arrayName){
+			this._gameTextureAtlas[arrayName] = textureAtlas;
+		}
 	}
 }
