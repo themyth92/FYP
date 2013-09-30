@@ -2,6 +2,7 @@ package assets
 {
 	import constant.Constant;
 	
+	import flash.display.Bitmap;
 	import flash.utils.Dictionary;
 	
 	import starling.textures.Texture;
@@ -33,14 +34,14 @@ package assets
 			@ return the texture according to 
 			@ the name
 		======================================*/
-		public static function getTexture(textureName : String){
+		public static function getTexture(textureName : String):Texture{
 			
 			//condition if the private gameTexture for a specific name has not been initialized
 			//initialize it instead of creating a new texture
 			if(_gameTexture[textureName] == undefined){
 				
 				//get texture from class in side assets class
-				var bitmap = new Assets[textureName]();
+				var bitmap:Bitmap = new Assets[textureName]();
 				_gameTexture[textureName] = Texture.fromBitmap(bitmap);
 			}
 			
@@ -78,5 +79,16 @@ package assets
 			
 			return _gameTextureAtlas[screen];
 		}
+<<<<<<< HEAD
+		
+		public static function storeGameTextureAtlas(textureAtlas:TextureAtlas, arrayName:String):void{
+			_gameTextureAtlas[arrayName] = textureAtlas;
+		}
+		
+		public static function getGameTextureAtlas(arrayName:String):TextureAtlas{
+			return _gameTextureAtlas[arrayName];
+		}
+=======
+>>>>>>> parent of 48d8052... Added sprite sheet for chapter 1 function
 	}
 }
