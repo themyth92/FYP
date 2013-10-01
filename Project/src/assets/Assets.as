@@ -1,7 +1,5 @@
 package assets
 {
-<<<<<<< HEAD
-=======
 	import constant.Constant;
 	
 	import flash.display.Bitmap;
@@ -10,16 +8,11 @@ package assets
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 
->>>>>>> 4adbe118bc638ca46f02d780f77033789a79073b
 	public class Assets
 	{	
 		[Embed(source = '../media/font/GROBOLD.ttf', embedAsCFF = 'false', fontFamily = 'Grobold')]
 		private static const GroboldFont:Class;
 		
-<<<<<<< HEAD
-		public function Assets()
-		{
-=======
 		//embed the loading page sprite sheet
 		[Embed(source = '../media/sprite/loadingPage/preLoader.png')]
 		private static const AtlasTextureLoadingPage:Class;
@@ -84,7 +77,6 @@ package assets
 			}
 			
 			return _gameTextureAtlas[screen];
->>>>>>> 4adbe118bc638ca46f02d780f77033789a79073b
 		}
 		
 		public static function storeGameTextureAtlas(textureAtlas:TextureAtlas, arrayName:String):void{

@@ -1,6 +1,5 @@
-package Screens
+package Screens.LoadingScreen 
 {
-	import Screens.LoadingScreen.TextureLoader;
 	
 	import flash.events.Event;
 	

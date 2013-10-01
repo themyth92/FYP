@@ -2,12 +2,10 @@ package constant
 {
 	public class Constant
 	{
-<<<<<<< HEAD
-		public static const GAME_LOADING : 'Game is loading ...';
-=======
+		public static const GAME_LOADING : String       ='Game is loading ...';
+		
 		//custom event
 		public static const TEXTURES_LOADED:String 	  = 'textureLoaded';
->>>>>>> 4adbe118bc638ca46f02d780f77033789a79073b
 		
 		//game windows
 		public static const LOADING_SCREEN:String  	  = 'loadingScreen';
