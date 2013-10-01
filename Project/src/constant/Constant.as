@@ -2,7 +2,7 @@ package constant
 {
 	public class Constant
 	{
-		public static const LOADING_SCREEN : 'loadingScreen';
+		public static const GAME_LOADING : 'Game is loading ...';
 		
 	}
 }

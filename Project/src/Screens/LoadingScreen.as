@@ -1,4 +1,4 @@
-package Screens.LoadingScreen
+package Screens
 {
 	import starling.display.Sprite;
 	
