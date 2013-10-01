@@ -45,5 +45,10 @@ package object
 			this.addChild(_loaderText);
 			this.addChild(_loaderObject);
 		}
+		
+		public function removeLoaderAnimation():void{
+			this.removeChild(_loaderText);
+			this.removeChild(_loaderObject);
+		}
 	}
 }

@@ -2,9 +2,6 @@ package constant
 {
 	public class Constant
 	{
-		public static const LOADING_SCREEN : 'loadingScreen';
-		
-<<<<<<< HEAD
 		//game windows
 		public static const LOADING_SCREEN:String  	  = 'loadingScreen';
 		
@@ -28,7 +25,5 @@ package constant
 		public static const NUMBER_FILE_LOAD:uint       = 1;
 		public static const PNG_ADDR:uint               = 0;
 		public static const XML_ADDR:uint               = 1;
-=======
->>>>>>> parent of 48d8052... Added sprite sheet for chapter 1 function
 	}
 }

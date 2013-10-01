@@ -79,7 +79,6 @@ package assets
 			
 			return _gameTextureAtlas[screen];
 		}
-<<<<<<< HEAD
 		
 		public static function storeGameTextureAtlas(textureAtlas:TextureAtlas, arrayName:String):void{
 			_gameTextureAtlas[arrayName] = textureAtlas;
@@ -88,7 +87,5 @@ package assets
 		public static function getGameTextureAtlas(arrayName:String):TextureAtlas{
 			return _gameTextureAtlas[arrayName];
 		}
-=======
->>>>>>> parent of 48d8052... Added sprite sheet for chapter 1 function
 	}
 }

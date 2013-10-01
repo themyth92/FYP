@@ -4,9 +4,24 @@ package Screens.LoadingScreen
 	
 	import assets.Assets;
 	
-	public class TextureLoader extends Sprite
+	import object.LoaderObject;
+	
+	import constant.Constant;
+	
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.events.Event;
+	import flash.events.ProgressEvent;
+	import flash.display.Loader;
+	import flash.display.Bitmap;
+	import flash.events.EventDispatcher;
+	
+	import starling.textures.TextureAtlas;
+	import starling.textures.Texture;
+	
+	
+	public class TextureLoader extends EventDispatcher
 	{
-<<<<<<< HEAD
 		
 		private var _loaderObject  : LoaderObject;
 		private var _loader        : Loader;
@@ -80,11 +95,6 @@ package Screens.LoadingScreen
 				
 				dispatchEvent(new Event(TextureLoader.TEXTURE_LOADED));	
 			}
-=======
-		public function TextureLoader()
-		{
-			super(); 
->>>>>>> parent of 48d8052... Added sprite sheet for chapter 1 function
 		}
 	}
 }
