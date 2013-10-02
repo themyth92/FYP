@@ -1,4 +1,4 @@
-package screen.loading 
+package controller 
 {
 	import assets.Assets;
 	
@@ -19,7 +19,7 @@ package screen.loading
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
-	public class LoadingTexture extends Sprite
+	public class TextureLoaderControl extends Sprite
 	{
 		
 		private var _loaderObject  : LoaderObject;
@@ -30,7 +30,7 @@ package screen.loading
 		private var _fileIndex     : uint;
 		private var _fileInfo      : Array;
 		
-		public function LoadingTexture()
+		public function TextureLoaderControl()
 		{
 			super(); 
 			
@@ -52,22 +52,42 @@ package screen.loading
 					
 					_xmlLoader = new URLLoader();
 					_xmlLoader.addEventListener(Event.COMPLETE, onXMLLoadComplete);
-					_xmlLoader.load(new URLRequest(_fileInfo[_fileIndex][Constant.XML_ADDR]));
+					
+					try{
+						
+						_xmlLoader.load(new URLRequest(_fileInfo[_fileIndex][Constant.XML_ADDR]));
+					}
+					catch(e:Error){
+						
+						trace(Constant.LOAD_FILE_PROBLEM + ': ' + e.message);
+						return;
+					}
 				}
-			}
+			}	
 		}
 		
-		private function onXMLLoadComplete(event:Event):void{		
+		private function onXMLLoadComplete(event:flash.events.Event):void{		
 			
 			_xml       = new XML(event.target.data);
 			_xmlLoader.removeEventListener(Event.COMPLETE, onXMLLoadComplete);
 			_xmlLoader = null;
+			
+			try{	
 				
-			_loader.load(new URLRequest(_fileInfo[_fileIndex][Constant.PNG_ADDR]));		
+				_loader.load(new URLRequest(_fileInfo[_fileIndex][Constant.PNG_ADDR]));
+			}
+			catch(e:Error){
+				
+				trace(Constant.LOAD_FILE_PROBLEM + ': ' + e.message);
+				return;
+			}
 		}
 		
 		private function onLoadProgress(e:ProgressEvent):void{
+			
 			var pcent:Number = e.target.bytesLoaded / e.target.bytesTotal * 100;
+			
+			trace('File ' + _fileIndex + ' is loading ' + pcent);
 		}
 		
 		private function onLoadComplete(event:Event):void{
@@ -87,7 +107,7 @@ package screen.loading
 				this.loadTexture();
 			}	
 			else{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.FIRST_CHAPTER_FUNC_SCREEN}));	
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.FIRST_CHAPTER_FUNC_SCREEN}, true));	
 			}
 		}
 	}

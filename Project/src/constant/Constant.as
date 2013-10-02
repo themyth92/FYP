@@ -17,5 +17,8 @@ package constant
 		public static const NUMBER_FILE_LOAD:uint       	   = 1;
 		public static const PNG_ADDR:uint                    = 0;	//this is the index of PNG file on 2D array, means the PNG always on the first column
 		public static const XML_ADDR:uint                    = 1;	//and the XML always on the second column
+		
+		//Error
+		public static const LOAD_FILE_PROBLEM:String         = 'Can not load file';
 	}
 }

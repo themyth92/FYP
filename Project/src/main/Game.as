@@ -4,10 +4,10 @@ package main
 	
 	import constant.Constant;
 	
-	import screen.loading.LoadingScreen;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import screen.loading.LoadingScreen;
 	
 	public class Game extends Sprite
 	{
@@ -19,12 +19,11 @@ package main
 			_loadingScreen = new LoadingScreen();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
-			
 		}
 		
 		private function onAddedToStage(event:Event):void{
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
 			this.addChild(_loadingScreen);
 		}
 		
