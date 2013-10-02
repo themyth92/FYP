@@ -1,3 +1,8 @@
+/*
+
+* Store and load the graphics from dictionary object
+
+*/
 package assets
 {
 	import constant.Constant;
@@ -33,7 +38,11 @@ package assets
 			@ return the texture according to 
 			@ the name
 		======================================*/
+<<<<<<< HEAD
 		public static function getTexture(textureName : String):Texture{
+=======
+		private static function getTexture(textureName : String):Texture{
+>>>>>>> origin/nhat
 			
 			//condition if the private gameTexture for a specific name has not been initialized
 			//initialize it instead of creating a new texture
@@ -49,34 +58,76 @@ package assets
 		
 		/*========================================
 			@ get bitmap from the spiresheet
-			@ param screen
+			@ param name
 			@ we will load the spritesheet according
-			@ to the screen
+			@ to the name of the object in dictionary object
 			@ return a texture atlas object
 		=========================================*/
-		public static function getAtlas(screen:String):TextureAtlas{
+		public static function getAtlas(name:String):TextureAtlas{
 			
 			//condition if the textureAtlas has not got the object
 			//initialize it
-			if(_gameTextureAtlas[screen] == undefined){
+			if(_gameTextureAtlas[name] == undefined){
 				
 				var texture 	  : Texture;
 				var xml     	  : XML;
-				var textureAtlas : TextureAtlas; 
+				var textureAtlas  : TextureAtlas; 
 				
 				//switch case according to the sprite sheet we want to take from
-				//it depends on the screen. e.g Loading Screen, Welcome screen, etc... 
-				switch(screen){
+				//it depends on the name of the sprite sheet from the constant class 
+				switch(name){
 					case Constant.LOADING_SCREEN:
-						texture                   = getTexture('AtlasTextureLoadingPage');
-						xml                       = XML(new AtlasXmlLoadingPage);
-						textureAtlas              = new TextureAtlas(texture, xml);
-						_gameTextureAtlas[screen] = textureAtlas;
+						
+						//try catch if the embeded image can not be found inside the project file
+						try{
+							texture                   = getTexture('AtlasTextureLoadingPage');
+							xml                       = XML(new AtlasXmlLoadingPage);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
 					break;
+					
+					//all the texture loaded from the loader class already
+					//if it can not be founded inside the dictionary object then \
+					//means that the the file has not been loaded or the name of the object in to
+					//detect the file inside the dictionary is not correct
+					//return null for both cases
+					default:
+						return null;
 				}
 			}
 			
-			return _gameTextureAtlas[screen];
+			return _gameTextureAtlas[name];
+		}
+		
+		/*================================================================
+		
+			@store the atlas from files to the dictionary atlas object
+			@param texture, xml : the content of xml file and spritesheet 
+								  to create the textureAtlas object
+			@param name : name of the dictionay object
+			@return false if the texture or xml does not content anything
+		
+		=================================================================*/
+		public static function storeAtlas(texture:Texture, xml:XML , name:String):Boolean{
+			
+			//check if both the object is null or not
+			if(texture != null && xml !=null){
+				
+				//create texture atlas object and assign to dictionary
+				var textureAtlas:TextureAtlas        = new TextureAtlas(texture, xml);
+				_gameTextureAtlas[name] 			 = textureAtlas;	
+				
+				return true;
+			}
+			
+			return false;
 		}
 		
 		public static function storeGameTextureAtlas(textureAtlas:TextureAtlas, arrayName:String):void{
