@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:173f340311904a32e31ab69e5f309a0e$ -->
+<!-- $TexturePacker:SmartUpdate:e0f16d77924982651fc03a4de123ad91$ -->
 <TextureAtlas imagePath="preLoader.png">
-    <SubTexture name="loadingText" x="2" y="2" width="424" height="50"/>
-    <SubTexture name="preLoader_01" x="2" y="410" width="106" height="124" frameX="-13" frameY="-4" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_02" x="102" y="536" width="98" height="122" frameX="-18" frameY="-5" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_03" x="322" y="554" width="104" height="120" frameX="-11" frameY="-6" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_04" x="346" y="182" width="112" height="116" frameX="-2" frameY="-9" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_05" x="234" y="54" width="114" height="114" frameX="0" frameY="-9" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_06" x="118" y="54" width="114" height="114" frameX="0" frameY="-6" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_07" x="2" y="54" width="114" height="118" frameX="0" frameY="0" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_08" x="118" y="170" width="112" height="124" frameX="-1" frameY="0" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_09" x="350" y="54" width="112" height="126" frameX="-1" frameY="0" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_10" x="230" y="402" width="108" height="126" frameX="-3" frameY="0" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_11" x="110" y="410" width="104" height="124" frameX="-6" frameY="-1" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_12" x="2" y="536" width="98" height="122" frameX="-8" frameY="-2" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_13" x="216" y="530" width="104" height="120" frameX="-9" frameY="-3" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_14" x="232" y="170" width="112" height="116" frameX="-10" frameY="-5" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_15" x="116" y="296" width="112" height="112" frameX="-12" frameY="-7" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_16" x="2" y="298" width="112" height="110" frameX="-12" frameY="-6" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_17" x="232" y="288" width="112" height="112" frameX="-12" frameY="-3" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_18" x="2" y="174" width="112" height="122" frameX="-11" frameY="-2" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_19" x="346" y="300" width="110" height="126" frameX="-12" frameY="-2" frameWidth="124" frameHeight="128"/>
-    <SubTexture name="preLoader_20" x="340" y="428" width="108" height="124" frameX="-13" frameY="-4" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="background" x="2" y="2" width="1100" height="800"/>
+    <SubTexture name="loadingText" x="2" y="932" width="424" height="50"/>
+    <SubTexture name="preLoader_01" x="562" y="804" width="106" height="124" frameX="-13" frameY="-4" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_02" x="990" y="804" width="98" height="122" frameX="-18" frameY="-5" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_03" x="1104" y="2" width="104" height="120" frameX="-11" frameY="-6" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_04" x="1104" y="244" width="112" height="116" frameX="-2" frameY="-9" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_05" x="1218" y="244" width="114" height="114" frameX="0" frameY="-9" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_06" x="1104" y="362" width="114" height="114" frameX="0" frameY="-6" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_07" x="1104" y="124" width="114" height="118" frameX="0" frameY="0" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_08" x="338" y="804" width="112" height="124" frameX="-1" frameY="0" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_09" x="2" y="804" width="112" height="126" frameX="-1" frameY="0" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_10" x="228" y="804" width="108" height="126" frameX="-3" frameY="0" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_11" x="670" y="804" width="104" height="124" frameX="-6" frameY="-1" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_12" x="890" y="804" width="98" height="122" frameX="-8" frameY="-2" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_13" x="1090" y="804" width="104" height="120" frameX="-9" frameY="-3" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_14" x="1210" y="2" width="112" height="116" frameX="-10" frameY="-5" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_15" x="1324" y="2" width="112" height="112" frameX="-12" frameY="-7" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_16" x="1104" y="478" width="112" height="110" frameX="-12" frameY="-6" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_17" x="1220" y="120" width="112" height="112" frameX="-12" frameY="-3" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_18" x="776" y="804" width="112" height="122" frameX="-11" frameY="-2" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_19" x="116" y="804" width="110" height="126" frameX="-12" frameY="-2" frameWidth="124" frameHeight="128"/>
+    <SubTexture name="preLoader_20" x="452" y="804" width="108" height="124" frameX="-13" frameY="-4" frameWidth="124" frameHeight="128"/>
 </TextureAtlas>

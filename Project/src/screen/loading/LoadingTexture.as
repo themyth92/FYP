@@ -1,26 +1,25 @@
-package Screens.LoadingScreen
+package screen.loading 
 {
-	import starling.display.Sprite;
-	
 	import assets.Assets;
-	
-	import object.LoaderObject;
 	
 	import constant.Constant;
 	
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
+	import events.NavigationEvent;
+	
+	import flash.display.Bitmap;
+	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
-	import flash.display.Loader;
-	import flash.display.Bitmap;
-	import flash.events.EventDispatcher;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
 	
-	import starling.textures.TextureAtlas;
+	import object.LoaderObject;
+	
+	import starling.display.Sprite;
 	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	
-	
-	public class TextureLoader extends EventDispatcher
+	public class LoadingTexture extends Sprite
 	{
 		
 		private var _loaderObject  : LoaderObject;
@@ -31,15 +30,12 @@ package Screens.LoadingScreen
 		private var _fileIndex     : uint;
 		private var _fileInfo      : Array;
 		
-		public static const TEXTURE_LOADED:String  = 'textureLoaded';
-		public static const TEXTURE_LOADING:String = 'textureLoading'; 
-		
-		public function TextureLoader()
+		public function LoadingTexture()
 		{
 			super(); 
 			
 			this._fileIndex     = 0;	
-			this._fileInfo      = new Array([Constant.SPRITE_ONE_PNG_ADDR, Constant.SPRITE_ONE_XML_ADDR],[Constant.SPRITE_THREE_PNG_ADDR, Constant.SPRITE_THREE_XML_ADDR],[Constant.SPRITE_TWO_PNG_ADDR, Constant.SPRITE_TWO_XML_ADDR],[Constant.SPRITE_FOUR_PNG_ADDR, Constant.SPRITE_FOUR_XML_ADDR]);		
+			this._fileInfo      = new Array([Constant.SPRITE_ONE_PNG_ADDR, Constant.SPRITE_ONE_XML_ADDR]);		
 			this._numberOfFiles = this._fileInfo.length;
 		}
 		
@@ -72,16 +68,15 @@ package Screens.LoadingScreen
 		
 		private function onLoadProgress(e:ProgressEvent):void{
 			var pcent:Number = e.target.bytesLoaded / e.target.bytesTotal * 100;
-			trace(pcent);
 		}
 		
 		private function onLoadComplete(event:Event):void{
 			
 			var bitmap : Bitmap = event.currentTarget.content as Bitmap;
 			
-			var textureAtlas: TextureAtlas = new TextureAtlas(Texture.fromBitmap(bitmap), _xml);
+			var texture:Texture = Texture.fromBitmap(bitmap);
 			
-			Assets.storeGameTextureAtlas(textureAtlas, Constant.SPRITE_ONE);
+			Assets.storeAtlas(texture, _xml, Constant.SPRITE_ONE);
 			
 			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
 			_loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
@@ -92,8 +87,7 @@ package Screens.LoadingScreen
 				this.loadTexture();
 			}	
 			else{
-				
-				dispatchEvent(new Event(TextureLoader.TEXTURE_LOADED));	
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.FIRST_CHAPTER_FUNC_SCREEN}));	
 			}
 		}
 	}

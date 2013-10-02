@@ -2,7 +2,7 @@
 <data version="1.0">
     <struct type="Settings">
         <key>fileFormatVersion</key>
-        <int>0</int>
+        <int>1</int>
         <key>variation</key>
         <string>main</string>
         <key>verbose</key>
@@ -61,7 +61,7 @@
         <key>fixedTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>512</int>
+            <int>2048</int>
             <key>height</key>
             <int>1024</int>
         </QSize>
@@ -142,6 +142,8 @@
         <key>fileList</key>
         <array>
             <filename>FYP/Image/Preloader</filename>
+            <filename>../Image/Preloader</filename>
+            <filename>../Image/Common Assets/Background</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
