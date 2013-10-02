@@ -38,11 +38,7 @@ package assets
 			@ return the texture according to 
 			@ the name
 		======================================*/
-<<<<<<< HEAD
-		public static function getTexture(textureName : String):Texture{
-=======
 		private static function getTexture(textureName : String):Texture{
->>>>>>> origin/nhat
 			
 			//condition if the private gameTexture for a specific name has not been initialized
 			//initialize it instead of creating a new texture
@@ -128,14 +124,6 @@ package assets
 			}
 			
 			return false;
-		}
-		
-		public static function storeGameTextureAtlas(textureAtlas:TextureAtlas, arrayName:String):void{
-			_gameTextureAtlas[arrayName] = textureAtlas;
-		}
-		
-		public static function getGameTextureAtlas(arrayName:String):TextureAtlas{
-			return _gameTextureAtlas[arrayName];
 		}
 	}
 }

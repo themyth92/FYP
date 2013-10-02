@@ -1,15 +1,9 @@
 package main
 {
-<<<<<<< HEAD
-	import Screens.LoadingScreen.LoadingScreen;
-
-=======
 	import events.NavigationEvent;
 	
 	import constant.Constant;
 	
-	
->>>>>>> origin/nhat
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import screen.loading.LoadingScreen;
@@ -28,9 +22,7 @@ package main
 		}
 		
 		private function onAddedToStage(event:Event):void{
-<<<<<<< HEAD
-			this.addChild(_loadingScreen);
-=======
+			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
 			this.addChild(_loadingScreen);
@@ -54,7 +46,6 @@ package main
 					break;
 				}
 			}
->>>>>>> origin/nhat
 		}
 	}
 }

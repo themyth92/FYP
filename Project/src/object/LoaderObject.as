@@ -20,8 +20,6 @@ package object
 		public function LoaderObject()
 		{
 			super();
-<<<<<<< HEAD
-=======
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
@@ -32,7 +30,6 @@ package object
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
 			createLoaderAnimation();
->>>>>>> origin/nhat
 		}
 		
 		public function createLoaderAnimation():void{
@@ -67,11 +64,6 @@ package object
 			
 			_loaderText   = null;
 			_loaderObject = null;
-		}
-		
-		public function removeLoaderAnimation():void{
-			this.removeChild(_loaderText);
-			this.removeChild(_loaderObject);
 		}
 	}
 }
