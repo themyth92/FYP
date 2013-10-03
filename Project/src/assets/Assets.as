@@ -15,7 +15,6 @@ package assets
 
 	public class Assets
 	{	
-		//embed the font
 		[Embed(source = '../media/font/GROBOLD.ttf', embedAsCFF = 'false', fontFamily = 'Grobold')]
 		private static const GroboldFont:Class;
 		

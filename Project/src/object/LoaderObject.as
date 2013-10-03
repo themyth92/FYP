@@ -59,6 +59,18 @@ package object
 			this.addChild(_background);
 			this.addChild(_loaderText);
 			this.addChild(_loaderObject);
+
+		}
+		
+		private function onRemoveFromStage():void{
+			
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+			
+			this.removeChild(_loaderText);
+			this.removeChild(_loaderObject);
+			
+			_loaderText   = null;
+			_loaderObject = null;
 		}
 		
 		//remove all the object and event listener from the loader object
