@@ -1,3 +1,8 @@
+/*
+
+*control the loading progress
+
+*/
 package controller 
 {
 	import assets.Assets;
@@ -13,16 +18,19 @@ package controller
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
-	import object.LoaderObject;
-	
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
 	public class TextureLoaderControl extends Sprite
 	{
-		
-		private var _loaderObject  : LoaderObject;
+		//loader to load the png file
+		//xml loader to load the xml file
+		//xml : private var to temporaily store the xml file and later will be added with the png file in the dictionary in Assets class
+		//file index : keep track of the current row/file load from the file info array
+		//file info array : 2D array 
+		//first column will be the png address
+		//second column will be the xml address
 		private var _loader        : Loader;
 		private var _xmlLoader     : URLLoader;
 		private var _xml           : XML;
@@ -39,6 +47,11 @@ package controller
 			this._numberOfFiles = this._fileInfo.length;
 		}
 		
+		/*=====================================================================================================
+			@in the load texture function
+			@I actually load the xml file first and added an event listener for the xml file to be fully loaded
+			@after that I will load the png file correspond to the xml file
+		=====================================================================================================*/
 		public function loadTexture():void{
 			
 			_loader = new Loader();
@@ -46,6 +59,7 @@ package controller
 			_loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onLoadProgress);
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);	
 			
+			//check if the file Info array got element
 			if(_fileInfo[_fileIndex] != null){
 				
 				if(_fileInfo[_fileIndex][Constant.PNG_ADDR] !=null && _fileInfo[_fileIndex][Constant.XML_ADDR] !=null){
@@ -53,6 +67,7 @@ package controller
 					_xmlLoader = new URLLoader();
 					_xmlLoader.addEventListener(Event.COMPLETE, onXMLLoadComplete);
 					
+					//put the try catch here if the xml file can not be found by the system
 					try{
 						
 						_xmlLoader.load(new URLRequest(_fileInfo[_fileIndex][Constant.XML_ADDR]));
@@ -72,6 +87,7 @@ package controller
 			_xmlLoader.removeEventListener(Event.COMPLETE, onXMLLoadComplete);
 			_xmlLoader = null;
 			
+			//put the try catch here if the file can not be found by the system
 			try{	
 				
 				_loader.load(new URLRequest(_fileInfo[_fileIndex][Constant.PNG_ADDR]));
@@ -83,6 +99,7 @@ package controller
 			}
 		}
 		
+		//just one function to show on console the percent of the current loading file
 		private function onLoadProgress(e:ProgressEvent):void{
 			
 			var pcent:Number = e.target.bytesLoaded / e.target.bytesTotal * 100;
@@ -90,6 +107,12 @@ package controller
 			trace('File ' + _fileIndex + ' is loading ' + pcent);
 		}
 		
+		/*=======================================================================================================
+		when the load for one file complete
+			@the continuity of the loading depends on the number of file still left from the file info array
+			@if there is some file still left then continues to load
+			@otherwise a new event will be dispatch to notify the other classes for change their screens, etc ...
+		========================================================================================================*/
 		private function onLoadComplete(event:Event):void{
 			
 			var bitmap : Bitmap = event.currentTarget.content as Bitmap;
@@ -107,6 +130,7 @@ package controller
 				this.loadTexture();
 			}	
 			else{
+				//dispatch the change screen event with the default screen change change ID will be the first chapter function screen
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.FIRST_CHAPTER_FUNC_SCREEN}, true));	
 			}
 		}

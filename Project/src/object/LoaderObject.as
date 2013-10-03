@@ -1,3 +1,9 @@
+/*
+
+*object to display the loader component to screen
+
+*/
+
 package object
 {
 	import assets.Assets;
@@ -29,6 +35,7 @@ package object
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			
+			//load and and object to the loading screen container
 			createLoaderAnimation();
 		}
 		
@@ -52,9 +59,9 @@ package object
 			this.addChild(_background);
 			this.addChild(_loaderText);
 			this.addChild(_loaderObject);
-
 		}
 		
+		//remove all the object and event listener from the loader object
 		private function onRemoveFromStage():void{
 			
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
