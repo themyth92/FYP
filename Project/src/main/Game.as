@@ -1,22 +1,25 @@
 package main
 {
-	import events.NavigationEvent;
-	
 	import constant.Constant;
 	
+	import events.NavigationEvent;
+	
+	import screen.chapterOne.ChapterScreen;
+	import screen.loading.LoadingScreen;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import screen.loading.LoadingScreen;
 	
 	public class Game extends Sprite
 	{
-		private var _loadingScreen:LoadingScreen;
+		private var _loadingScreen    :LoadingScreen;
+		private var _chapterOneScreen : screen.chapterOne.ChapterScreen;
 		
 		public function Game()
 		{
 			super();
-			_loadingScreen = new LoadingScreen();
+			_loadingScreen    = new LoadingScreen();
+			_chapterOneScreen = new screen.chapterOne.ChapterScreen();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -34,10 +37,15 @@ package main
 					
 					case Constant.LOADING_SCREEN:
 						trace('loading screen');
+						
 					break;
 					
 					case Constant.FIRST_CHAPTER_FUNC_SCREEN:
 						trace('first chapter func screen');
+						this.removeChild(_loadingScreen);
+						this.addChild(_chapterOneScreen);
+						_loadingScreen = null;
+
 					break;
 					
 					default:

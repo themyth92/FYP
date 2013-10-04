@@ -4,7 +4,9 @@ package constant
 	{
 		//game windows
 		public static const LOADING_SCREEN:String  	       = 'loadingScreen';
-		public static const FIRST_CHAPTER_FUNC_SCREEN:String = 'firstChapFunScreen';
+		public static const FIRST_CHAPTER_FUNC_SCREEN:String = 'firstChapFuncScreen';
+		public static const FIRST_CHAPTER_GRAP_SCREEN:String = 'firstChapGrapScreen';
+		public static const FIRST_CHAPTER_PHYS_SCREEN:String = 'firstChapPhysScreen';
 		
 		//sprite sheet dictionary name
 		public static const SPRITE_ONE:String      	  	   = 'spriteOne';
@@ -20,5 +22,15 @@ package constant
 		
 		//Error
 		public static const LOAD_FILE_PROBLEM:String         = 'Can not load file';
+		
+		//Chapter 1 object dictionary
+		public static const CHAP_ONE_TEXTURE_ARRAY:Array     = new Array('background','dialogBubble',
+															   				'heart','bottomSelectionFrame',
+															   				'consoleNote', 'frameWithIndex',
+															   				'grassBackground', 'mainFrame',
+															   				'nextArrow', 'scoreFace',
+															   				'volumeDecBtn', 'volumeBar',
+															   				'volumeIncBtn', 'volumeSlider',
+															   				'warningSign', 'teacher');
 	}
 }
