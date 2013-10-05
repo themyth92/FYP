@@ -45,7 +45,7 @@
     <SubTexture name="scoreFace" x="929" y="63" width="48" height="46"/>
     <SubTexture name="teacher" x="674" y="605" width="150" height="338"/>
     <SubTexture name="volumeDecBtn" x="955" y="424" width="18" height="21"/>
-    <SubTexture name="volumeHandle" x="674" y="209" width="251" height="11"/>
+    <SubTexture name="volumeBar" x="674" y="209" width="251" height="11"/>
     <SubTexture name="volumeIncBtn" x="995" y="30" width="26" height="20"/>
     <SubTexture name="volumeSlider" x="995" y="2" width="26" height="26"/>
     <SubTexture name="warningSign" x="995" y="52" width="23" height="21"/>
