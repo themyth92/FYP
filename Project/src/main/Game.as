@@ -42,10 +42,9 @@ package main
 					
 					case Constant.FIRST_CHAPTER_FUNC_SCREEN:
 						trace('first chapter func screen');
+						this.removeChild(_loadingScreen);
 						this.addChild(_chapterOneScreen);
-						//this.removeChild(_loadingScreen);
-
-						//_loadingScreen = null;
+						_loadingScreen = null;
 
 					break;
 					

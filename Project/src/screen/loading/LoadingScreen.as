@@ -10,8 +10,6 @@ package screen.loading
 	
 	import constant.Constant;
 	
-	import controller.TextureLoaderControl;
-	
 	import events.NavigationEvent;
 	
 	import object.LoaderObject;
@@ -19,6 +17,7 @@ package screen.loading
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import controller.TextureLoaderControl;
 	
 
 		
@@ -40,17 +39,15 @@ package screen.loading
 			
 			_loaderObject   = new LoaderObject();
 			_textureLoader  = new TextureLoaderControl();
-			//this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.FIRST_CHAPTER_FUNC_SCREEN}, true));	
+			
 			this.addChild(_loaderObject);
 			this.addChild(_textureLoader);
 			
-			_textureLoader.loadTexture();
+			_textureLoader.loadTexture();	
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
 			
-			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
-			this.removeChild(_textureLoader);
 			this.removeChild(_loaderObject);
 			_loaderObject  = null;
 			_textureLoader = null;
