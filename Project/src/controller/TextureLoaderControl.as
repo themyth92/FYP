@@ -10,13 +10,13 @@ package controller
 	import constant.Constant;
 	
 	import events.NavigationEvent;
-	
+	/*
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	import flash.net.URLLoader;
-	import flash.net.URLRequest;
+	import flash.net.URLRequest;*/
 	
 	import starling.display.Sprite;
 	import starling.textures.Texture;
@@ -31,20 +31,22 @@ package controller
 		//file info array : 2D array 
 		//first column will be the png address
 		//second column will be the xml address
-		private var _loader        : Loader;
+	/*	private var _loader        : Loader;
 		private var _xmlLoader     : URLLoader;
 		private var _xml           : XML;
 		private var _numberOfFiles : uint;
 		private var _fileIndex     : uint;
-		private var _fileInfo      : Array;
+		private var _fileInfo      : Array;*/
 		
 		public function TextureLoaderControl()
 		{
 			super(); 
 			
-			this._fileIndex     = 0;	
+		/*	this._fileIndex     = 0;	
 			this._fileInfo      = new Array([Constant.SPRITE_ONE_PNG_ADDR, Constant.SPRITE_ONE_XML_ADDR]);		
-			this._numberOfFiles = this._fileInfo.length;
+			this._numberOfFiles = this._fileInfo.length;*/
+			
+			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.FIRST_CHAPTER_FUNC_SCREEN}, true));
 		}
 		
 		/*=====================================================================================================
@@ -52,7 +54,7 @@ package controller
 			@I actually load the xml file first and added an event listener for the xml file to be fully loaded
 			@after that I will load the png file correspond to the xml file
 		=====================================================================================================*/
-		public function loadTexture():void{
+/*		public function loadTexture():void{
 			
 			_loader = new Loader();
 			
@@ -113,7 +115,7 @@ package controller
 			@if there is some file still left then continues to load
 			@otherwise a new event will be dispatch to notify the other classes for change their screens, etc ...
 		========================================================================================================*/
-		private function onLoadComplete(event:Event):void{
+/*		private function onLoadComplete(event:Event):void{
 			
 			var bitmap : Bitmap = event.currentTarget.content as Bitmap;
 			
@@ -133,6 +135,6 @@ package controller
 				//dispatch the change screen event with the default screen change change ID will be the first chapter function screen
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.FIRST_CHAPTER_FUNC_SCREEN}, true));	
 			}
-		}
+		}*/
 	}
 }

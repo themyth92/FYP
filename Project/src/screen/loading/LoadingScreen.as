@@ -43,7 +43,7 @@ package screen.loading
 			this.addChild(_loaderObject);
 			this.addChild(_textureLoader);
 			
-			_textureLoader.loadTexture();	
+		//	_textureLoader.loadTexture();	
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
