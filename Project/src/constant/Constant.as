@@ -24,10 +24,9 @@ package constant
 		public static const LOAD_FILE_PROBLEM:String         = 'Can not load file';
 		
 		//Chapter 1 object dictionary
-		public static const CHAP_ONE_TEXTURE_ARRAY:Array     = new Array('background','dialogBubble',
+		public static const CHAP_ONE_TEXTURE_ARRAY:Array     = new Array('background', 'mainFrame','grassBackground',
 															   				'heart','bottomSelectionFrame',
-															   				'consoleNote', 'frameWithIndex',
-															   				'grassBackground', 'mainFrame',
+															   				'consoleNote', 'frameWithIndex','dialogBubble',
 															   				'nextArrow', 'scoreFace',
 															   				'volumeDecBtn', 'volumeBar',
 															   				'volumeIncBtn', 'volumeSlider',
