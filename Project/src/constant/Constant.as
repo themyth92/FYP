@@ -26,10 +26,12 @@ package constant
 		//Chapter 1 object dictionary
 		public static const CHAP_ONE_TEXTURE_ARRAY:Array     = new Array('background', 'mainFrame','grassBackground',
 															   				'heart','bottomSelectionFrame',
-															   				'consoleNote', 'frameWithIndex','dialogBubble',
+															   				'frameWithIndex','dialogBubble',
 															   				'nextArrow', 'scoreFace',
 															   				'volumeDecBtn', 'volumeBar',
 															   				'volumeIncBtn', 'volumeSlider',
 															   				'warningSign', 'teacher');
+		//font
+		public static const GROBOLD_FONT: String              = 'Grobold';
 	}
 }

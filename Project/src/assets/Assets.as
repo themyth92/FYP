@@ -88,7 +88,6 @@ package assets
 						if(!storeAtlas(texture, xml, name))
 							return null;
 					break;
-					
 					//all the texture loaded from the loader class already
 					//if it can not be founded inside the dictionary object then \
 					//means that the the file has not been loaded or the name of the object in to

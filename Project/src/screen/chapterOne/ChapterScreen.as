@@ -6,23 +6,25 @@ package screen.chapterOne
 	
 	import flash.utils.Dictionary;
 	
-	import starling.display.Image;
-	import starling.display.Sprite;
-	import starling.events.Event;
-	
 	import object.chapterOne.Button;
 	import object.chapterOne.Console;
 	import object.chapterOne.DialogBubble;
 	import object.chapterOne.IndexBoard;
 	import object.chapterOne.Score;
+	
+	import starling.display.Image;
+	import starling.display.Sprite;
+	import starling.events.Event;
 
 	public class ChapterScreen extends Sprite
 	{
 		private var _commonObject : Dictionary;
+		private var _console 	   : Console;
 		
 		public function ChapterScreen()
 		{
 			_commonObject = new Dictionary();
+			_console      = new Console();
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -53,6 +55,7 @@ package screen.chapterOne
 				}
 			}
 			catch(e:Error){
+				
 				trace('Array out of bound or can not get the texture in chapter one');
 			}
 			
@@ -71,6 +74,7 @@ package screen.chapterOne
 				}
 			}
 			
+			this.addChild(_console);
 			arrangeTexture();
 		}
 		
@@ -102,9 +106,6 @@ package screen.chapterOne
 			_commonObject['scoreFace'] = 506;
 			_commonObject['scoreFace'] = 34;
 			
-			_commonObject['consoleNote'].x = 838;
-			_commonObject['consoleNote'].y = 58;
-			
 			_commonObject['volumeBar'].x = 838;
 			_commonObject['volumeBar'].y = 549;
 			
@@ -116,6 +117,9 @@ package screen.chapterOne
 			
 			_commonObject['bottomSelectionFrame'].x = 150;
 			_commonObject['bottomSelectionFrame'].y = 635;
+			
+			_console.x = 838;
+			_console.y = 58;
 		}
 	}
 }
