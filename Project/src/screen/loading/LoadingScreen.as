@@ -18,8 +18,6 @@ package screen.loading
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import controller.TextureLoaderControl;
-	
-
 		
 	public class LoadingScreen extends Sprite
 	{	

@@ -4,27 +4,37 @@ package screen.chapterOne
 	
 	import constant.Constant;
 	
+	import controller.chapterOne.Controller;
+	
 	import flash.utils.Dictionary;
 	
 	import object.chapterOne.Button;
 	import object.chapterOne.Console;
 	import object.chapterOne.DialogBubble;
+	import object.chapterOne.Hero;
 	import object.chapterOne.IndexBoard;
 	import object.chapterOne.Score;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.events.Event;
+	import starling.events.Event; 
 
 	public class ChapterScreen extends Sprite
 	{
 		private var _commonObject : Dictionary;
 		private var _console 	   : Console;
+		private var _button       : Button;
+		private var _controller   : Controller;
+		private var _hero         : Hero;
 		
 		public function ChapterScreen()
 		{
 			_commonObject = new Dictionary();
 			_console      = new Console();
+			_controller   = new Controller(_console);
+			_button       = new Button(_controller);
+			_hero         = new Hero(_controller);
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -75,6 +85,8 @@ package screen.chapterOne
 			}
 			
 			this.addChild(_console);
+			this.addChild(_button);
+			this.addChild(_hero);
 			arrangeTexture();
 		}
 		
@@ -120,6 +132,12 @@ package screen.chapterOne
 			
 			_console.x = 838;
 			_console.y = 58;
+			
+			_button.x  = 500;
+			_button.y  = 500;
+			
+			_hero.x = 300;
+			_hero.y = 500;
 		}
 	}
 }
