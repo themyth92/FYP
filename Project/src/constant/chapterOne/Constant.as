@@ -22,5 +22,10 @@ package constant.chapterOne
 		
 		public static const HERO_MALE_STAND:Array        = new Array('Male/male_up_01', 'Male/male_down_01','Male/male_left_01', 'Male/male_right_01');
 		public static const HERO_MALE_RUN:Array          = new Array('Male/male_up_', 'Male/male_down_', 'Male/male_left_', 'Male/male_right_');
+		
+		public static const HERO_STATUS_LEFT:String      = 'left';
+		public static const HERO_STATUS_RIGHT:String     = 'right';
+		public static const HERO_STATUS_UP:String        = 'up';
+		public static const HERO_STATUS_DOWN:String      = 'down';
  	}
 }

@@ -11,24 +11,33 @@ package object.chapterOne
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.KeyboardEvent;
+	
+	import flash.ui.Keyboard;
 
 	public class Hero extends Sprite
 	{
 		private var _controller:Controller;
 		private var _heroStand :Array;
 		private var _heroRun   :Array;
+		private var _speedX    :int;
+		private var _speedY    :int;
+		private var _heroStatus:String;
 		
 		public function Hero(controller:Controller)
 		{	
 			this._controller = controller;
 			this._heroStand  = new Array();
 			this._heroRun    = new Array();
+			this._speedX     = 0;
+			this._speedY     = 0;
+			this._heroStatus = Constant.HERO_STATUS_RIGHT;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		public function moveHero(index:uint):void{
-			
+				
 		}
 		
 		public function showHero(index:uint, status:uint = 0):void{
@@ -77,6 +86,8 @@ package object.chapterOne
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 		
 		private function heroAddToStage():void{
@@ -103,7 +114,54 @@ package object.chapterOne
 		}
 		
 		private function onEnterFrame(e:Event):void{
-			
+			this.x += _speedX;
+			this.y += _speedY;
+		}
+		
+		private function onKeyDown(e:KeyboardEvent):void{
+			if(e.keyCode == Keyboard.LEFT){
+				_heroStatus = Constant.HERO_STATUS_LEFT;
+				showHero(2, 1);
+				_speedX = -3;
+				_speedY = 0;
+			}
+			else if(e.keyCode == Keyboard.RIGHT){
+				_heroStatus = Constant.HERO_STATUS_RIGHT;
+				showHero(3, 1); 
+				_speedX = 3;
+				_speedY = 0;
+			}
+			else if(e.keyCode == Keyboard.UP){
+				_heroStatus = Constant.HERO_STATUS_UP;
+				showHero(0, 1); 
+				_speedX = 0;
+				_speedY = -3;
+			}
+			else if(e.keyCode == Keyboard.DOWN){
+				_heroStatus = Constant.HERO_STATUS_DOWN;
+				showHero(1,1);
+				_speedX = 0;
+				_speedY = 3;
+			}
+		}
+		
+		private function onKeyUp(e:KeyboardEvent):void{
+			_speedX = 0;
+			_speedY = 0;
+			switch(_heroStatus){
+				case Constant.HERO_STATUS_DOWN:
+					showHero(1,0);
+					break;
+				case Constant.HERO_STATUS_LEFT:
+					showHero(2,0);
+					break;
+				case Constant.HERO_STATUS_RIGHT:
+					showHero(3,0);
+					break;
+				case Constant.HERO_STATUS_UP:
+					showHero(0,0);
+					break;
+			}
 		}
 	}
 }
