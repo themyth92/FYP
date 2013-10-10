@@ -130,7 +130,7 @@ package screen.chapterOne
 			_commonObject['bottomSelectionFrame'].x = 150;
 			_commonObject['bottomSelectionFrame'].y = 635;
 			
-			_console.x = 838;
+			_console.x = 853;
 			_console.y = 58;
 			
 			_button.x  = 500;

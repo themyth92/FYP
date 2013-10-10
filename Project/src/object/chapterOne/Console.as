@@ -36,7 +36,8 @@ package object.chapterOne
 				_textField.width      					   = Constant.TEXTFIELD_WIDTH;
 				_textField.height     					   = Constant.TEXTFIELD_HEIGTH;
 				_textField.isEditable 					   = true;
-				_textField.textEditorProperties.textFormat = new TextFormat(Constant.GROBOLD_FONT, 13);
+				_textField.textEditorProperties.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
+				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 			}
 			catch(e:Error){
 				

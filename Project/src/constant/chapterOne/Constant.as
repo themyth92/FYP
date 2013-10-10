@@ -7,13 +7,16 @@ package constant.chapterOne
 		
 		//function
 		public static const GROBOLD_FONT: String   	   = 'Grobold';
-		public static const TEXTFIELD_WIDTH:uint   	   = 500;
-		public static const TEXTFIELD_HEIGTH:uint  	   = 500;
+		public static const TEXTFIELD_WIDTH:uint   	   = 216;
+		public static const TEXTFIELD_HEIGTH:uint  	   = 235;
+		
+		public static const CONSOLE_NORMAL:String        = 'Console/ConsoleNormal';
+		public static const CONSOLE_FOCUS:String         = 'Console/ConsoleFocus';
 		
 		public static const NOTE_POSX:uint         	   = 0;
 		public static const NOTE_POSY:uint         	   = 0;
-		public static const TEXTFIELD_POSX:uint    	   = 0;
-		public static const TEXTFIELD_POSY:uint    	   = 0;
+		public static const TEXTFIELD_POSX:uint    	   = 17;
+		public static const TEXTFIELD_POSY:uint    	   = 87;
 		
 		public static const SUBMIT_NORMAL:String   	   = 'submitBtn/submitBtn_01';
 		public static const SUBMIT_DISABLED:String 	   = 'submitBtn/submitBtn_02';

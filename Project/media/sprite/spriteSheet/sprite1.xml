@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:89b759e296bce3b3e65481368bc8511a$ -->
+<!-- $TexturePacker:SmartUpdate:cdeaf86aa8fc9c2603dd8a712a68d02c$ -->
 <TextureAtlas imagePath="sprite1.png">
+    <SubTexture name="Console/ConsoleFocus" x="644" y="842" width="216" height="235"/>
+    <SubTexture name="Console/ConsoleNormal" x="674" y="605" width="216" height="235"/>
     <SubTexture name="Female/female_down_01" x="969" y="186" width="38" height="32" frameX="0" frameY="-2" frameWidth="40" frameHeight="40"/>
     <SubTexture name="Female/female_down_02" x="929" y="179" width="38" height="32" frameX="0" frameY="-3" frameWidth="40" frameHeight="40"/>
     <SubTexture name="Female/female_down_03" x="969" y="186" width="38" height="32" frameX="0" frameY="-2" frameWidth="40" frameHeight="40"/>
@@ -43,13 +45,13 @@
     <SubTexture name="mainFrame" x="2" y="2" width="670" height="501"/>
     <SubTexture name="nextArrow" x="929" y="2" width="64" height="59"/>
     <SubTexture name="scoreFace" x="929" y="63" width="48" height="46"/>
-    <SubTexture name="submitBtn/submitBtn_01" x="826" y="719" width="111" height="36"/>
-    <SubTexture name="submitBtn/submitBtn_02" x="826" y="681" width="111" height="36"/>
-    <SubTexture name="submitBtn/submitBtn_03" x="826" y="643" width="111" height="36"/>
-    <SubTexture name="submitBtn/submitBtn_04" x="826" y="605" width="111" height="36"/>
-    <SubTexture name="teacher" x="674" y="605" width="150" height="338"/>
-    <SubTexture name="volumeDecBtn" x="955" y="424" width="18" height="21"/>
+    <SubTexture name="submitBtn/submitBtn_01" x="892" y="719" width="111" height="36"/>
+    <SubTexture name="submitBtn/submitBtn_02" x="892" y="681" width="111" height="36"/>
+    <SubTexture name="submitBtn/submitBtn_03" x="892" y="643" width="111" height="36"/>
+    <SubTexture name="submitBtn/submitBtn_04" x="892" y="605" width="111" height="36"/>
+    <SubTexture name="teacher" x="862" y="842" width="150" height="338"/>
     <SubTexture name="volumeBar" x="674" y="209" width="251" height="11"/>
+    <SubTexture name="volumeDecBtn" x="955" y="424" width="18" height="21"/>
     <SubTexture name="volumeIncBtn" x="995" y="30" width="26" height="20"/>
     <SubTexture name="volumeSlider" x="995" y="2" width="26" height="26"/>
     <SubTexture name="warningSign" x="995" y="52" width="23" height="21"/>
