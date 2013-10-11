@@ -44,7 +44,7 @@ package object.chapterOne
 		}
 		
 		private function onSubmitBtnTrigger(e:Event):void{
-			_controller.notifyObserver();
+
 		}
 	}
 }

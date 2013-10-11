@@ -31,10 +31,10 @@ package screen.chapterOne
 		{
 			_commonObject = new Dictionary();
 			_console      = new Console();
-			_controller   = new Controller(_console);
 			_button       = new Button(_controller);
+			_controller   = new Controller();
 			_hero         = new Hero(_controller);
-			
+			_controller.assignObjectController(_console, _hero);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		

@@ -1,5 +1,7 @@
 package controller.chapterOne
 {
+	import controller.chapterOne.HeroController;
+	
 	import object.chapterOne.Console;
 	import object.chapterOne.Hero;
 	
@@ -7,14 +9,21 @@ package controller.chapterOne
 	{
 		private var _console: Console;
 		private var _hero   : Hero;
+		private var _heroController : HeroController;
 		
-		public function Controller(console:Console)
+		public function Controller()
 		{
-			this._console = console;
 		}
 		
-		public function notifyObserver():void{
-						
+		public function notifyObserver(event:Object):void{
+			_heroController.updateHeroPosition();				
+		}
+		
+		public function assignObjectController(console:Console, hero:Hero):void{
+			this._console = console;
+			this._hero    = hero;
+			trace(_hero);
+			_heroController = new HeroController(_hero);
 		}
 	}
 }

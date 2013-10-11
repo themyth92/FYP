@@ -6,17 +6,25 @@ package object.chapterOne
 	
 	import controller.chapterOne.Controller;
 	
+	import flash.ui.Keyboard;
+	
 	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
-	
-	import flash.ui.Keyboard;
 
 	public class Hero extends Sprite
 	{
+		private static const KEY_PRESSED:String    = 'keyPressed';
+		private static const KEY_RELEASED:String   = 'keyReleased';
+		private static const KEY_LEFT:String       = 'keyLeft';
+		private static const KEY_RIGHT:String      = 'keyRight';
+		private static const KEY_DOWN:String       = 'keyDown';
+		private static const KEY_UP:String         = 'keyUp'; 
+		private static const HERO:String           = 'hero';
+		
 		private var _controller:Controller;
 		private var _heroStand :Array;
 		private var _heroRun   :Array;
@@ -120,6 +128,7 @@ package object.chapterOne
 		
 		private function onKeyDown(e:KeyboardEvent):void{
 			if(e.keyCode == Keyboard.LEFT){
+				_controller.notifyObserver({event:KEY_PRESSED, arg:KEY_LEFT, target:HERO});
 				_heroStatus = Constant.HERO_STATUS_LEFT;
 				showHero(2, 1);
 				_speedX = -3;
