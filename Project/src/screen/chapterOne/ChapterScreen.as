@@ -36,7 +36,7 @@ package screen.chapterOne
 			_controller   = new Controller();
 			_hero         = new Hero(_controller);
 			_dialogBubble = new DialogBubble(_controller);
-			_controller.assignObjectController(_console, _hero);
+			_controller.assignObjectController(_console, _hero, _dialogBubble);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		

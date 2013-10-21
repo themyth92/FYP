@@ -19,7 +19,7 @@ package object.chapterOne
 		private var _textField     :TextField;
 		private var _bubbles 		:Image;
 		private var _arrow         :starling.display.Button;
-		private var _dialogCurPos     :uint;
+		private var _dialogCurPos  :uint;
 		
 		public function DialogBubble(controller:Controller)
 		{	
@@ -34,15 +34,15 @@ package object.chapterOne
 		}
 
 		public function changeDialogTextField(text:String):void{
-			
+			_textField.text = text;
 		}
 		
 		private function onAddedToStage(e:Event):void{
 		
-			_bubbles   = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.BUBBLE_DIALOG));
-			_textField = new TextField(Constant.DIALOG_TEXTFIELD_WIDTH , Constant.DIALOG_TEXTFIELD_HEIGHT, Constant.WELCOME_DIALOG ,Constant.GROBOLD_FONT);
-			_arrow     = new starling.display.Button(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.NEXT_ARROW));
-			_dialogCurPos = 0;
+			_bubbles   		= new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.BUBBLE_DIALOG));
+			_textField 		= new TextField(Constant.DIALOG_TEXTFIELD_WIDTH , Constant.DIALOG_TEXTFIELD_HEIGHT, Constant.WELCOME_DIALOG ,Constant.GROBOLD_FONT);
+			_arrow     		= new starling.display.Button(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.NEXT_ARROW));
+			_dialogCurPos 	= 0;
 			
 			this.addChild(_bubbles);
 			this.addChild(_textField);
@@ -66,8 +66,8 @@ package object.chapterOne
 			this.removeChild(_textField);
 			this.removeChild(_arrow);
 			
-			_arrow = null;
-			_bubbles = null;
+			_arrow     = null;
+			_bubbles   = null;
 			_textField = null;
 		}
 		
