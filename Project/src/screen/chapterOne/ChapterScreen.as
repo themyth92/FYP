@@ -26,6 +26,7 @@ package screen.chapterOne
 		private var _button       : Button;
 		private var _controller   : Controller;
 		private var _hero         : Hero;
+		private var _dialogBubble : DialogBubble;
 		
 		public function ChapterScreen()
 		{
@@ -34,6 +35,7 @@ package screen.chapterOne
 			_button       = new Button(_controller);
 			_controller   = new Controller();
 			_hero         = new Hero(_controller);
+			_dialogBubble = new DialogBubble(_controller);
 			_controller.assignObjectController(_console, _hero);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -87,15 +89,13 @@ package screen.chapterOne
 			this.addChild(_console);
 			this.addChild(_button);
 			this.addChild(_hero);
+			this.addChild(_dialogBubble);
 			arrangeTexture();
 		}
 		
 		private function arrangeTexture():void{
 			_commonObject['teacher'].x = 13;
 			_commonObject['teacher'].y = 233;
-			
-			_commonObject['dialogBubble'].x = 52;
-			_commonObject['dialogBubble'].y = 13;
 			
 			_commonObject['heart'].x = 284;
 			_commonObject['heart'].y = 36;
@@ -138,6 +138,9 @@ package screen.chapterOne
 			
 			_hero.x = 300;
 			_hero.y = 500;
+			
+			_dialogBubble.x = 52;
+			_dialogBubble.y = 13;
 		}
 	}
 }
