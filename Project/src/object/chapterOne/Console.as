@@ -14,8 +14,9 @@ package object.chapterOne
 	
 	public class Console extends Sprite
 	{
-		private var _textField    :TextArea;
-		private var _consoleNotes :Image;
+		private var _textField    : TextArea;
+		private var _consoleNotes : Image;
+		private var _text         : String;
 		
 		public function Console()
 		{
@@ -24,6 +25,18 @@ package object.chapterOne
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
+		public function get text():String
+		{
+			_text = _textField.text;
+			
+			return _text;
+		}
+
+		public function set text(value:String):void
+		{
+			_text = value;
+		}
+
 		private function onAddedToStage(e:Event):void{
 					
 			try{
@@ -38,6 +51,7 @@ package object.chapterOne
 				_textField.isEditable 					   = true;
 				_textField.textEditorProperties.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
 				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
+				
 			}
 			catch(e:Error){
 				

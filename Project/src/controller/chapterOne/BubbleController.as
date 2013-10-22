@@ -14,7 +14,7 @@ package controller.chapterOne
 		}
 		
 		public function changeDialog(dialogNum:uint):void{
-			trace(dialogNum);
+
 			try{
 				
 				dialogNum ++ ;

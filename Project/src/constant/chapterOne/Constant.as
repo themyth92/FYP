@@ -54,6 +54,9 @@ package constant.chapterOne
 		/* Arrow instruction */
 		public static const INSTRUC_ARROW_LEFT:String   = 'arrowInsLeft';
 		public static const INSTRUC_ARROW_RIGHT:String  = 'arrowInsRight';
+		
+		/* Submit Button */
+		public static const SUBMIT_BTN:String           = 'submitBtn';
 		/* Event */
 		public static const TRIGGER : String  			= 'trigger';
  	}

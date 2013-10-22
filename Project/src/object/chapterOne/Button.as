@@ -32,8 +32,8 @@ package object.chapterOne
 			_submitBtn.hoverSkin   = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.SUBMIT_HOVER));
 			
 			this.addChild(_submitBtn);
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_submitBtn.addEventListener(Event.TRIGGERED, onSubmitBtnTrigger);
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
@@ -44,7 +44,8 @@ package object.chapterOne
 		}
 		
 		private function onSubmitBtnTrigger(e:Event):void{
-
+			
+			_controller.notifyObserver({event:Constant.TRIGGER, arg:'', target:Constant.SUBMIT_BTN});
 		}
 	}
 }
