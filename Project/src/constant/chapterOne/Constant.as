@@ -37,11 +37,10 @@ package constant.chapterOne
 		public static const DIALOG_NEXT_ARROW:String     = 'dialogNextArrow';
 		public static const DIALOG_TEXTFIELD_WIDTH:uint  = 200;
 		public static const DIALOG_TEXTFIELD_HEIGHT:uint = 200;
-		public static const DIALOG_POSX:uint             = 0;
-		public static const DIALOG_POSY:uint             = 0;
+		public static const DIALOG_POSX:uint             = 30;
+		public static const DIALOG_POSY:int              = -10;
 		public static const DIALOG_ARROW_POSX:uint       = 0;
 		public static const DIALOG_ARROW_POSY:uint       = 0;
-		
 		
 		public static const WELCOME_DIALOG:String	       = 'Welcome to our class. Please click the arrow below to continue the conversation.';
 		public static const DIALOG:Array                 = new Array('In this class, we assume that you do not know anything about programming.',
@@ -52,6 +51,9 @@ package constant.chapterOne
 																		'Let us create a brick on the screen. ',
 																		'You should follow the exact instruction. If not a red sign will appear to show you if your texts are false.',
 																		'Type in the box "createBrick()" and press the submit button.');
+		/* Arrow instruction */
+		public static const INSTRUC_ARROW_LEFT:String   = 'arrowInsLeft';
+		public static const INSTRUC_ARROW_RIGHT:String  = 'arrowInsRight';
 		/* Event */
 		public static const TRIGGER : String  			= 'trigger';
  	}
