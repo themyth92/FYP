@@ -4,36 +4,34 @@ package object.chapterOne
 	
 	import constant.chapterOne.Constant;
 	
+	import feathers.controls.TextArea;
 	import feathers.controls.TextInput;
 	import feathers.controls.text.TextFieldTextEditor;
 	import feathers.core.ITextEditor;
 	
 	import flash.text.TextFormat;
+	import flash.ui.Keyboard;
 	
 	import mx.utils.StringUtil;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	
-	import flash.ui.Keyboard;
-	
 	import starling.events.KeyboardEvent;
 	import starling.text.TextField;
 	
+	
 	public class Console extends Sprite
 	{
-		private var _textField    : TextInput;
-		private var _consoleNotes : Image;
-		private var _text         : String;
-		private var _errorSign    : Image;
-		private var _enteredText 	:TextInput = new TextInput();
-		private var _actionCounter 	:Number = 0;
-		private var _nextLineIndex 	:Number = 0;
+		private var _textField    	: TextInput;
+		private var _consoleNotes	: Image;
+		private var _text         	: String;
+		private var _errorSign    	: Image;
+		private var _enteredText 	: TextArea = new TextArea();
+		private var _executed		: Boolean = false;
 		
 		public function Console()
-		{
-			
+		{			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
@@ -65,6 +63,13 @@ package object.chapterOne
 				_errorSign.visible = true;
 			else
 				_errorSign.visible = false;
+		}
+		
+		private function isExecuted(executed:Boolean):void{
+			if(executed)
+				_executed = true;
+			else
+				_executed = false;
 		}
 
 		private function onAddedToStage(e:Event):void{
@@ -99,7 +104,6 @@ package object.chapterOne
 				_textField.maxChars                        = 30;
 				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 				
-				
 				_errorSign.x                               = Constant.WARNING_SIGN_POSX;
 				_errorSign.y                               = Constant.WARNING_SIGN_POSY;
 			}
@@ -118,8 +122,8 @@ package object.chapterOne
 				
 				toggleErrorSign();
 				_textField.addEventListener(Event.CHANGE, onTextFieldChange);
+				this.addEventListener(KeyboardEvent.KEY_DOWN, captureText);
 			}
-			this.addEventListener(KeyboardEvent.KEY_DOWN, captureText);
 		}
 		
 		private function onTextFieldChange(e:Event):void{
@@ -127,49 +131,61 @@ package object.chapterOne
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
-			
 			this.removeChild(_consoleNotes);
 			this.removeChild(_textField);
-			_consoleNotes = null;
-			_textField    = null;
+			this.removeChild(_enteredText);
+			_consoleNotes 	= null;
+			_textField   	= null;
+			_enteredText 	= null;
 		}
 		
 		private function captureText(e:KeyboardEvent): void
 		{
-			var _str			:String = _textField.text;
-			var _subString		:String;
+			var _str	:String;
+			_str = _textField.text;
+			
+			toggleErrorSign(false);
+			isExecuted(false);
 			
 			if(e.keyCode == Keyboard.ENTER)
-			{	
-				_subString = _str.substr(_nextLineIndex,_str.length);
-				
-				if(_subString.indexOf("(") == -1)
-				{
-					//output error
-					errorDisplay();
-				}	
-				else
-				{
-					if(_subString.charAt(_subString.indexOf("(") -1 ) == " ")
-						functionWithSpace(_subString);
+			{
+				if(checkSyntax(_str))
+				{		
+					if(_str.indexOf("(") == -1)
+					{
+						//output error
+						toggleErrorSign(true);
+					}	
 					else
-						functionWithoutSpace(_subString);
+					{
+						if(_str.charAt(_str.indexOf("(") -1 ) == " ")
+							functionWithSpace(_str);
+						else
+							functionWithoutSpace(_str);
+						isExecuted(true);
+					}
+				}
+				else 
+				{
+					toggleErrorSign(true);
 				}
 				
-				_actionCounter ++;
-				_nextLineIndex = _str.length + 1;
+				if(_executed)
+				{
+					_textField.text = "";
+				}
 			}
 		}
+	
 		
 		private function functionWithSpace(s:String):void
 		{
 			var _actionString		:String;
 			var _openBracketIndex 	:Number;
-			var _closeBracketIndex	:Number;
 			var _objectLocation		:Number;
+			var _objectType			:String;
 			
 			_openBracketIndex 	= s.indexOf("(");
-			_closeBracketIndex 	= s.indexOf(")");
 			
 			_actionString = s.substr(0,_openBracketIndex - 1);
 			_actionString.toLowerCase();
@@ -177,24 +193,32 @@ package object.chapterOne
 			switch(_actionString){
 				case "create":
 					_objectLocation = getLocation(s);
-					if(_objectLocation == 0)
-					{
-						errorDisplay();
+					_objectType = getObjectType(s);
+					if(_objectType == null)
+					{	
+						toggleErrorSign(true);
 						break;
 					}
-					createObject(_objectLocation);
+					if(_objectLocation == 0)
+					{
+						toggleErrorSign(true);
+						break;
+					}
+					createObject(_objectType,_objectLocation);
 					break;
 				case "delete":
 					_objectLocation = getLocation(s);
+					_objectType = getObjectType(s);
 					if(_objectLocation == 0)
 					{
-						errorDisplay();
+						toggleErrorSign(true);
 						break;
 					}
 					deleteObject(_objectLocation);
 					break;
 				default:
-					errorDisplay();
+					toggleErrorSign(true);
+					isExecuted(false);
 					break;
 			}
 		}
@@ -203,11 +227,10 @@ package object.chapterOne
 		{
 			var _actionString		:String;
 			var _openBracketIndex 	:Number;
-			var _closeBracketIndex	:Number;
 			var _objectLocation		:Number;
+			var _objectType			:String;
 			
 			_openBracketIndex 	= s.indexOf("(");
-			_closeBracketIndex 	= s.indexOf(")");
 			
 			_actionString = s.substr(0,_openBracketIndex);
 			_actionString.toLowerCase();
@@ -215,49 +238,73 @@ package object.chapterOne
 			switch(_actionString){
 				case "create":
 					_objectLocation = getLocation(s);
-					if(_objectLocation == 0)
-					{
-						errorDisplay();
+					_objectType = getObjectType(s);
+					if(_objectType == null)
+					{	
+						toggleErrorSign(true);
 						break;
 					}
-					createObject(_objectLocation);
+					if(_objectLocation == 0)
+					{
+						toggleErrorSign(true);
+						break;
+					}
+					createObject(_objectType,_objectLocation);
 					break;
 				case "delete":
 					_objectLocation = getLocation(s);
+					_objectType = getObjectType(s);
 					if(_objectLocation == 0)
 					{
-						errorDisplay();
+						toggleErrorSign(true);
 						break;
 					}
 					deleteObject(_objectLocation);
 					break;
 				default:
-					errorDisplay();
+					isExecuted(false);
+					toggleErrorSign(true);
 					break;
 			}
 		}
 		
+		//Get location of the object => x,y coordinate
 		private function getLocation(s:String):Number
 		{
-			var _openBracketIndex 		:Number;
+			var _commaIndex				:Number;
 			var _closeBracketIndex		:Number;
 			var _objectLocationString	:String;
 			
-			_openBracketIndex 	= s.indexOf("(");
+			_commaIndex 	= s.indexOf(",");
 			_closeBracketIndex 	= s.indexOf(")");
 			
-			if(_openBracketIndex == _closeBracketIndex - 1)
+			if(_commaIndex == _closeBracketIndex - 1)
 				return 0;
 			else
 			{
-				_objectLocationString = s.substr(_openBracketIndex + 1, _closeBracketIndex - _openBracketIndex - 1);
+				_objectLocationString = s.substr(_commaIndex + 1, _closeBracketIndex - _commaIndex - 1);
 				return Number(_objectLocationString);
 			}
-			//_enteredText.text = _objectLocationString + " " + s.indexOf("(") + " " + s.indexOf(")");
-			//_enteredText.visible = true;
 		}
 		
-		private function createObject(n:Number):void
+		//Get type of the object: brick, tree, hero, start, goal
+		private function getObjectType(s:String):String{
+			var _openBracketIndex	:Number;
+			var _commaIndex			:Number;
+			var _type				:String;
+			_openBracketIndex = s.indexOf("(");
+			_commaIndex = s.indexOf(",");
+			
+			if(_openBracketIndex == _commaIndex - 1)
+				return null
+			else
+			{
+				_type = s.substr(_openBracketIndex + 1, _commaIndex - _openBracketIndex - 1);
+				return _type;
+			}
+		}
+		
+		private function createObject(s:String,n:Number):void
 		{
 			switch(n){
 				case 10:
@@ -269,7 +316,7 @@ package object.chapterOne
 					_enteredText.y = -50;
 					break;
 			}
-			_enteredText.text = n.toString();				
+			_enteredText.text = s + " " + n.toString();
 			_enteredText.visible = true;
 		}
 		
@@ -278,10 +325,16 @@ package object.chapterOne
 			_enteredText.visible = false;
 		}
 		
-		private function errorDisplay():void
+		private function checkSyntax(s:String):Boolean 
 		{
-			_enteredText.text = "error"
-			_enteredText.visible = true;	
+			var _closeBracketIndex:Number;
+			
+			_closeBracketIndex = s.lastIndexOf(")");
+			if(s.charAt(_closeBracketIndex + 1) == ";")
+				return true;
+			else
+				return false;
 		}
+		
 	}
 }
