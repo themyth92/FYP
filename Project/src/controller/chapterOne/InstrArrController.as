@@ -12,7 +12,7 @@ package controller.chapterOne
 		public function InstrArrController(arrow:InstrArrow)
 		{
 			this._instrArrow = arrow;
-			_dialogArrow  = [[830, 200, 15, 0 ], [0, 0, 0, 0]];
+			_dialogArrow  = [[330, 200, 15, 0 ], [0, 0, 0, 0]];
 		}
 		
 		public function showInstrArrowFromDialogBubble(index:int):void{;

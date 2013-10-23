@@ -71,7 +71,7 @@ package screen.chapterOne
 				}
 			}
 			catch(e:Error){
-				
+				trace(index);
 				trace('Array out of bound or can not get the texture in chapter one');
 			}
 			
@@ -99,29 +99,20 @@ package screen.chapterOne
 		}
 		
 		private function arrangeTexture():void{
-			_commonObject['teacher'].x = 13;
-			_commonObject['teacher'].y = 233;
+			_commonObject['teacher'].x = 4;
+			_commonObject['teacher'].y = 198;
 			
-			_commonObject['heart'].x = 284;
-			_commonObject['heart'].y = 36;
+			_commonObject['mainFrame'].x = 96;
+			_commonObject['mainFrame'].y = 75;
 			
-			_commonObject['scoreFace'].x = 503;
-			_commonObject['scoreFace'].y = 34;
+			_commonObject['grassBackground'].x = 107;
+			_commonObject['grassBackground'].y = 82;
 			
-			_commonObject['mainFrame'].x = 150;
-			_commonObject['mainFrame'].y = 97;
+			_commonObject['heart'].x = 192;
+			_commonObject['heart'].y = 33;
 			
-			_commonObject['grassBackground'].x = 165;
-			_commonObject['grassBackground'].y = 108;
-			
-			_commonObject['frameWithIndex'].x =164;
-			_commonObject['frameWithIndex'].y = 108;
-			
-			_commonObject['heart'].x = 287;
-			_commonObject['heart'].y = 37;
-			
-			_commonObject['scoreFace'] = 506;
-			_commonObject['scoreFace'] = 34;
+			_commonObject['scoreFace'] = 375;
+			_commonObject['scoreFace'] = 32;
 			
 			_commonObject['volumeBar'].x = 838;
 			_commonObject['volumeBar'].y = 549;
@@ -132,20 +123,20 @@ package screen.chapterOne
 			_commonObject['volumeIncBtn'].x = 1063;
 			_commonObject['volumeIncBtn'].y = 566;
 			
-			_commonObject['bottomSelectionFrame'].x = 150;
-			_commonObject['bottomSelectionFrame'].y = 635;
+			_commonObject['bottomSelectionFrame'].x = 96;
+			_commonObject['bottomSelectionFrame'].y = 451;
 			
-			_console.x = 853;
-			_console.y = 58;
+			_console.x = 611;
+			_console.y = 48;
 			
-			_button.x  = 500;
-			_button.y  = 500;
+			_button.x  = 614;
+			_button.y  = 384;
 			
 			_hero.x = 300;
 			_hero.y = 500;
 			
-			_dialogBubble.x = 52;
-			_dialogBubble.y = 13;
+			_dialogBubble.x = 32;
+			_dialogBubble.y = 20;
 		}
 	}
 }
