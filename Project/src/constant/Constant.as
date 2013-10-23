@@ -26,7 +26,6 @@ package constant
 		//Chapter 1 object dictionary
 		public static const CHAP_ONE_TEXTURE_ARRAY:Array     = new Array('background', 'mainFrame','grassBackground',
 															   				'heart','bottomSelectionFrame',
-															   				'frameWithIndex',
 															   				'nextArrow', 'scoreFace',
 															   				'volumeDecBtn', 'volumeBar',
 															   				'volumeIncBtn', 'volumeSlider',

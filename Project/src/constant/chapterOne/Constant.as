@@ -12,8 +12,8 @@ package constant.chapterOne
 		
 		
 		/* Console */
-		public static const TEXTFIELD_WIDTH:uint   	   = 216;
-		public static const TEXTFIELD_HEIGTH:uint  	   = 235;
+		public static const TEXTFIELD_WIDTH:uint   	   = 151;
+		public static const TEXTFIELD_HEIGTH:uint  	   = 32;
 		
 		public static const CONSOLE_NORMAL:String        = 'Console/ConsoleNormal';
 		public static const CONSOLE_FOCUS:String         = 'Console/ConsoleFocus';
@@ -21,8 +21,8 @@ package constant.chapterOne
 		public static const NOTE_POSX:uint         	   = 0;
 		public static const NOTE_POSY:uint         	   = 0;
 		
-		public static const TEXTFIELD_POSX:uint    	   = 17;
-		public static const TEXTFIELD_POSY:uint    	   = 87;
+		public static const TEXTFIELD_POSX:uint    	   = 10;
+		public static const TEXTFIELD_POSY:uint    	   = 67;
 		
 		public static const WARNING_SIGN  :String        = 'warningSign';
 		public static const WARNING_SIGN_POSX:uint       = 200;
@@ -46,8 +46,8 @@ package constant.chapterOne
 		public static const DIALOG_NEXT_ARROW:String     = 'dialogNextArrow';
 		public static const DIALOG_TEXTFIELD_WIDTH:uint  = 200;
 		public static const DIALOG_TEXTFIELD_HEIGHT:uint = 200;
-		public static const DIALOG_POSX:uint             = 30;
-		public static const DIALOG_POSY:int              = -10;
+		public static const DIALOG_POSX:uint             = 10;
+		public static const DIALOG_POSY:int              = -20;
 		public static const DIALOG_ARROW_POSX:uint       = 0;
 		public static const DIALOG_ARROW_POSY:uint       = 0;
 		
