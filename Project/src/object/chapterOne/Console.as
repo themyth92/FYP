@@ -4,9 +4,13 @@ package object.chapterOne
 	
 	import constant.chapterOne.Constant;
 	
-	import feathers.controls.TextArea;
+	import feathers.controls.TextInput;
+	import feathers.controls.text.TextFieldTextEditor;
+	import feathers.core.ITextEditor;
 	
 	import flash.text.TextFormat;
+	
+	import mx.utils.StringUtil;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -14,9 +18,10 @@ package object.chapterOne
 	
 	public class Console extends Sprite
 	{
-		private var _textField    : TextArea;
+		private var _textField    : TextInput;
 		private var _consoleNotes : Image;
 		private var _text         : String;
+		private var _errorSign    : Image;
 		
 		public function Console()
 		{
@@ -29,6 +34,7 @@ package object.chapterOne
 		{
 			_text = _textField.text;
 			
+			_text = StringUtil.trim(_text);
 			return _text;
 		}
 
@@ -36,12 +42,29 @@ package object.chapterOne
 		{
 			_text = value;
 		}
+		
+		public function setConsoleEditable(isEditable:Boolean = true):void{
+			
+			if(isEditable)
+				_textField.isEditable = true;
+			else
+				_textField.isEditable = false;
+		}
+		
+		public function toggleErrorSign(isShow:Boolean = false):void{
+			
+			if(isShow)
+				_errorSign.visible = true;
+			else
+				_errorSign.visible = false;
+		}
 
 		private function onAddedToStage(e:Event):void{
 					
 			try{
 				
-				_textField    = new TextArea();
+				_errorSign    = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.WARNING_SIGN));
+				_textField    = new TextInput();
 				_consoleNotes = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE));
 				
 				_textField.x          					   = Constant.TEXTFIELD_POSX;
@@ -49,20 +72,39 @@ package object.chapterOne
 				_textField.width      					   = Constant.TEXTFIELD_WIDTH;
 				_textField.height     					   = Constant.TEXTFIELD_HEIGTH;
 				_textField.isEditable 					   = true;
-				_textField.textEditorProperties.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
+				
+				_textField.textEditorFactory               = function():ITextEditor{
+					var format:TextFieldTextEditor = new TextFieldTextEditor();
+					format.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
+					format.embedFonts = true;
+					return format;
+				};
+				
+				_textField.maxChars                        = 30;
 				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 				
+				
+				_errorSign.x                               = Constant.WARNING_SIGN_POSX;
+				_errorSign.y                               = Constant.WARNING_SIGN_POSY;
 			}
 			catch(e:Error){
 				
 				trace('Can not load texture');
 			}
 			
-			if(_consoleNotes != null && _textField != null){
+			if(_consoleNotes != null && _textField != null && _errorSign != null){
 				
 				this.addChild(_consoleNotes);
 				this.addChild(_textField);
+				this.addChild(_errorSign);
+				
+				toggleErrorSign();
+				_textField.addEventListener(Event.CHANGE, onTextFieldChange);
 			}
+		}
+		
+		private function onTextFieldChange(e:Event):void{
+			trace('change');
 		}
 		
 		private function onRemoveFromStage(e:Event):void{

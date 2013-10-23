@@ -9,6 +9,9 @@ package constant.chapterOne
 		
 		//function
 		public static const GROBOLD_FONT: String   	   = 'Grobold';
+		
+		
+		/* Console */
 		public static const TEXTFIELD_WIDTH:uint   	   = 216;
 		public static const TEXTFIELD_HEIGTH:uint  	   = 235;
 		
@@ -17,9 +20,15 @@ package constant.chapterOne
 		
 		public static const NOTE_POSX:uint         	   = 0;
 		public static const NOTE_POSY:uint         	   = 0;
+		
 		public static const TEXTFIELD_POSX:uint    	   = 17;
 		public static const TEXTFIELD_POSY:uint    	   = 87;
 		
+		public static const WARNING_SIGN  :String        = 'warningSign';
+		public static const WARNING_SIGN_POSX:uint       = 200;
+		public static const WARNING_SIGN_POSY:uint       = 89;
+		
+		/* Submit btn */
 		public static const SUBMIT_NORMAL:String   	   = 'submitBtn/submitBtn_01';
 		public static const SUBMIT_DISABLED:String 	   = 'submitBtn/submitBtn_02';
 		public static const SUBMIT_HOVER:String    	   = 'submitBtn/submitBtn_04';

@@ -16,8 +16,24 @@ package controller.chapterOne
 		}
 		
 		private function analyzeTextInput(text:String):void{
-			var commandArray : Array = text.split('\\');
-			trace(commandArray[0]);
+			
+			//if(checkWhiteSpace(text));
+			//continue process the command here
+		}
+		
+		private function checkWhiteSpace(text:String):Boolean{
+			
+			if(text != null){
+				
+				for(var i:uint = 0 ; i < text.length ; i++){
+					if(text[i] == ' ')
+						return false;
+				}
+				
+				return true;
+			}
+			else
+				return false;
 		}
 	}
 }
