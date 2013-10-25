@@ -33,7 +33,7 @@ package screen.chapterOne
 		public function ChapterScreen()
 		{
 			_commonObject = new Dictionary();
-			_console      = new Console();
+			_console      = new Console(_controller);
 			_controller   = new Controller();
 			_hero         = new Hero(_controller);
 			_dialogBubble = new DialogBubble(_controller);

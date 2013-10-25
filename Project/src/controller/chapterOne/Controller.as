@@ -52,13 +52,18 @@ package controller.chapterOne
 			
 			this._console 		    = console;
 			this._hero    	        = hero;
-			this._dialogBubble     = dialogBubble;
-			this._instrArrow       = instrArrow;
+			this._dialogBubble      = dialogBubble;
+			this._instrArrow        = instrArrow;
 			
 			_heroController         = new HeroController(_hero);
 			_dialogBubbleController = new BubbleController(_dialogBubble);
 			_instrArrowController   = new InstrArrController(_instrArrow);
 			_consoleController      = new ConsoleController(_console);
+		}
+		
+		public function notifyConsoleController():void
+		{
+			_consoleController.consoleControllerActivate();
 		}
 	}
 }
