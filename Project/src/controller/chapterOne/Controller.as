@@ -38,6 +38,7 @@ package controller.chapterOne
 						break;
 						case Constant.SUBMIT_BTN:
 							_consoleController.consoleControllerActivate();
+							
 						break;
 						default:
 						break;
