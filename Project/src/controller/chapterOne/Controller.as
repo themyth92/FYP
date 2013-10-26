@@ -5,11 +5,13 @@ package controller.chapterOne
 	import controller.chapterOne.BubbleController;
 	import controller.chapterOne.ConsoleController;
 	import controller.chapterOne.HeroController;
+	import controller.chapterOne.IndexBoardController;
 	import controller.chapterOne.InstrArrController;
 	
 	import object.chapterOne.Console;
 	import object.chapterOne.DialogBubble;
 	import object.chapterOne.Hero;
+	import object.chapterOne.IndexBoard;
 	import object.chapterOne.InstrArrow;
 	
 	public class Controller
@@ -19,9 +21,11 @@ package controller.chapterOne
 		private var _dialogBubble	 		 : DialogBubble;
 		private var _heroController 		 : HeroController;
 		private var _instrArrow     		 : InstrArrow;
+		private var _indexBoard             : IndexBoard;
 		private var _dialogBubbleController : BubbleController;
 		private var _instrArrowController 	 : InstrArrController;
 		private var _consoleController      : ConsoleController;
+		private var _indexBoardController   : IndexBoardController;
 		
 		public function Controller()
 		{
@@ -37,8 +41,8 @@ package controller.chapterOne
 							_instrArrowController.showInstrArrowFromDialogBubble(e.arg);
 						break;
 						case Constant.SUBMIT_BTN:
-							_consoleController.consoleControllerActivate();
-							
+							var commandArr:Array = _consoleController.consoleControllerActivate();
+							_indexBoardController.analyzeArrayInput(commandArr);
 						break;
 						default:
 						break;
@@ -49,22 +53,19 @@ package controller.chapterOne
 				trace('Error with event undefined');
 		}
 		
-		public function assignObjectController(console:Console, hero:Hero, dialogBubble:DialogBubble, instrArrow:InstrArrow):void{
+		public function assignObjectController(console:Console, hero:Hero, dialogBubble:DialogBubble, instrArrow:InstrArrow, indexBoard:IndexBoard):void{
 			
 			this._console 		    = console;
 			this._hero    	        = hero;
 			this._dialogBubble      = dialogBubble;
 			this._instrArrow        = instrArrow;
+			this._indexBoard        = indexBoard;
 			
 			_heroController         = new HeroController(_hero);
 			_dialogBubbleController = new BubbleController(_dialogBubble);
 			_instrArrowController   = new InstrArrController(_instrArrow);
 			_consoleController      = new ConsoleController(_console);
-		}
-		
-		public function notifyConsoleController():void
-		{
-			_consoleController.consoleControllerActivate();
+			_indexBoardController   = new IndexBoardController(_indexBoard);
 		}
 	}
 }

@@ -50,7 +50,7 @@ package object.chapterOne
 			_patternIndex.push(index);
 		}
 		
-		private function positionObjectOnStage(obj:Image, index:uint){
+		private function positionObjectOnStage(obj:Image, index:uint):void{
 			
 			if(index > 0 && index <= MAXIMUM_ROW*MAXIMUM_COLUMN){
 				

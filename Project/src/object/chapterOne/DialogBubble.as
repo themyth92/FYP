@@ -15,7 +15,7 @@ package object.chapterOne
 	public class DialogBubble extends Sprite
 	{
 		
-		private var _controller    	: Controller;
+		private var _controller    	:Controller;
 		private var _textField     	:TextField;
 		private var _bubbles 			:Image;
 		private var _arrow         	:starling.display.Button;

@@ -100,7 +100,7 @@ package object.chapterOne
 				_enteredText.textEditorProperties.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
 				_enteredText.backgroundSkin = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 				
-				_textField.maxChars                        = 30;
+				_textField.maxChars                        = 20;
 				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 				
 				_errorSign.x                               = Constant.WARNING_SIGN_POSX;
@@ -120,18 +120,14 @@ package object.chapterOne
 				_enteredText.visible = false;
 				
 				toggleErrorSign();
-				//_textField.addEventListener(Event.CHANGE, onTextFieldChange);
+
 				_textField.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
 			}
 		}
 		
-		private function onTextInputEnter(e:FeathersEventType):void{
-			_controller.notifyConsoleController()
+		private function onTextInputEnter(e:Event):void{
+			_controller.notifyObserver(null);
 		}
-		
-		//private function onTextFieldChange(e:Event):void{
-			//trace('change');
-		//}
 		
 		private function onRemoveFromStage(e:Event):void{
 			this.removeChild(_consoleNotes);

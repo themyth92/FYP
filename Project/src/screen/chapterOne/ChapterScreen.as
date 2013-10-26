@@ -14,6 +14,7 @@ package screen.chapterOne
 	import object.chapterOne.Hero;
 	import object.chapterOne.IndexBoard;
 	import object.chapterOne.InstrArrow;
+	import object.chapterOne.PatternList;
 	import object.chapterOne.Score;
 	
 	import starling.display.Image;
@@ -29,18 +30,22 @@ package screen.chapterOne
 		private var _hero         : Hero;
 		private var _dialogBubble : DialogBubble;
 		private var _instrArrow   : InstrArrow;
+		private var _indexBoard   : IndexBoard;
+		private var _patternList  : PatternList;
 		
 		public function ChapterScreen()
 		{
 			_commonObject = new Dictionary();
-			_console      = new Console(_controller);
 			_controller   = new Controller();
+			_console      = new Console(_controller);
 			_hero         = new Hero(_controller);
 			_dialogBubble = new DialogBubble(_controller);
 			_button       = new Button(_controller);
 			_instrArrow   = new InstrArrow();
+			_patternList  = new PatternList();
+			_indexBoard   = new IndexBoard();
 			
-			_controller.assignObjectController(_console, _hero, _dialogBubble, _instrArrow);
+			_controller.assignObjectController(_console, _hero, _dialogBubble, _instrArrow, _indexBoard);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -95,6 +100,8 @@ package screen.chapterOne
 			this.addChild(_hero);
 			this.addChild(_dialogBubble);
 			this.addChild(_instrArrow);
+			this.addChild(_patternList);
+			this.addChild(_indexBoard);
 			arrangeTexture();
 		}
 		

@@ -10,11 +10,11 @@ package controller.chapterOne
 	{
 		private var _console 					:Console;
 		private var _gotError					:Boolean;
-		private static const MIN_INDEX			:Number = 1;
-		private static const MAX_INDEX			:Number = 96;
+		private static const MIN_INDEX		:Number = 1;
+		private static const MAX_INDEX		:Number = 96;
 		private static const OBJECT_TYPE		:Array = new Array("brick", "tree", "bush");
 		private static const ACTION_TYPE 		:Array = new Array("create", "delete");
-		private static const INVALID_ACTION		:Number = -1; 
+		private static const INVALID_ACTION	:Number = -1; 
 		private static const INVALID_LOCATION	:Number = -1;
 		private static const INVALID_TYPE		:String = null;
 		
@@ -24,9 +24,9 @@ package controller.chapterOne
 			this._gotError	= false;
 		}
 		
-		public function consoleControllerActivate():void
+		public function consoleControllerActivate():Array
 		{
-			analyzeTextInput(_console.text);
+			return analyzeTextInput(_console.text);
 		}
 		
 		private function analyzeTextInput(text:String):Array
