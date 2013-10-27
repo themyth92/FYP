@@ -26,6 +26,10 @@ package object.chapterOne
 	
 	public class Console extends Sprite
 	{
+		private static const WARNING_SIGN_POSX:uint       = 130;
+		private static const WARNING_SIGN_POSY:uint       = 73;
+		
+		
 		private var _textField    	: TextInput;
 		private var _consoleNotes	: Image;
 		private var _text         	: String;
@@ -103,8 +107,8 @@ package object.chapterOne
 				_textField.maxChars                        = 20;
 				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 				
-				_errorSign.x                               = Constant.WARNING_SIGN_POSX;
-				_errorSign.y                               = Constant.WARNING_SIGN_POSY;
+				_errorSign.x                               = WARNING_SIGN_POSX;
+				_errorSign.y                               = WARNING_SIGN_POSY;
 			}
 			catch(e:Error){
 				

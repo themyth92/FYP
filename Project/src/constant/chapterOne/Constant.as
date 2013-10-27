@@ -25,14 +25,6 @@ package constant.chapterOne
 		public static const TEXTFIELD_POSY:uint    	   = 67;
 		
 		public static const WARNING_SIGN  :String        = 'warningSign';
-		public static const WARNING_SIGN_POSX:uint       = 200;
-		public static const WARNING_SIGN_POSY:uint       = 89;
-		
-		/* Submit btn */
-		public static const SUBMIT_NORMAL:String   	   = 'submitBtn/submitBtn_01';
-		public static const SUBMIT_DISABLED:String 	   = 'submitBtn/submitBtn_02';
-		public static const SUBMIT_HOVER:String    	   = 'submitBtn/submitBtn_04';
-		public static const SUBMIT_CLICK:String    	   = 'submitBtn/submitBtn_03';
 		
 		public static const HERO_MALE_STAND:Array        = new Array('Male/male_up_01', 'Male/male_down_01','Male/male_left_01', 'Male/male_right_01');
 		public static const HERO_MALE_RUN:Array          = new Array('Male/male_up_', 'Male/male_down_', 'Male/male_left_', 'Male/male_right_');
@@ -64,9 +56,10 @@ package constant.chapterOne
 		public static const INSTRUC_ARROW_LEFT:String   = 'arrowInsLeft';
 		public static const INSTRUC_ARROW_RIGHT:String  = 'arrowInsRight';
 		
-		/* Submit Button */
+		/* Button */
 		public static const SUBMIT_BTN:String           = 'submitBtn';
+		public static const PREVIEW_BTN:String          = 'previewBtn';
 		/* Event */
-		public static const TRIGGER : String  			= 'trigger';
+		public static const TRIGGER : String  		  = 'trigger';
  	}
 }

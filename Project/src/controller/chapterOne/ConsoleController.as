@@ -41,6 +41,7 @@ package controller.chapterOne
 			str = toNonWhiteSpaceString(text);
 			
 			_gotError = false;
+			_console.displayError(true);
 			//didn't check for error => no error => turn off error display
 			if(_console.displayError(_gotError))
 			{

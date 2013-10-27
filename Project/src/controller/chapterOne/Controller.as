@@ -40,7 +40,7 @@ package controller.chapterOne
 							_dialogBubbleController.changeDialog(e.arg);
 							_instrArrowController.showInstrArrowFromDialogBubble(e.arg);
 						break;
-						case Constant.SUBMIT_BTN:
+						case Constant.PREVIEW_BTN:
 							var commandArr:Array = _consoleController.consoleControllerActivate();
 							_indexBoardController.analyzeArrayInput(commandArr);
 						break;

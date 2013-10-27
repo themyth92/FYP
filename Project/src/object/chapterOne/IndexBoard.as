@@ -27,7 +27,7 @@ package object.chapterOne
 		private function onAddedToStage(e:Event):void{
 			
 			_patternCollection = new Vector.<Image>();
-			_patternIndex      = new Vector.<Image>();
+			_patternIndex      = new Vector.<uint>();
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
