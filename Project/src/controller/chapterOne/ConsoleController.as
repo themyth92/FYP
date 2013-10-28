@@ -10,18 +10,24 @@ package controller.chapterOne
 	{
 		private var _console 					:Console;
 		private var _gotError					:Boolean;
-		private static const MIN_INDEX		:Number = 1;
-		private static const MAX_INDEX		:Number = 96;
+		private var _actionType					:Number;
+		private var _locationIndex				:Number;
+		private var _typeIndex					:String;
+		private static const MIN_INDEX			:Number = 1;
+		private static const MAX_INDEX			:Number = 96;
 		private static const OBJECT_TYPE		:Array = new Array("brick", "tree", "bush");
 		private static const ACTION_TYPE 		:Array = new Array("create", "delete");
-		private static const INVALID_ACTION	:Number = -1; 
+		private static const INVALID_ACTION		:Number = -1; 
 		private static const INVALID_LOCATION	:Number = -1;
 		private static const INVALID_TYPE		:String = null;
 		
 		public function ConsoleController(console:Console)
 		{
-			this._console 	= console;
-			this._gotError	= false;
+			this._console 		= console;
+			this._gotError		= false;
+			this._actionType 	= -1;
+			this._locationIndex = -1;
+			this._typeIndex		= null;
 		}
 		
 		public function consoleControllerActivate():Array
@@ -32,9 +38,6 @@ package controller.chapterOne
 		private function analyzeTextInput(text:String):Array
 		{	
 			var str				: String;
-			var locationIndex	: Number;
-			var typeIndex		: String;
-			var actionType		: Number;
 			var resultArray		: Array;
 			
 			//remove all whitespace from string
@@ -47,29 +50,37 @@ package controller.chapterOne
 			{
 				if(checkSyntax(str)) //check syntax error 
 				{
-					actionType 		= getAction(str);
-					locationIndex 	= getLocation(str);
-					typeIndex 		= getObjectType(str);
+					_actionType 	= getAction(str);
+					_locationIndex 	= getLocation(str);
+					_typeIndex 		= getObjectType(str);
 					
-					if(actionType == INVALID_ACTION)
+					if(_actionType == INVALID_ACTION)
 					{
 						_gotError 	= true;
 						resultArray = new Array(false);
 					}
-					else if(locationIndex == INVALID_LOCATION)
+					else if(_locationIndex == INVALID_LOCATION)
 					{
 						_gotError 	= true;
 						resultArray = new Array(false);
 					}
-					else if(typeIndex == INVALID_TYPE)
+					else if(_typeIndex == INVALID_TYPE)
 					{
-						_gotError 	= true;
-						resultArray = new Array(false);
+						if(_actionType == 0)
+						{
+							_gotError 	= true;
+							resultArray = new Array(false);
+						}
+						else if(_actionType == 1)
+						{
+							_gotError = false;
+							resultArray = new Array(_actionType, _locationIndex);
+						}
 					}
 					else
 					{
 						_gotError 	= false;
-						resultArray = new Array(actionType, locationIndex, typeIndex);
+						resultArray = new Array(_actionType, _locationIndex, _typeIndex);
 					}
 				}	
 				else
@@ -111,7 +122,7 @@ package controller.chapterOne
 				_gotError = true;
 			else if (s.indexOf(")") == -1) //if there is no ")" => error
 				_gotError = true;
-			else if(s.charAt(closeBracketIndex + 1) != null) //if 1 characters after ")" is null => error 
+			else if(s.charAt(closeBracketIndex + 1) != ";") //if 1 characters after ")" is null => error
 				_gotError = true;
 			else if(s.indexOf(",") == -1) //if there is no "," => error 
 				_gotError = true;
@@ -143,12 +154,14 @@ package controller.chapterOne
 		private function getLocation(s:String):Number
 		{
 			var commaIndex				:Number;
+			//var openBracketIndex		:Number;
 			var closeBracketIndex		:Number;
 			var objectLocationString	:String;
 			var index					:Number;
 			
-			//get "," and ")" location in the string
-			commaIndex 	= s.indexOf(",");
+			//get "(", "," and ")" location in the string
+			//openBracketIndex 	= s.indexOf("(");
+			commaIndex 			= s.indexOf(",");
 			closeBracketIndex 	= s.indexOf(")");
 			
 			if(commaIndex == closeBracketIndex - 1) //if nothing in between them => invalid => error
@@ -158,9 +171,9 @@ package controller.chapterOne
 				objectLocationString = s.substr(commaIndex + 1, closeBracketIndex - commaIndex - 1);
 				index = Number(objectLocationString);
 				
-				if(isNaN(index))	// if the string is not a number => invalid => error
+				if(!isNaN(index))	// if the string is not a number => invalid => error
 				{
-					if(MIN_INDEX <= index && index >= MAX_INDEX)	//if the index is not in range of the board => invalid => error 
+					if(MIN_INDEX <= index && index <= MAX_INDEX)	//if the index is not in range of the board => invalid => error
 						return index;
 					else
 						return INVALID_LOCATION;

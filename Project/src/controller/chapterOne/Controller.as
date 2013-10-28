@@ -53,6 +53,11 @@ package controller.chapterOne
 				trace('Error with event undefined');
 		}
 		
+		public function debug():void
+		{
+		      _consoleController.consoleControllerActivate();
+		}
+		
 		public function assignObjectController(console:Console, hero:Hero, dialogBubble:DialogBubble, instrArrow:InstrArrow, indexBoard:IndexBoard):void{
 			
 			this._console 		    = console;

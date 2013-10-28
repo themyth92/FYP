@@ -104,7 +104,7 @@ package object.chapterOne
 				_enteredText.textEditorProperties.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
 				_enteredText.backgroundSkin = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 				
-				_textField.maxChars                        = 20;
+				_textField.maxChars                        = 50;
 				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
 				
 				_errorSign.x                               = WARNING_SIGN_POSX;
@@ -125,12 +125,13 @@ package object.chapterOne
 				
 				toggleErrorSign();
 
-				_textField.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
+				_textField.addEventListener(KeyboardEvent.KEY_DOWN, onTextInputEnter);
 			}
 		}
 		
-		private function onTextInputEnter(e:Event):void{
-			_controller.notifyObserver(null);
+		private function onTextInputEnter(e:KeyboardEvent):void{
+			if(e.keyCode == Keyboard.ENTER)
+				_controller.debug();
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
