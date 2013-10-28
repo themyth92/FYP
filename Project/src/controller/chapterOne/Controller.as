@@ -48,6 +48,20 @@ package controller.chapterOne
 						break;
 					}
 				}
+				else if(e.event == Constant.KEY_PRESSED){
+					switch(e.target){
+						case Constant.HERO:
+							_heroController.moveHero(e.arg);
+						break;
+					}
+				}
+				else if(e.event == Constant.KEY_UP){
+					switch(e.target){
+						case Constant.HERO:
+							_heroController.stopHero(e.arg);
+						break;
+					}
+				}
 			}
 			else
 				trace('Error with event undefined');

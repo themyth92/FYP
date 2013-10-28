@@ -10,7 +10,7 @@ package object.chapterOne
 	
 	public class IndexBoard extends Sprite
 	{
-		private static const PATTERN_PREFIX:String	 = 'pattern_';
+		private static const PATTERN_PREFIX:String	 = 'pattern/pattern_';
 		private static const MAXIMUM_COLUMN:uint 		 = 12;
 		private static const MAXIMUM_ROW:uint          = 8;
 		private static const PIXEL_MOVE:int 			 = 40;
@@ -54,14 +54,31 @@ package object.chapterOne
 			
 			if(index > 0 && index <= MAXIMUM_ROW*MAXIMUM_COLUMN){
 				
-				var rowIndex:uint    = index % MAXIMUM_ROW; 
-				var columnIndex:uint = index % MAXIMUM_COLUMN;
+				var modular      : int = index % MAXIMUM_COLUMN;
+				var rowIndex 	  : uint = 0;
+				var columnIndex  : uint = 0;
 				
-				rowIndex    = rowIndex - 1;
-				columnIndex = columnIndex -1 ;
+				if(modular == 0){
+					
+					rowIndex    = int(index/MAXIMUM_COLUMN) - 1;
+					columnIndex = MAXIMUM_COLUMN - 1; 
+				}
+				else{
+					
+					rowIndex    = int(index/MAXIMUM_COLUMN);
+					columnIndex = modular - 1;
+				}
+				
+				trace(rowIndex + ' ' + columnIndex);
+				
+				if(columnIndex < 0 || rowIndex < 0){
+					trace('problem with finding the position of the pattern. Program should be paused for debugging');
+					return;
+				}
 				
 				obj.x = columnIndex*PIXEL_MOVE;
 				obj.y = rowIndex*PIXEL_MOVE;
+				
 				this.addChild(obj);
 			}
 		}

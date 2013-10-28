@@ -76,10 +76,8 @@ package screen.chapterOne
 				}
 			}
 			catch(e:Error){
-				trace(index);
 				trace('Array out of bound or can not get the texture in chapter one');
 			}
-			
 		}
 		
 		private function displayChapterTexture():void{
@@ -144,6 +142,9 @@ package screen.chapterOne
 			
 			_dialogBubble.x = 32;
 			_dialogBubble.y = 20;
+			
+			_indexBoard.x = 107;
+			_indexBoard.y = 82;
 		}
 	}
 }

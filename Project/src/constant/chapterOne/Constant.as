@@ -5,7 +5,6 @@ package constant.chapterOne
 		public static const CONSOLE:String     	 	   = 'consoleNote';
 		public static const SPRITE_ONE:String      	   = 'spriteOne';
 		public static const BUBBLE_DIALOG:String         = 'dialogBubble';
-		public static const NEXT_ARROW:String            = 'nextArrow';
 		
 		//function
 		public static const GROBOLD_FONT: String   	   = 'Grobold';
@@ -29,13 +28,7 @@ package constant.chapterOne
 		public static const HERO_MALE_STAND:Array        = new Array('Male/male_up_01', 'Male/male_down_01','Male/male_left_01', 'Male/male_right_01');
 		public static const HERO_MALE_RUN:Array          = new Array('Male/male_up_', 'Male/male_down_', 'Male/male_left_', 'Male/male_right_');
 		
-		public static const HERO_STATUS_LEFT:String      = 'left';
-		public static const HERO_STATUS_RIGHT:String     = 'right';
-		public static const HERO_STATUS_UP:String        = 'up';
-		public static const HERO_STATUS_DOWN:String      = 'down';
-		
 		/* Dialog bubble */
-		public static const DIALOG_NEXT_ARROW:String     = 'dialogNextArrow';
 		public static const DIALOG_TEXTFIELD_WIDTH:uint  = 200;
 		public static const DIALOG_TEXTFIELD_HEIGHT:uint = 200;
 		public static const DIALOG_POSX:uint             = 10;
@@ -56,10 +49,27 @@ package constant.chapterOne
 		public static const INSTRUC_ARROW_LEFT:String   = 'arrowInsLeft';
 		public static const INSTRUC_ARROW_RIGHT:String  = 'arrowInsRight';
 		
-		/* Button */
-		public static const SUBMIT_BTN:String           = 'submitBtn';
-		public static const PREVIEW_BTN:String          = 'previewBtn';
 		/* Event */
 		public static const TRIGGER : String  		  = 'trigger';
+		public static const KEY_PRESSED:String    	  = 'keyPressed';
+		public static const KEY_RELEASED:String   	  = 'keyReleased';
+		
+		/* Argumemt */
+		public static const KEY_LEFT:String       	  = 'keyLeft';
+		public static const KEY_RIGHT:String      	  = 'keyRight';
+		public static const KEY_DOWN:String       	  = 'keyDown';
+		public static const KEY_UP:String         	  = 'keyUp'; 
+		
+		public static const HERO_STATUS_LEFT:String     = 'left';
+		public static const HERO_STATUS_RIGHT:String    = 'right';
+		public static const HERO_STATUS_UP:String       = 'up';
+		public static const HERO_STATUS_DOWN:String     = 'down';
+		
+		/* Target */
+		public static const HERO:String           	  = 'hero';
+		public static const NEXT_ARROW:String           = 'nextArrow';
+		public static const DIALOG_NEXT_ARROW:String    = 'dialogNextArrow';
+		public static const SUBMIT_BTN:String           = 'submitBtn';
+		public static const PREVIEW_BTN:String          = 'previewBtn';
  	}
 }

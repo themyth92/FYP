@@ -16,47 +16,63 @@ package object.chapterOne
 	import starling.events.KeyboardEvent;
 
 	public class Hero extends Sprite
-	{
-		private static const KEY_PRESSED:String    = 'keyPressed';
-		private static const KEY_RELEASED:String   = 'keyReleased';
-		private static const KEY_LEFT:String       = 'keyLeft';
-		private static const KEY_RIGHT:String      = 'keyRight';
-		private static const KEY_DOWN:String       = 'keyDown';
-		private static const KEY_UP:String         = 'keyUp'; 
-		private static const HERO:String           = 'hero';
-		
-		private var _controller:Controller;
-		private var _heroStand :Array;
-		private var _heroRun   :Array;
-		private var _speedX    :int;
-		private var _speedY    :int;
-		private var _heroStatus:String;
+	{		
+		private var _controller  :Controller;
+		private var _heroStand   :Array;
+		private var _heroRun     :Array;
+		private var _speedX      :int;
+		private var _speedY      :int;
+		private var _heroStatus  :String;
+		private var _heroEnable  :Boolean;
 		
 		public function Hero(controller:Controller)
 		{	
-			this._controller = controller;
-			this._heroStand  = new Array();
-			this._heroRun    = new Array();
-			this._speedX     = 0;
-			this._speedY     = 0;
-			this._heroStatus = Constant.HERO_STATUS_RIGHT;
+			this._controller  = controller;
+			this._heroStand   = new Array();
+			this._heroRun     = new Array();
+			this._speedX      = 0;
+			this._speedY      = 0;
+			this._heroStatus  = null;
+			this._heroEnable  = false;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-		
-		public function moveHero(index:uint):void{
-				
+
+		public function set speedY(value:int):void
+		{
+			_speedY = value;
+		}
+
+		public function set speedX(value:int):void
+		{
+			_speedX = value;
 		}
 		
-		public function showHero(index:uint, status:uint = 0):void{
+		public function set heroStatus(value:String):void
+		{
+			_heroStatus = value;	
+		}
+		
+		public function showHero(index:int, status:uint = 0):void{
 			
 			if(index >= _heroStand.length){
 				trace('Function: ShowHero, Error: Out of bound');
 				return ;
 			}
 			
-			if(status == 0){
+			if(index < 0){
+				
+				//do not show anything
 				for(var i:uint = 0 ; i < _heroStand.length ; i++){
+						
+					_heroStand[i].visible = false;	
+					_heroRun[i].visible   = false;
+				}	
+				return;
+			}
+			
+			if(status == 0){
+				for(i = 0 ; i < _heroStand.length ; i++){
 					
 					if(i==index && _heroStand[i] != null){
 						
@@ -88,14 +104,18 @@ package object.chapterOne
 			}
 		}
 		
+		public function enableHero():void{
+			
+			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}
+		
 		private function onAddedToStage(e:Event):void{
 			
 			heroAddToStage();
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-			this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 		
 		private function heroAddToStage():void{
@@ -118,7 +138,7 @@ package object.chapterOne
 				this.addChild(_heroRun[index]);
 			}
 			
-			this.showHero(3, 0);
+			this.showHero(-1, 0);
 		}
 		
 		private function onEnterFrame(e:Event):void{
@@ -128,49 +148,23 @@ package object.chapterOne
 		
 		private function onKeyDown(e:KeyboardEvent):void{
 			if(e.keyCode == Keyboard.LEFT){
-				_controller.notifyObserver({event:KEY_PRESSED, arg:KEY_LEFT, target:HERO});
-				_heroStatus = Constant.HERO_STATUS_LEFT;
-				showHero(2, 1);
-				_speedX = -3;
-				_speedY = 0;
+				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_LEFT, target:Constant.HERO});
 			}
 			else if(e.keyCode == Keyboard.RIGHT){
-				_heroStatus = Constant.HERO_STATUS_RIGHT;
-				showHero(3, 1); 
-				_speedX = 3;
-				_speedY = 0;
+				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_RIGHT, target:Constant.HERO});
 			}
 			else if(e.keyCode == Keyboard.UP){
-				_heroStatus = Constant.HERO_STATUS_UP;
-				showHero(0, 1); 
-				_speedX = 0;
-				_speedY = -3;
+				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_UP, target:Constant.HERO});
 			}
 			else if(e.keyCode == Keyboard.DOWN){
-				_heroStatus = Constant.HERO_STATUS_DOWN;
-				showHero(1,1);
-				_speedX = 0;
-				_speedY = 3;
+				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_DOWN, target:Constant.HERO});
 			}
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void{
 			_speedX = 0;
 			_speedY = 0;
-			switch(_heroStatus){
-				case Constant.HERO_STATUS_DOWN:
-					showHero(1,0);
-					break;
-				case Constant.HERO_STATUS_LEFT:
-					showHero(2,0);
-					break;
-				case Constant.HERO_STATUS_RIGHT:
-					showHero(3,0);
-					break;
-				case Constant.HERO_STATUS_UP:
-					showHero(0,0);
-					break;
-			}
+			_controller.notifyObserver({event:Constant.KEY_UP, arg:_heroStatus, target:Constant.HERO});
 		}
 	}
 }

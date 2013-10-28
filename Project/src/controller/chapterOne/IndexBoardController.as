@@ -6,8 +6,8 @@ package controller.chapterOne
 	{
 		private static const MAXIMUM_PATTERN:uint     	  = 1;
 		private static const LIST_COMMAND:Array        	  = [0,1];
-		private static const CREATE_LENGTH_ARRAY:uint       = 2;
-		private static const DELETE_LENGTH_ARRAY :uint      = 3;
+		private static const CREATE_LENGTH_ARRAY:uint       = 3;
+		private static const DELETE_LENGTH_ARRAY :uint      = 2;
 		private static const FALSE_LENGTH_ARRAY :uint       = 1;
 		
 		private var _indexBoard : IndexBoard;
@@ -27,6 +27,7 @@ package controller.chapterOne
 					
 					var index:uint = arr[1];
 					_indexBoard.deleteObject(index);
+					return;
 				}
 			}
 			else if(arr.length == CREATE_LENGTH_ARRAY){
@@ -36,6 +37,7 @@ package controller.chapterOne
 					index            = arr[2];
 					var name :String = arr[1];
 					_indexBoard.createObject(name, index);
+					return;
 				}
 			}
 			
