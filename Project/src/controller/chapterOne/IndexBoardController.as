@@ -4,11 +4,11 @@ package controller.chapterOne
 	
 	public class IndexBoardController
 	{
-		private static const MAXIMUM_PATTERN:uint     	  = 1;
-		private static const LIST_COMMAND:Array        	  = [0,1];
-		private static const CREATE_LENGTH_ARRAY:uint       = 3;
-		private static const DELETE_LENGTH_ARRAY :uint      = 2;
-		private static const FALSE_LENGTH_ARRAY :uint       = 1;
+		private static const MAXIMUM_PATTERN		:uint   = 1;
+		private static const LIST_COMMAND			:Array 	= [0,1];
+		private static const CREATE_LENGTH_ARRAY	:uint   = 3;
+		private static const DELETE_LENGTH_ARRAY 	:uint   = 2;
+		private static const FALSE_LENGTH_ARRAY 	:uint   = 1;
 		
 		private var _indexBoard : IndexBoard;
 		
@@ -31,7 +31,7 @@ package controller.chapterOne
 				}
 			}
 			else if(arr.length == CREATE_LENGTH_ARRAY){
-				
+
 				if(arr[0] == LIST_COMMAND[1]){
 					
 					index            = arr[2];

@@ -6,6 +6,8 @@ package controller.chapterOne
 	
 	import starling.errors.AbstractClassError;
 	
+	import mx.utils.StringUtil;
+
 	public class ConsoleController
 	{
 		private var _console 					:Console;
@@ -16,7 +18,7 @@ package controller.chapterOne
 		private static const MIN_INDEX			:Number = 1;
 		private static const MAX_INDEX			:Number = 96;
 		private static const OBJECT_TYPE		:Array = new Array("brick", "tree", "bush");
-		private static const ACTION_TYPE 		:Array = new Array("create", "delete");
+		private static const ACTION_TYPE 		:Array = new Array("delete", "create");
 		private static const INVALID_ACTION		:Number = -1; 
 		private static const INVALID_LOCATION	:Number = -1;
 		private static const INVALID_TYPE		:String = null;
@@ -48,9 +50,9 @@ package controller.chapterOne
 			//didn't check for error => no error => turn off error display
 			if(_console.displayError(_gotError))
 			{
+				_actionType 	= getAction(str);
 				if(checkSyntax(str)) //check syntax error 
 				{
-					_actionType 	= getAction(str);
 					_locationIndex 	= getLocation(str);
 					_typeIndex 		= getObjectType(str);
 					
@@ -66,12 +68,12 @@ package controller.chapterOne
 					}
 					else if(_typeIndex == INVALID_TYPE)
 					{
-						if(_actionType == 0)
+						if(_actionType == 1)
 						{
 							_gotError 	= true;
 							resultArray = new Array(false);
 						}
-						else if(_actionType == 1)
+						else if(_actionType == 0)
 						{
 							_gotError = false;
 							resultArray = new Array(_actionType, _locationIndex);
@@ -80,7 +82,7 @@ package controller.chapterOne
 					else
 					{
 						_gotError 	= false;
-						resultArray = new Array(_actionType, _locationIndex, _typeIndex);
+						resultArray = new Array(_actionType,_typeIndex, _locationIndex);
 					}
 				}	
 				else
@@ -122,9 +124,9 @@ package controller.chapterOne
 				_gotError = true;
 			else if (s.indexOf(")") == -1) //if there is no ")" => error
 				_gotError = true;
-			else if(s.charAt(closeBracketIndex + 1) != ";") //if 1 characters after ")" is null => error
+			else if(isLetter(s.charAt(closeBracketIndex + 1))) //if 1 characters after ")" is null => error
 				_gotError = true;
-			else if(s.indexOf(",") == -1) //if there is no "," => error 
+			else if(s.indexOf(",") == -1 && _actionType == 1) //if there is no "," => error 
 				_gotError = true;
 			
 			if(_gotError)
@@ -154,33 +156,57 @@ package controller.chapterOne
 		private function getLocation(s:String):Number
 		{
 			var commaIndex				:Number;
-			//var openBracketIndex		:Number;
+			var openBracketIndex		:Number;
 			var closeBracketIndex		:Number;
 			var objectLocationString	:String;
 			var index					:Number;
 			
 			//get "(", "," and ")" location in the string
-			//openBracketIndex 	= s.indexOf("(");
-			commaIndex 			= s.indexOf(",");
+			openBracketIndex 	= s.indexOf("(");
 			closeBracketIndex 	= s.indexOf(")");
-			
-			if(commaIndex == closeBracketIndex - 1) //if nothing in between them => invalid => error
-				return INVALID_LOCATION;
-			else
+			if(_actionType == 1)
 			{
-				objectLocationString = s.substr(commaIndex + 1, closeBracketIndex - commaIndex - 1);
-				index = Number(objectLocationString);
+				commaIndex 		= s.indexOf(",");
 				
-				if(!isNaN(index))	// if the string is not a number => invalid => error
+				if(commaIndex == closeBracketIndex - 1) //if nothing in between them => invalid => error
+					return INVALID_LOCATION;
+				else
 				{
-					if(MIN_INDEX <= index && index <= MAX_INDEX)	//if the index is not in range of the board => invalid => error
-						return index;
+					objectLocationString = s.substr(commaIndex + 1, closeBracketIndex - commaIndex - 1);
+					index = Number(objectLocationString);
+					
+					if(!isNaN(index))	// if the string is not a number => invalid => error
+					{
+						if(MIN_INDEX <= index && index <= MAX_INDEX)	//if the index is not in range of the board => invalid => error
+							return index;
+						else
+							return INVALID_LOCATION;
+					}
 					else
 						return INVALID_LOCATION;
 				}
-				else
-					return INVALID_LOCATION;
 			}
+			else if(_actionType == 0)
+			{
+				if(openBracketIndex == closeBracketIndex - 1) //if nothing in between them => invalid => error
+					return INVALID_LOCATION;
+				else
+				{
+					objectLocationString = s.substr(openBracketIndex + 1, closeBracketIndex - openBracketIndex - 1);
+					index = Number(objectLocationString);
+					
+					if(!isNaN(index))	// if the string is not a number => invalid => error
+					{
+						if(MIN_INDEX <= index && index <= MAX_INDEX)	//if the index is not in range of the board => invalid => error
+							return index;
+						else
+							return INVALID_LOCATION;
+					}
+					else
+						return INVALID_LOCATION;
+				}
+			}
+			return INVALID_LOCATION;
 		}
 		
 		//Get type of the object: brick, tree, hero, start, goal
@@ -193,9 +219,10 @@ package controller.chapterOne
 			//get "(" and "," location in the string
 			openBracketIndex = s.indexOf("(");
 			commaIndex = s.indexOf(",");
-			
-			if(openBracketIndex == commaIndex - 1) //if nothing is between them => invalid => error
-				return INVALID_TYPE
+			if(_actionType == 0)
+				return INVALID_TYPE;
+			else if(openBracketIndex == commaIndex - 1) //if nothing is between them => invalid => error
+				return INVALID_TYPE;
 			else
 			{
 				type = s.substr(openBracketIndex + 1, commaIndex - openBracketIndex - 1);
@@ -211,6 +238,40 @@ package controller.chapterOne
 					return i > 9 ? "" + i : "0" + i;
 			}
 			return INVALID_TYPE;
+		}
+		
+		//Determines if a string is upper case
+		public function isUpperCase(value : String) : Boolean {
+			return isValidCode(value, 65, 90);
+			
+		}
+		
+		// Determines if a string is lower case 
+		public function isLowerCase(value : String) : Boolean {
+			return isValidCode(value, 97, 122);
+		}
+		
+		// Determines if a string is digit 
+		private function isDigit(value : String) : Boolean {
+			return isValidCode(value, 48, 57);
+		}
+		
+		// Determines if a string is letter
+		public function isLetter(value : String) : Boolean {
+			return (isLowerCase(value) || isUpperCase(value));
+		}
+		
+		// The meat of the functions which checks the values 
+		private function isValidCode(value : String, minCode : Number, maxCode : Number) : Boolean {
+			if ((value == null) || (StringUtil.trim(value).length < 1))
+				return false;
+			
+			for (var i : int=value.length-1;i >= 0; i--) {
+				var code : Number = value.charCodeAt(i);
+				if ((code < minCode) || (code > maxCode))
+					return false;
+			}
+			return true;
 		}
 	}
 }
