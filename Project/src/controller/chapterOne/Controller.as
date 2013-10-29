@@ -44,6 +44,8 @@ package controller.chapterOne
 							var commandArr:Array = _consoleController.consoleControllerActivate();
 							_indexBoardController.analyzeArrayInput(commandArr);
 						break;
+						case Constant.SUBMIT_BTN:
+						break;
 						default:
 						break;
 					}

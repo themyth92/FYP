@@ -111,6 +111,12 @@ package object.chapterOne
 			this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 		
+		public function retrieveHeroPosition():Array{
+			
+			var arr:Array = new Array(this.x, this.y);
+			return arr;
+		}
+		
 		private function onAddedToStage(e:Event):void{
 			
 			heroAddToStage();

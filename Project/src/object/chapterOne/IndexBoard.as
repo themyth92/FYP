@@ -44,7 +44,7 @@ package object.chapterOne
 			}
 			catch(e:Error){
 				
-				trace('problem with finding the patter');
+				trace('problem with finding the pattern');
 			}
 			
 			_patternIndex.push(index);
