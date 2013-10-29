@@ -71,7 +71,8 @@ package controller.chapterOne
 		
 		public function debug():void
 		{
-		      _consoleController.consoleControllerActivate();
+			var commandArr:Array = _consoleController.consoleControllerActivate();
+			_indexBoardController.analyzeArrayInput(commandArr);
 		}
 		
 		public function assignObjectController(console:Console, hero:Hero, dialogBubble:DialogBubble, instrArrow:InstrArrow, indexBoard:IndexBoard):void{
