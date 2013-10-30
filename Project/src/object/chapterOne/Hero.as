@@ -40,6 +40,16 @@ package object.chapterOne
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
+		public function get heroEnable():Boolean
+		{
+			return _heroEnable;
+		}
+
+		public function set heroEnable(value:Boolean):void
+		{
+			_heroEnable = value;
+		}
+
 		public function set speedY(value:int):void
 		{
 			_speedY = value;
@@ -65,15 +75,16 @@ package object.chapterOne
 			if(index < 0){
 				
 				//do not show anything
-				for(var i:uint = 0 ; i < _heroStand.length ; i++){
-						
+				for(var i:uint = 0 ; i < _heroStand.length ; i++)
+				{
 					_heroStand[i].visible = false;	
 					_heroRun[i].visible   = false;
 				}	
 				return;
 			}
 			
-			if(status == 0){
+			if(status == 0)
+			{
 				for(i = 0 ; i < _heroStand.length ; i++){
 					
 					if(i==index && _heroStand[i] != null){
@@ -106,8 +117,8 @@ package object.chapterOne
 			}
 		}
 		
-		public function enableHero():void{
-			
+		public function enableHero():void
+		{
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -122,13 +133,13 @@ package object.chapterOne
 		private function onAddedToStage(e:Event):void{
 			
 			heroAddToStage();
-			
+			enableHero();
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function heroAddToStage():void{
 			
-			var image:Image    ;
+			var image:Image;
 			var movie:MovieClip;
 			
 			for(var index:uint = 0 ; index < Constant.HERO_MALE_STAND.length ; index++){
@@ -146,16 +157,29 @@ package object.chapterOne
 				this._hero.addChild(_heroRun[index]);
 			}
 			this.addChild(_hero);
-			this.showHero(-1, 0);
+			this.showHero(2, 0);
+			this._heroEnable = true;
 		}
 		
 		private function onEnterFrame(e:Event):void{
 			this._hero.x += _speedX;
 			this._hero.y += _speedY;
+			
+			var heroPos : Array = _controller.notifyForCollisionChecking(_hero.x, _hero.y);
+			if(heroPos[0])
+			{
+				if(heroPos[1] != -1 && heroPos[2] != -1)
+				{
+					this._hero.x = heroPos[1];
+					this._hero.y = heroPos[2];
+				}
+				else
+					trace("coin");
+			}
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void{
-			if(e.keyCode == Keyboard.LEFT){
+			if(e.keyCode == Keyboard.LEFT){			
 				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_LEFT, target:Constant.HERO});
 			}
 			else if(e.keyCode == Keyboard.RIGHT){

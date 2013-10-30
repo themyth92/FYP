@@ -5,8 +5,7 @@ package controller.chapterOne
 	import object.chapterOne.Hero;
 	
 	public class HeroController
-	{
-		private var _heroAvail						:Boolean;					
+	{					
 		private static const HERO_SPEED_FORWARD		:int = 3;
 		private static const HERO_SPEED_BACKWARD	:int = -3;
 		
@@ -15,19 +14,16 @@ package controller.chapterOne
 		public function HeroController(hero:Hero)
 		{
 			this._hero = hero;
-			this._heroAvail = false;
 		}
 
 		public function enableHero():void
 		{
-			_hero.enableHero();
-			_heroAvail = true;
+			_hero.enableHero();		
 		}
 
 		public function moveHero(key:String):void{
 			
 			switch(key){
-				
 				case Constant.KEY_LEFT:
 					_hero.speedX = HERO_SPEED_BACKWARD;
 					_hero.speedY = 0;
@@ -81,14 +77,6 @@ package controller.chapterOne
 					_hero.showHero(3,0);
 				break;
 			}
-		}
-		
-		public function checkHeroAvail():Boolean
-		{
-			if(_heroAvail)
-				return true;
-			else
-				return false;
 		}
 	}
 }

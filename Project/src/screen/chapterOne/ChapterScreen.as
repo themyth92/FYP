@@ -27,7 +27,7 @@ package screen.chapterOne
 		private var _console 	   : Console;
 		private var _button       : Button;
 		private var _controller   : Controller;
-		private var _hero         : Hero;
+		//private var _hero         : Hero;
 		private var _dialogBubble : DialogBubble;
 		private var _instrArrow   : InstrArrow;
 		private var _indexBoard   : IndexBoard;
@@ -38,14 +38,14 @@ package screen.chapterOne
 			_commonObject = new Dictionary();
 			_controller   = new Controller();
 			_console      = new Console(_controller);
-			_hero         = new Hero(_controller);
+			//_hero         = new Hero(_controller);
 			_dialogBubble = new DialogBubble(_controller);
 			_button       = new Button(_controller);
 			_instrArrow   = new InstrArrow();
 			_patternList  = new PatternList();
-			_indexBoard   = new IndexBoard();
+			_indexBoard   = new IndexBoard(_controller);
 			
-			_controller.assignObjectController(_console, _hero, _dialogBubble, _instrArrow, _indexBoard);
+			_controller.assignObjectController(_console, _dialogBubble, _instrArrow, _indexBoard);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -95,7 +95,7 @@ package screen.chapterOne
 			
 			this.addChild(_console);
 			this.addChild(_button);
-			this.addChild(_hero);
+			//this.addChild(_hero);
 			this.addChild(_dialogBubble);
 			this.addChild(_instrArrow);
 			this.addChild(_patternList);
@@ -137,8 +137,8 @@ package screen.chapterOne
 			_button.x  = 614;
 			_button.y  = 384;
 			
-			_hero.x = 300;
-			_hero.y = 500;
+			//_hero.x = 300;
+			//_hero.y = 500;
 			
 			_dialogBubble.x = 32;
 			_dialogBubble.y = 20;

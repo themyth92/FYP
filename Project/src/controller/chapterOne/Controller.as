@@ -17,9 +17,9 @@ package controller.chapterOne
 	public class Controller
 	{
 		private var _console		 		 : Console;
-		private var _hero   		 		 : Hero;
+		//private var _hero   		 		 : Hero;
 		private var _dialogBubble	 		 : DialogBubble;
-		private var _heroController 		 : HeroController;
+		//private var _heroController 		 : HeroController;
 		private var _instrArrow     		 : InstrArrow;
 		private var _indexBoard              : IndexBoard;
 		private var _dialogBubbleController  : BubbleController;
@@ -46,7 +46,7 @@ package controller.chapterOne
 						break;
 						case Constant.SUBMIT_BTN:
 							var gotCoin:Boolean = _indexBoardController.checkCoinAvail(); //Check if got coin or not
-							var gotHero:Boolean = _heroController.checkHeroAvail();		  //Check if got hero or not
+							var gotHero:Boolean = _indexBoardController.checkHeroAvail();		  //Check if got hero or not
 							if(gotCoin && gotHero) //If got both => start game
 								trace("gotSth");
 							else
@@ -59,14 +59,15 @@ package controller.chapterOne
 				else if(e.event == Constant.KEY_PRESSED){
 					switch(e.target){
 						case Constant.HERO:
-							_heroController.moveHero(e.arg);
+							//trace("here");
+							_indexBoardController.moveHero(e.arg);
 						break;
 					}
 				}
 				else if(e.event == Constant.KEY_UP){
 					switch(e.target){
 						case Constant.HERO:
-							_heroController.stopHero(e.arg);
+							_indexBoardController.stopHero(e.arg);
 						break;
 					}
 				}
@@ -81,19 +82,23 @@ package controller.chapterOne
 			_indexBoardController.analyzeArrayInput(commandArr);
 		}
 		
-		public function assignObjectController(console:Console, hero:Hero, dialogBubble:DialogBubble, instrArrow:InstrArrow, indexBoard:IndexBoard):void{
-			
+		public function assignObjectController(console:Console, dialogBubble:DialogBubble, instrArrow:InstrArrow, indexBoard:IndexBoard):void
+		{
 			this._console 		    = console;
-			this._hero    	        = hero;
+			//this._hero    	        = hero;
 			this._dialogBubble      = dialogBubble;
 			this._instrArrow        = instrArrow;
 			this._indexBoard        = indexBoard;
 			
-			_heroController         = new HeroController(_hero);
 			_dialogBubbleController = new BubbleController(_dialogBubble);
 			_instrArrowController   = new InstrArrController(_instrArrow);
 			_consoleController      = new ConsoleController(_console);
 			_indexBoardController   = new IndexBoardController(_indexBoard);
+		}
+		
+		public function notifyForCollisionChecking(x:Number,y:Number):Array
+		{
+			return _indexBoardController.collisionDetect(x,y);
 		}
 	}
 }
