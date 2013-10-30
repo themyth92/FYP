@@ -125,13 +125,12 @@ package object.chapterOne
 				
 				toggleErrorSign();
 
-				_textField.addEventListener(KeyboardEvent.KEY_DOWN, onTextInputEnter);
+				this._textField.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
 			}
 		}
 		
-		private function onTextInputEnter(e:KeyboardEvent):void{
-			if(e.keyCode == Keyboard.ENTER)
-				_controller.debug();
+		private function onTextInputEnter(e:Event):void{
+			_controller.debug();
 		}
 		
 		private function onRemoveFromStage(e:Event):void{

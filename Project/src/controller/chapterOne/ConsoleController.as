@@ -17,7 +17,7 @@ package controller.chapterOne
 		private var _typeIndex					:String;
 		private static const MIN_INDEX			:Number = 1;
 		private static const MAX_INDEX			:Number = 96;
-		private static const OBJECT_TYPE		:Array = new Array("brick", "tree", "bush");
+		private static const OBJECT_TYPE		:Array = new Array("brick", "xbox", "fire", "coin", "hero");
 		private static const ACTION_TYPE 		:Array = new Array("delete", "create");
 		private static const INVALID_ACTION		:Number = -1; 
 		private static const INVALID_LOCATION	:Number = -1;
