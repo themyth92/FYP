@@ -24,6 +24,7 @@ package object.chapterOne
 		private var _speedY      :int;
 		private var _heroStatus  :String;
 		private var _heroEnable  :Boolean;
+		private var _hero        :Sprite;
 		
 		public function Hero(controller:Controller)
 		{	
@@ -34,6 +35,7 @@ package object.chapterOne
 			this._speedY      = 0;
 			this._heroStatus  = null;
 			this._heroEnable  = false;
+			this._hero        = new Sprite();  
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -138,18 +140,18 @@ package object.chapterOne
 			}
 			
 			for(index = 0; index < _heroStand.length; index++){
-				this.addChild(_heroStand[index]);
+				this._hero.addChild(_heroStand[index]);
 				
 				Starling.juggler.add(_heroRun[index]);
-				this.addChild(_heroRun[index]);
+				this._hero.addChild(_heroRun[index]);
 			}
-			
+			this.addChild(_hero);
 			this.showHero(-1, 0);
 		}
 		
 		private function onEnterFrame(e:Event):void{
-			this.x += _speedX;
-			this.y += _speedY;
+			this._hero.x += _speedX;
+			this._hero.y += _speedY;
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void{
