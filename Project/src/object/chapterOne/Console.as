@@ -125,7 +125,6 @@ package object.chapterOne
 				
 				toggleErrorSign();
 
-				//_textField.addEventListener(KeyboardEvent.KEY_DOWN, onTextInputEnter);
 				this._textField.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
 			}
 		}

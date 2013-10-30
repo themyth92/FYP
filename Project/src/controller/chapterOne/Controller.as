@@ -21,11 +21,11 @@ package controller.chapterOne
 		private var _dialogBubble	 		 : DialogBubble;
 		private var _heroController 		 : HeroController;
 		private var _instrArrow     		 : InstrArrow;
-		private var _indexBoard             : IndexBoard;
-		private var _dialogBubbleController : BubbleController;
+		private var _indexBoard              : IndexBoard;
+		private var _dialogBubbleController  : BubbleController;
 		private var _instrArrowController 	 : InstrArrController;
-		private var _consoleController      : ConsoleController;
-		private var _indexBoardController   : IndexBoardController;
+		private var _consoleController       : ConsoleController;
+		private var _indexBoardController    : IndexBoardController;
 		
 		public function Controller()
 		{
@@ -45,6 +45,12 @@ package controller.chapterOne
 							_indexBoardController.analyzeArrayInput(commandArr);
 						break;
 						case Constant.SUBMIT_BTN:
+							var gotCoin:Boolean = _indexBoardController.checkCoinAvail(); //Check if got coin or not
+							var gotHero:Boolean = _heroController.checkHeroAvail();		  //Check if got hero or not
+							if(gotCoin && gotHero) //If got both => start game
+								trace("gotSth");
+							else
+								trace("noSth");
 						break;
 						default:
 						break;
