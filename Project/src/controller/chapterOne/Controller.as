@@ -100,5 +100,10 @@ package controller.chapterOne
 		{
 			return _indexBoardController.collisionDetect(x,y);
 		}
+		
+		public function notifyCollectCoin(index:uint):void
+		{
+			_indexBoardController.removeCoinOnCollision(index);
+		}
 	}
 }

@@ -86,6 +86,11 @@ package controller.chapterOne
 			return;
 		}
 		
+		public function removeCoinOnCollision(index:uint):void
+		{
+			_indexBoard.deleteObject(index);
+		}
+		
 		/*-------------------------------------------------------------
 		--------------------HERO CONTROL FUNCTION----------------------
 		---------------------------------------------------------------*/
@@ -131,8 +136,8 @@ package controller.chapterOne
 			}
 		}
 		
-		public function stopHero(status: String):void{
-			
+		public function stopHero(status: String):void
+		{
 			_hero.speedX = 0;
 			_hero.speedY = 0;
 			
@@ -163,62 +168,82 @@ package controller.chapterOne
 		
 		public function collisionDetect(x:Number, y:Number):Array
 		{
-			var thingChecking : Image = _indexBoard.patternCollection[0];
-			
-			var collisionStatus : Boolean = false;
-			var heroX : Number = _hero.x + x;
-			var heroY : Number = _hero.y + y;
-			
-			var vx:Number = (heroX + (_hero.width/2)) - (thingChecking.x + (thingChecking.width/2));
-			var vy:Number = (heroY + (_hero.height/2)) - (thingChecking.y + (thingChecking.height/2));
-			
 			var positionArr : Array;
 			
-			if(Math.abs(vx) < _hero.width/2 + thingChecking.width/2)
+			if(_indexBoard.patternCollection.length == 0)
 			{
-				if(Math.abs(vy) < _hero.height/2 + thingChecking.height/2)
+				positionArr = new Array(false);
+			}
+			else
+			{
+				var thingChecking : Vector.<Image> 	= _indexBoard.patternCollection;
+				var thingType 	  : Vector.<String> = _indexBoard.patternType;
+				var thingIndex	  : Vector.<uint> 	= _indexBoard.patternIndex;
+				
+				var collisionStatus : Boolean = false;
+				
+				var heroX : Number = _hero.x + x;
+				var heroY : Number = _hero.y + y;
+				
+				var vx 	  : Number;
+				var vy	  : Number;
+				
+				positionArr = new Array(false);
+				
+				for(var i:uint = 0; i < thingChecking.length; i++)
 				{
+					vx = (heroX + (_hero.width/2)) - (thingChecking[i].x + (thingChecking[i].width/2));
+					vy = (heroY + (_hero.height/2)) - (thingChecking[i].y + (thingChecking[i].height/2));
 					
-					if(thingChecking.width != 40)
+					if(Math.abs(vx) < _hero.width/2 + thingChecking[i].width/2)
 					{
-						collisionStatus = true;
-						positionArr = new Array(collisionStatus, -1, -1);
+						if(Math.abs(vy) < _hero.height/2 + thingChecking[i].height/2)
+						{	
+							var overlap_X	: Number = _hero.width/2 + thingChecking[i].width/2 - Math.abs(vx);
+							var overlap_Y	: Number = _hero.height/2 + thingChecking[i].height/2 - Math.abs(vy);
+							
+							if(thingType[i] == COIN_TYPE)
+							{
+								positionArr = new Array(true,thingIndex[i]);
+							}					
+							else if(overlap_X >= overlap_Y)
+							{			
+								if(vy>0)
+								{
+									heroY = heroY + overlap_Y;
+									collisionStatus = true;
+								}
+								else
+								{
+									heroY = heroY - overlap_Y;
+									collisionStatus = true;
+								}
+								positionArr = new Array(collisionStatus,heroX-_hero.x, heroY-_hero.y);
+							}
+							else
+							{
+								if(vx>0)
+								{
+									heroX = heroX + overlap_X;
+									collisionStatus = true;
+								}
+								else
+								{
+									heroX = heroX - overlap_X;
+									collisionStatus = true;
+								}
+								positionArr = new Array(collisionStatus,heroX-_hero.x, heroY-_hero.y);
+							}					
+						}
+						else
+							positionArr = new Array (false);
+					}
+					else 
+						positionArr = new Array (false);
+					if(collisionStatus == true)
 						return positionArr;
-					}
-					
-					var overlap_X	: Number = _hero.width/2 + thingChecking.width/2 - Math.abs(vx);
-					var overlap_Y	: Number = _hero.height/2 + thingChecking.height/2 - Math.abs(vy);
-					
-					if(overlap_X >= overlap_Y)
-					{			
-						if(vy>0)
-						{
-							heroY = heroY + overlap_Y;
-							collisionStatus = true;
-						}
-						else
-						{
-							heroY = heroY - overlap_Y;
-							collisionStatus = true;
-						}
-					}
-					else
-					{
-						if(vx>0)
-						{
-							heroX = heroX + overlap_X;
-							collisionStatus = true;
-						}
-						else
-						{
-							heroX = heroX - overlap_X;
-							collisionStatus = true;
-						}
-					}
 				}
 			}
-			
-			positionArr = new Array(collisionStatus,heroX-_hero.x, heroY-_hero.y);
 			return positionArr;
 		}
 	}

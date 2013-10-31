@@ -38,8 +38,15 @@ package object.chapterOne
 			this._hero        = new Sprite();  
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
-
+		
+		private function onRemoveFromStage(e:Event):void
+		{
+			this._heroEnable = false;
+			this.removeEventListener(Event.ADDED_TO_STAGE, onRemoveFromStage);
+		}
+		
 		public function get heroEnable():Boolean
 		{
 			return _heroEnable;
@@ -73,7 +80,6 @@ package object.chapterOne
 			}
 			
 			if(index < 0){
-				
 				//do not show anything
 				for(var i:uint = 0 ; i < _heroStand.length ; i++)
 				{
@@ -166,15 +172,19 @@ package object.chapterOne
 			this._hero.y += _speedY;
 			
 			var heroPos : Array = _controller.notifyForCollisionChecking(_hero.x, _hero.y);
-			if(heroPos[0])
+			
+			if(heroPos.length == 1)
 			{
-				if(heroPos[1] != -1 && heroPos[2] != -1)
-				{
-					this._hero.x = heroPos[1];
-					this._hero.y = heroPos[2];
-				}
-				else
-					trace("coin");
+				//trace("do nothing");
+			}
+			else if(heroPos.length  == 2)
+			{
+				_controller.notifyCollectCoin(heroPos[1]);
+			}
+			else if (heroPos.length == 3)
+			{
+				this._hero.x = heroPos[1];
+				this._hero.y = heroPos[2];
 			}
 		}
 		

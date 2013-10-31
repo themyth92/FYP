@@ -23,11 +23,13 @@ package object.chapterOne
 		
 		//indexBoard var
 		private var _patternCollection : Vector.<Image>;
+		private var _patternType	   : Vector.<String>;
 		private var _patternIndex      : Vector.<uint>;
 		
 		//Hero var
 		private var _hero	       : Hero;
 		private var _controller	   : Controller;
+		private var _heroIndex	   : uint;
 		
 		public function IndexBoard(controller:Controller)
 		{
@@ -42,6 +44,16 @@ package object.chapterOne
 			return _patternCollection;
 		}
 
+		public function get patternType():Vector.<String>
+		{
+			return _patternType;
+		}
+		
+		public function get patternIndex():Vector.<uint>
+		{
+			return _patternIndex;
+		}
+		
 		public function get hero():Hero
 		{
 			return _hero;
@@ -51,6 +63,7 @@ package object.chapterOne
 			
 			_patternCollection = new Vector.<Image>();
 			_patternIndex      = new Vector.<uint>();
+			_patternType 	   = new Vector.<String>();
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -62,6 +75,7 @@ package object.chapterOne
 				
 				var img:Image = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(PATTERN_PREFIX + name));
 				_patternCollection.push(img);
+				_patternType.push(name);
 				positionObjectOnStage(img, index);
 			}
 			catch(e:Error){
@@ -105,12 +119,19 @@ package object.chapterOne
 		
 		public function deleteObject(index:uint):void
 		{
+			trace(index + " " + _heroIndex);
+			if(index == _heroIndex && _hero.heroEnable)
+			{
+				this.deleteHero();						
+				return;
+			}
+			
 			for (var i:uint = 0 ; i < _patternIndex.length ; i++){
-				
-				if(_patternIndex[i] == index){
-					
+				if(_patternIndex[i] == index)
+				{
 					this.removeChild(_patternCollection[i]);
 					_patternCollection.splice(i, 1);
+					_patternType.splice(i,1);
 					_patternIndex.splice(i, 1);
 					
 					break;
@@ -118,15 +139,17 @@ package object.chapterOne
 			}
 		}
 		
-		public function deleteHero():Boolean
+		public function deleteHero():void
 		{
 			if(_hero.heroEnable)
 			{
+				trace("sadasdas");
 				this.removeChild(_hero);
-				return true;
+				_hero.heroEnable = false;
+				return;
 			}
 			else
-				return false;
+				return;
 		}
 		
 		public function createHero(index:Number):Boolean
@@ -134,6 +157,8 @@ package object.chapterOne
 			var modular      : int  = index % MAXIMUM_COLUMN;
 			var rowIndex 	 : uint = 0;
 			var columnIndex  : uint = 0;
+			
+			_heroIndex = index;
 			
 			if(!_hero.heroEnable)
 			{
