@@ -17,9 +17,7 @@ package controller.chapterOne
 	public class Controller
 	{
 		private var _console		 		 : Console;
-		//private var _hero   		 		 : Hero;
 		private var _dialogBubble	 		 : DialogBubble;
-		//private var _heroController 		 : HeroController;
 		private var _instrArrow     		 : InstrArrow;
 		private var _indexBoard              : IndexBoard;
 		private var _dialogBubbleController  : BubbleController;
@@ -59,7 +57,6 @@ package controller.chapterOne
 				else if(e.event == Constant.KEY_PRESSED){
 					switch(e.target){
 						case Constant.HERO:
-							//trace("here");
 							_indexBoardController.moveHero(e.arg);
 						break;
 					}
@@ -85,7 +82,6 @@ package controller.chapterOne
 		public function assignObjectController(console:Console, dialogBubble:DialogBubble, instrArrow:InstrArrow, indexBoard:IndexBoard):void
 		{
 			this._console 		    = console;
-			//this._hero    	        = hero;
 			this._dialogBubble      = dialogBubble;
 			this._instrArrow        = instrArrow;
 			this._indexBoard        = indexBoard;
@@ -104,6 +100,16 @@ package controller.chapterOne
 		public function notifyCollectCoin(index:uint):void
 		{
 			_indexBoardController.removeCoinOnCollision(index);
+		}
+		
+		public function notifyIndexBoard(type:String):void
+		{
+			_indexBoard.onTouchListener(true, type);
+		}
+		
+		public function mouseInputAnalyze(type:String, x:Number, y:Number):void
+		{
+			_indexBoardController.dragDropAnalyze(type,x,y);
 		}
 	}
 }

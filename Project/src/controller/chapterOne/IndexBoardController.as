@@ -2,6 +2,7 @@ package controller.chapterOne
 {
 	import constant.chapterOne.Constant;
 	
+	import flash.events.UncaughtErrorEvent;
 	import flash.geom.Rectangle;
 	
 	import object.chapterOne.Hero;
@@ -20,6 +21,12 @@ package controller.chapterOne
 		private static const FALSE_LENGTH_ARRAY 	:uint   = 1;
 		private static const COIN_TYPE				:String = "03";
 		private static const HERO_TYPE				:String = "04";
+		
+		private static const MAXIMUM_COLUMN:uint 	 = 12;
+		private static const MAXIMUM_ROW:uint        = 8;
+		private static const PIXEL_MOVE:int 	     = 40;
+		private static const BOARD_X:uint			 = 107;
+		private static const BOARD_Y:uint			 = 82;
 		
 		private var _indexBoard 	: IndexBoard;
 		
@@ -69,6 +76,42 @@ package controller.chapterOne
 			
 			trace('Array from console controller is not in defined format');
 			return;
+		}
+		
+		public function dragDropAnalyze(type:String, x:Number, y:Number):Number
+		{
+			_indexBoard.createObject(type,mousePositionToBoardIndex(x,y)); 
+			return 0;
+		}
+		
+		private function mousePositionToBoardIndex(x:Number, y:Number):Number
+		{
+			var modular		:int;
+			var rowIndex	:uint = 0;
+			var columnIndex	:uint = 0;
+			var index		:uint;
+			
+			for(index=1;index<= MAXIMUM_ROW*MAXIMUM_COLUMN;index++)
+			{
+				modular = index % MAXIMUM_COLUMN;
+				if(modular == 0){
+					rowIndex    = int(index/MAXIMUM_COLUMN) - 1;
+					columnIndex = MAXIMUM_COLUMN - 1; 
+				}
+				else{
+					rowIndex    = int(index/MAXIMUM_COLUMN);
+					columnIndex = modular - 1;
+				}
+				
+				//if(columnIndex < 0 || rowIndex < 0){
+					//trace('problem with finding the position of the pattern. Program should be paused for debugging');
+					//return 0;
+				//}
+				
+				if((((x - BOARD_X)- columnIndex*PIXEL_MOVE) <= PIXEL_MOVE) && (((y - BOARD_Y) - rowIndex*PIXEL_MOVE) <= PIXEL_MOVE))
+					break;
+			}
+			return index;
 		}
 		
 		public function checkCoinAvail():Boolean

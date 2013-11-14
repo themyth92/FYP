@@ -4,37 +4,143 @@ package object.chapterOne
 	
 	import constant.Constant;
 	
+	import controller.chapterOne.Controller;
+	
 	import feathers.controls.List;
+	import feathers.controls.Scroller;
 	import feathers.data.ListCollection;
 	import feathers.layout.HorizontalLayout;
-	import feathers.controls.Scroller;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
 	
 	public class PatternList extends Sprite
 	{
-		private static const PATTERN_PREFIX: String = 'pattern/pattern_';
-		private static const PATTERN_LIST:Array     = ['00','01','02','03'];
-		private static const PATTERN_NAME:Array     = ['brick','fire','xbox','coin'];
-		private static const PATTERN_POS :Array     = [100, 455];
+		private static const PATTERN_PREFIX		:String  = 'pattern/pattern_';
+		private static const PATTERN_LIST		:Array   = ['00','01','02','03'];
+		private static const PATTERN_NAME		:Array   = ['brick','fire','xbox','coin'];
+		private static const PATTERN_POS 		:Array   = [100, 455];
 		
-		private var _patternList : List;
+		private var _controller					:Controller;
+		private var _patternList 				:List;
+		private var _touch						:Touch;
+		private var _touchX 					:Number;
+		private var _touchY 					:Number;
+		private var _isDragged					:Boolean;
+		private var _notified 					:Boolean;
 		
-		public function PatternList()
+		public function PatternList(controller:Controller)
 		{
+			this._isDragged	= false;
+			this._notified 	= false;
+			this._controller = controller;
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+			this.addEventListener(TouchEvent.TOUCH, onTouch);
 		}
+		
+		public function get isDragged():Boolean
+		{
+			return _isDragged;
+		}
+
+		public function set isDragged(value:Boolean):void
+		{
+			_isDragged = value;
+		}
+
+		/**CHECK FOR MOUSE LOCATION 
+		 * CHECK MOUSE DOUBLE CLICK **/
+		private function onTouch(event:TouchEvent):void
+		{
+			_touch = event.getTouch(this);
+			if(_touch != null)
+			{
+				//get the location of mouse within the PatternList
+				_touchX = _touch.globalX;
+				_touchY = _touch.globalY;
+				
+				//check mouse within object's image and double click
+				if(checkWithinImage() && _touch.tapCount == 1)
+				{
+					if(!_notified)
+					{
+						selectPatternToDrop();
+						_notified = true;
+					}
+					else
+						_notified = false;
+				}
+			}
+		}
+		
+		/**CHECK WHETHER THE MOUSE WITHIN THE OBJECT'S IMAGE**/
+		private function checkWithinImage():Boolean
+		{
+			if(115 <= _touchX && _touchX <= 155)
+				if(470 <= _touchY && _touchY <= 510)
+					return true;
+			
+			if(165 <= _touchX && _touchX <= 205)
+				if(470 <= _touchY && _touchY <= 510)
+					return true;
+			
+			if(215 <= _touchX && _touchX <= 255)
+				if(470 <= _touchY && _touchY <= 510)
+					return true;
+			
+			if(265 <= _touchX && _touchX <= 305)
+				if(470 <= _touchY && _touchY <= 510)
+					return true;
+			
+			return false;
+		}
+		
+		/**SELECT THE PATTERN THAT WILL BE DRAG-AND-DROP  
+		 * BASED ON THE MOUSE LOCATION**/
+		private function selectPatternToDrop():void
+		{
+			if(115 <= _touchX && _touchX <= 155)
+				if(470 <= _touchY && _touchY <= 510)
+				{
+					_controller.notifyIndexBoard("00");
+					return;
+				}
+			
+			if(165 <= _touchX && _touchX <= 205)
+				if(470 <= _touchY && _touchY <= 510)
+				{
+					_controller.notifyIndexBoard("01");
+					return;
+				}
+			
+			if(215 <= _touchX && _touchX <= 255)
+				if(470 <= _touchY && _touchY <= 510)
+				{
+					_controller.notifyIndexBoard("02");
+					return;
+				}
+			
+			if(265 <= _touchX && _touchX <= 305)
+				if(470 <= _touchY && _touchY <= 510)
+				{
+					_controller.notifyIndexBoard("03");
+					return;
+				}
+		}
+		
 		
 		private function onAddedToStage(e:Event):void{
 			
 			_patternList = new List();
-			var patternCollection : ListCollection = new ListCollection();
-			var object 			   : Object        = new Object();
+			var patternCollection 	:ListCollection = new ListCollection();
+			var object 			   	:Object         = new Object();
 			
-			for(var i:uint = 0 ; i < PATTERN_LIST.length ; i++){
-				
+			for(var i:uint = 0 ; i < PATTERN_LIST.length ; i++)
+			{
 				if(PATTERN_NAME[i]){
 					object = {label:PATTERN_NAME[i], thumbnail:Assets.getAtlas(Constant.SPRITE_ONE).getTexture(PATTERN_PREFIX + PATTERN_LIST[i])};
 					patternCollection.push(object);
