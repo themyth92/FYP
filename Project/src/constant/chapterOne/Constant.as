@@ -44,7 +44,7 @@ package constant.chapterOne
 																		'Do you see the box on the left which the blue arrow is pointing to.',
 																		'Let us create a brick on the screen. ',
 																		'You should follow the exact instruction. If not a red sign will appear to show you if your texts are false.',
-																		'Type in the box "createBrick()" and press the submit button.');
+																		'Type in the box "create(brick,12)" and press the submit button.');
 		/* Arrow instruction */
 		public static const INSTRUC_ARROW_LEFT:String   = 'arrowInsLeft';
 		public static const INSTRUC_ARROW_RIGHT:String  = 'arrowInsRight';
