@@ -1,11 +1,20 @@
+/************************************
+ * ================================ *
+ * CONTROLLER FOR INSTRUCTION ARROW *
+ * ================================ * 
+ ************************************/
+
 package controller.chapterOne
 {
 	import object.chapterOne.InstrArrow;
 	
 	public class InstrArrController
 	{
+		
+		//CONSTANT
 		private static const DIALOG_ARROW_INSTRUCTION: Array = [[3,0], [4,2]];
 		
+		//VARIABLE
 		private var _instrArrow     : InstrArrow;
 		private var _dialogArrow  	 : Array;
 		

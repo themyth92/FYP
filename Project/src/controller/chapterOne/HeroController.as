@@ -1,3 +1,9 @@
+/*********************************
+ * ============================= *
+ * CONTROLLER FOR MAIN CHARACTER *
+ * ============================= * 
+ *********************************/
+
 package controller.chapterOne
 {
 	import constant.chapterOne.Constant;

@@ -1,27 +1,33 @@
+/**********************
+ * ================== *
+ * CHAPTER 1 CONSTANT *
+ * ================== *
+ **********************/
+
 package constant.chapterOne
 {
 	public class Constant
 	{
-		public static const CONSOLE:String     	 	   = 'consoleNote';
-		public static const SPRITE_ONE:String      	   = 'spriteOne';
+		public static const CONSOLE:String     	 	     = 'consoleNote';
+		public static const SPRITE_ONE:String      	     = 'spriteOne';
 		public static const BUBBLE_DIALOG:String         = 'dialogBubble';
 		
 		//function
-		public static const GROBOLD_FONT: String   	   = 'Grobold';
+		public static const GROBOLD_FONT: String   	     = 'Grobold';
 		
 		
 		/* Console */
-		public static const TEXTFIELD_WIDTH:uint   	   = 151;
-		public static const TEXTFIELD_HEIGTH:uint  	   = 32;
+		public static const TEXTFIELD_WIDTH:uint   	     = 151;
+		public static const TEXTFIELD_HEIGTH:uint  	     = 32;
 		
 		public static const CONSOLE_NORMAL:String        = 'Console/ConsoleNormal';
 		public static const CONSOLE_FOCUS:String         = 'Console/ConsoleFocus';
 		
-		public static const NOTE_POSX:uint         	   = 0;
-		public static const NOTE_POSY:uint         	   = 0;
+		public static const NOTE_POSX:uint         	     = 0;
+		public static const NOTE_POSY:uint         	     = 0;
 		
-		public static const TEXTFIELD_POSX:uint    	   = 10;
-		public static const TEXTFIELD_POSY:uint    	   = 67;
+		public static const TEXTFIELD_POSX:uint    	     = 10;
+		public static const TEXTFIELD_POSY:uint    	     = 67;
 		
 		public static const WARNING_SIGN  :String        = 'warningSign';
 		
@@ -36,7 +42,7 @@ package constant.chapterOne
 		public static const DIALOG_ARROW_POSX:uint       = 0;
 		public static const DIALOG_ARROW_POSY:uint       = 0;
 		
-		public static const WELCOME_DIALOG:String	       = 'Welcome to our class. Please click the arrow below to continue the conversation.';
+		public static const WELCOME_DIALOG:String	     = 'Welcome to our class. Please click the arrow below to continue the conversation.';
 		public static const DIALOG:Array                 = new Array('In this class, we assume that you do not know anything about programming.',
 																		'We will teach you about the fundamental concept of creating a game.',
 																		'Let us start with what is a function ???.',
@@ -50,15 +56,15 @@ package constant.chapterOne
 		public static const INSTRUC_ARROW_RIGHT:String  = 'arrowInsRight';
 		
 		/* Event */
-		public static const TRIGGER : String  		  = 'trigger';
-		public static const KEY_PRESSED:String    	  = 'keyPressed';
-		public static const KEY_RELEASED:String   	  = 'keyReleased';
+		public static const TRIGGER : String  		    = 'trigger';
+		public static const KEY_PRESSED:String    	    = 'keyPressed';
+		public static const KEY_RELEASED:String   	    = 'keyReleased';
 		
 		/* Argumemt */
-		public static const KEY_LEFT:String       	  = 'keyLeft';
-		public static const KEY_RIGHT:String      	  = 'keyRight';
-		public static const KEY_DOWN:String       	  = 'keyDown';
-		public static const KEY_UP:String         	  = 'keyUp'; 
+		public static const KEY_LEFT:String       	    = 'keyLeft';
+		public static const KEY_RIGHT:String      	    = 'keyRight';
+		public static const KEY_DOWN:String       	    = 'keyDown';
+		public static const KEY_UP:String         	    = 'keyUp'; 
 		
 		public static const HERO_STATUS_LEFT:String     = 'left';
 		public static const HERO_STATUS_RIGHT:String    = 'right';
@@ -66,7 +72,7 @@ package constant.chapterOne
 		public static const HERO_STATUS_DOWN:String     = 'down';
 		
 		/* Target */
-		public static const HERO:String           	  = 'hero';
+		public static const HERO:String           	    = 'hero';
 		public static const NEXT_ARROW:String           = 'nextArrow';
 		public static const DIALOG_NEXT_ARROW:String    = 'dialogNextArrow';
 		public static const SUBMIT_BTN:String           = 'submitBtn';

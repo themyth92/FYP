@@ -1,8 +1,9 @@
-/*
+/**************************************************** *
+ * ================================================== *
+ * STORE AND LOAD THE GRAPHICS FROM DICTIONARY OBJECT * 
+ * ================================================== *
+ ******************************************************/
 
-* Store and load the graphics from dictionary object
-
-*/
 package assets
 {
 	import constant.Constant;
@@ -26,10 +27,10 @@ package assets
 		[Embed(source = '../media/sprite/loadingPage/preLoader.xml', mimeType = 'application/octet-stream')]
 		private static const AtlasXmlLoadingPage    :Class;
 		
-		private static var _gameTexture 	   :Dictionary = new Dictionary();
-		private static var _gameTextureAtlas :Dictionary = new Dictionary();
+		private static var _gameTexture 	  	:Dictionary = new Dictionary();
+		private static var _gameTextureAtlas 	:Dictionary = new Dictionary();
 		
-		/*======================================
+		/**======================================
 			@ get texture from a single string
 			@ param : textureName
 			@ the texture name will be the name 
@@ -37,30 +38,29 @@ package assets
 			@ into flash
 			@ return the texture according to 
 			@ the name
-		======================================*/
+		======================================**/
 		private static function getTexture(textureName : String):Texture{
-			
+
 			//condition if the private gameTexture for a specific name has not been initialized
 			//initialize it instead of creating a new texture
 			if(_gameTexture[textureName] == undefined){
 				
 				//get texture from class in side assets class
-				var bitmap:Bitmap = new Assets[textureName]();
+				var bitmap:Bitmap 		  = new Assets[textureName]();
 				_gameTexture[textureName] = Texture.fromBitmap(bitmap);
 			}
 			
 			return _gameTexture[textureName];
 		}
 		
-		/*========================================
+		/**========================================
 			@ get bitmap from the spiresheet
 			@ param name
 			@ we will load the spritesheet according
 			@ to the name of the object in dictionary object
 			@ return a texture atlas object
-		=========================================*/
+		=========================================**/
 		public static function getAtlas(name:String):TextureAtlas{
-			
 			//condition if the textureAtlas has not got the object
 			//initialize it
 			if(_gameTextureAtlas[name] == undefined){
@@ -101,7 +101,7 @@ package assets
 			return _gameTextureAtlas[name];
 		}
 		
-		/*================================================================
+		/**================================================================
 		
 			@store the atlas from files to the dictionary atlas object
 			@param texture, xml : the content of xml file and spritesheet 
@@ -109,7 +109,7 @@ package assets
 			@param name : name of the dictionay object
 			@return false if the texture or xml does not content anything
 		
-		=================================================================*/
+		=================================================================**/
 		public static function storeAtlas(texture:Texture, xml:XML , name:String):Boolean{
 			
 			//check if both the object is null or not

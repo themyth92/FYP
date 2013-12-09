@@ -1,3 +1,9 @@
+/**************************
+ * ====================== *
+ * CONTROLLER FOR CONSOLE *
+ * ====================== * 
+ **************************/
+
 package controller.chapterOne
 {
 	import flashx.textLayout.formats.BackgroundColor;

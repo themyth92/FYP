@@ -1,8 +1,9 @@
-/*
+/**************************
+ * ====================== *
+ * CONTROLLER FOR LOADING *
+ * ====================== * 
+ **************************/
 
-*control the loading progress
-
-*/
 package controller 
 {
 	import assets.Assets;
