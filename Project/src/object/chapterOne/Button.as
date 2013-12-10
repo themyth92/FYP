@@ -1,3 +1,9 @@
+/*****************************************************
+ * ================================================= *
+ *                   BUTTON OBJECT                  *
+ * ================================================= * 
+ *****************************************************/
+
 package object.chapterOne
 {
 	import assets.Assets;
@@ -15,21 +21,23 @@ package object.chapterOne
 
 	public class Button extends Sprite
 	{
-		private static const SUBMIT_NORMAL:String   	   = 'submitBtn/submitBtn_01';
-		private static const SUBMIT_DISABLED:String 	   = 'submitBtn/submitBtn_02';
-		private static const SUBMIT_HOVER:String    	   = 'submitBtn/submitBtn_04';
-		private static const SUBMIT_CLICK:String    	   = 'submitBtn/submitBtn_03';
+		//BUTTON OBJECT CONSTANT
+		private static const SUBMIT_NORMAL	 :String   	 = 'submitBtn/submitBtn_01';
+		private static const SUBMIT_DISABLED :String 	 = 'submitBtn/submitBtn_02';
+		private static const SUBMIT_HOVER	 :String     = 'submitBtn/submitBtn_04';
+		private static const SUBMIT_CLICK	 :String     = 'submitBtn/submitBtn_03';
 		
-		private static const PREVIEW_NORMAL:String       = 'submitBtn/previewBtn_01';
+		private static const PREVIEW_NORMAL	 :String     = 'submitBtn/previewBtn_01';
 		private static const PREVIEW_DISABLED:String     = 'submitBtn/previewBtn_02';
-		private static const PREVIEW_HOVER:String        = 'submitBtn/previewBtn_04';
-		private static const PREVIEW_CLICK:String        = 'submitBtn/previewBtn_03';
+		private static const PREVIEW_HOVER	 :String     = 'submitBtn/previewBtn_04';
+		private static const PREVIEW_CLICK	 :String     = 'submitBtn/previewBtn_03';
 		
-		private static const SUBMIT_BTN_POSX:uint        = 93;
+		private static const SUBMIT_BTN_POSX :uint       = 93;
 		
-		private var _submitBtn  :feathers.controls.Button;
-		private var _previewBtn :feathers.controls.Button;
-		private var _controller :Controller;
+		//BUTTON OBJECT VARIABLE
+		private var _submitBtn 				 :feathers.controls.Button;
+		private var _previewBtn 			 :feathers.controls.Button;
+		private var _controller 			 :Controller;
 		
 		public function Button(controller:Controller)
 		{	

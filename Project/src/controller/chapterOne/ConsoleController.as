@@ -16,11 +16,14 @@ package controller.chapterOne
 
 	public class ConsoleController
 	{
+		//CONSOLE VARIABLE
 		private var _console 					:Console;
 		private var _gotError					:Boolean;
 		private var _actionType					:Number;
 		private var _locationIndex				:Number;
 		private var _typeIndex					:String;
+		
+		//CONSOLE CONSTANT
 		private static const MIN_INDEX			:Number = 1;
 		private static const MAX_INDEX			:Number = 96;
 		private static const OBJECT_TYPE		:Array = new Array("brick", "xbox", "fire", "coin", "hero");
@@ -38,6 +41,7 @@ package controller.chapterOne
 			this._typeIndex		= null;
 		}
 		
+		/** receive text input then call another function to analyze it **/
 		public function consoleControllerActivate():Array
 		{
 			return analyzeTextInput(_console.text);
@@ -245,6 +249,11 @@ package controller.chapterOne
 			}
 			return INVALID_TYPE;
 		}
+		
+		
+		/**------------------------------
+		   |            API             |
+		  *------------------------------**/
 		
 		//Determines if a string is upper case
 		public function isUpperCase(value : String) : Boolean {

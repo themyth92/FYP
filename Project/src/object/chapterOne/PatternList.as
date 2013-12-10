@@ -1,3 +1,9 @@
+/*****************************************************
+ * ================================================= *
+ *                   PATTERN OBJECT                  *
+ * ================================================= * 
+ *****************************************************/
+
 package object.chapterOne
 {
 	import assets.Assets;
@@ -18,11 +24,13 @@ package object.chapterOne
 	
 	public class PatternList extends Sprite
 	{
+		//PATTERN CONST
 		private static const PATTERN_PREFIX		:String  = 'pattern/pattern_';
 		private static const PATTERN_LIST		:Array   = ['00','01','02','03'];
 		private static const PATTERN_NAME		:Array   = ['brick','fire','xbox','coin'];
 		private static const PATTERN_POS 		:Array   = [100, 455];
 		
+		//PATTERN VARIABLE
 		private var _controller					:Controller;
 		private var _patternList 				:List;
 		private var _touch						:Touch;
