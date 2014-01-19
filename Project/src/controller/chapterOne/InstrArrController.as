@@ -10,7 +10,6 @@ package controller.chapterOne
 	
 	public class InstrArrController
 	{
-		
 		//CONSTANT
 		private static const DIALOG_ARROW_INSTRUCTION: Array = [[3,0], [4,2]];
 		
@@ -24,8 +23,7 @@ package controller.chapterOne
 			_dialogArrow  = [[600, 120, 15, 0 ], [0, 0, 0, 0]];
 		}
 		
-		public function showInstrArrowFromDialogBubble(index:int):void{;
-
+		public function showInstrArrowFromDialogBubble(index:int):void{
 			for(var i:uint = 0 ; i < DIALOG_ARROW_INSTRUCTION.length ; i++){
 				
 				if(DIALOG_ARROW_INSTRUCTION[i][0] == index){

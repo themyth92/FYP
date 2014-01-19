@@ -35,7 +35,6 @@ package object.chapterOne
 		private static const WARNING_SIGN_POSX:uint       = 130;
 		private static const WARNING_SIGN_POSY:uint       = 73;
 		
-		
 		private var _textField    	: TextInput;
 		private var _consoleNotes	: Image;
 		private var _text         	: String;
@@ -44,12 +43,24 @@ package object.chapterOne
 		private var _executed		: Boolean = false;
 		private var _controller 	: Controller;
 		
+		//STATES VARIABLE
+		private var _state					 :String = Constant.INSTRUCTING_STATE;
+		
 		public function Console(controller:Controller)
 		{
 			this._controller = controller;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+			this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
+		}
+		
+		private function onEnterFrame(e:Event):void
+		{
+			if(_state != Constant.EDITTING_STATE)
+				_textField.isEnabled = false;
+			else
+				_textField.isEnabled = true;
 		}
 		
 		public function get text():String
@@ -185,6 +196,11 @@ package object.chapterOne
 		private function deleteObject(n:Number):void
 		{
 			_enteredText.visible = false;
+		}
+		
+		public function changeState(currentState:String):void
+		{
+			_state = currentState;
 		}
 	}
 }

@@ -32,10 +32,9 @@ package constant
 		//Chapter 1 object dictionary
 		public static const CHAP_ONE_TEXTURE_ARRAY:Array     = new Array('background', 'mainFrame','grassBackground',
 															   				'heart','bottomSelectionFrame',
-															   				'nextArrow', 'scoreFace',
+																			'pattern/pattern_03','teacher',
 															   				'volumeDecBtn', 'volumeBar',
-															   				'volumeIncBtn', 'volumeSlider',
-															   				'warningSign', 'teacher');
+															   				'volumeIncBtn', 'volumeSlider');
 		//font
 		public static const GROBOLD_FONT: String              = 'Grobold';
 	}

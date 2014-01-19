@@ -27,20 +27,27 @@ package object.chapterOne
 		private var _arrow         	:starling.display.Button;
 		private var _dialogCurPos  	:uint;
 		
+		//STATES VARIABLE
+		private var _state					 :String = Constant.INSTRUCTING_STATE;
+		
 		public function DialogBubble(controller:Controller)
 		{	
 			this._controller = controller;
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
-
+		
 		public function set dialogCurPos(value:uint):void
 		{
 			_dialogCurPos = value;
 		}
 
-		public function changeDialogTextField(text:String):void{
+		public function changeDialogTextField(text:String):void
+		{
 			_textField.text = text;
+			if(text == null)
+				_controller.edittingState();
 		}
 		
 		private function onAddedToStage(e:Event):void{
@@ -77,8 +84,23 @@ package object.chapterOne
 			_textField = null;
 		}
 		
+		private function onEnterFrame(e:Event):void
+		{
+			if(_state != Constant.INSTRUCTING_STATE)
+			{
+				this._bubbles.alpha		 = 0;
+				this._textField.alpha 	 = 0;
+				this._arrow.alpha 		 = 0;
+			}
+		}
+		
 		private function onTriggerArrow(e:Event):void{
 			_controller.notifyObserver({event:Constant.TRIGGER, arg:_dialogCurPos, target:Constant.DIALOG_NEXT_ARROW});
+		}
+		
+		public function changeState(currentState:String):void
+		{
+			_state = currentState;
 		}
 	}
 }

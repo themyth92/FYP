@@ -17,7 +17,7 @@ package controller.chapterOne
 	import starling.display.Image;
 	
 	public class IndexBoardController
-	{
+	{	
 		//INDEX BOARD CONSTANT
 		private static const LIST_COMMAND			:Array 	= [0,1];
 		private static const MAXIMUM_PATTERN		:uint   = 1;
@@ -34,8 +34,8 @@ package controller.chapterOne
 		private static const BOARD_Y				:uint	= 82;
 		
 		//CHARACTER CONSTANT
-		private static const HERO_SPEED_FORWARD		:int = 3;
-		private static const HERO_SPEED_BACKWARD	:int = -3;
+		private static const HERO_SPEED_FORWARD		:int 	= 3;
+		private static const HERO_SPEED_BACKWARD	:int 	= -3;
 		
 		//INDEX BOARD VARIABLE
 		private var _numberOfCoin					:Number;
@@ -50,7 +50,7 @@ package controller.chapterOne
 			this._numberOfCoin 	 = 0;
 			this._hero           = _indexBoard.hero;
 		}
-		
+
 		/**================================================================
 		 * |                    BOARD CONTROL FUNCTION                    | *
 		 * ================================================================**/
@@ -307,8 +307,10 @@ package controller.chapterOne
 							
 							if(objectType[i] == COIN_TYPE)
 							{
-								positionArr = new Array(true,objectIndex[i]);
-							}					
+								collisionStatus = true;
+								positionArr = new Array(collisionStatus,objectIndex[i]);
+								coinCollect();
+							}			
 							else if(overlap_X >= overlap_Y)
 							{			
 								if(vy>0)
@@ -322,6 +324,14 @@ package controller.chapterOne
 									collisionStatus = true;
 								}
 								positionArr = new Array(collisionStatus,heroX-_hero.x, heroY-_hero.y);
+								if(objectType[i] == "02")
+								{
+									takeDamage();
+								}
+								if(objectType[i] == "01")
+								{
+									win();
+								}
 							}
 							else
 							{
@@ -336,6 +346,14 @@ package controller.chapterOne
 									collisionStatus = true;
 								}
 								positionArr = new Array(collisionStatus,heroX-_hero.x, heroY-_hero.y);
+								if(objectType[i] == "02")
+								{
+									takeDamage();
+								}
+								if(objectType[i] == "01")
+								{
+									win();
+								}
 							}					
 						}
 						else
@@ -348,6 +366,32 @@ package controller.chapterOne
 				}
 			}
 			return positionArr;
+		}
+	
+		public function changeObjectState(currentState:String):void
+		{
+			this._indexBoard.changeState(currentState);
+			this._hero.changeState(currentState);
+		}	
+		
+		private function coinCollect():void
+		{
+			this._hero.changeCoin();
+		}
+		
+		private function takeDamage():void
+		{
+			this._hero.changeLife(true, false);
+		}
+	
+		private function win():void
+		{
+			
+		}	
+		
+		public function updateLifeOnGameStart(value:Number):void
+		{
+			this._hero.updateMaxLife(value);
 		}
 	}
 }

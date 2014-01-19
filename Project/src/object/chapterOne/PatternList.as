@@ -9,6 +9,7 @@ package object.chapterOne
 	import assets.Assets;
 	
 	import constant.Constant;
+	import constant.chapterOne.Constant;
 	
 	import controller.chapterOne.Controller;
 	
@@ -39,6 +40,9 @@ package object.chapterOne
 		private var _isDragged					:Boolean;
 		private var _notified 					:Boolean;
 		
+		//STATES VARIABLE
+		private var _state					 :String = constant.chapterOne.Constant.INSTRUCTING_STATE;
+		
 		public function PatternList(controller:Controller)
 		{
 			this._isDragged	= false;
@@ -64,23 +68,26 @@ package object.chapterOne
 		 * CHECK MOUSE DOUBLE CLICK **/
 		private function onTouch(event:TouchEvent):void
 		{
-			_touch = event.getTouch(this);
-			if(_touch != null)
+			if(_state == constant.chapterOne.Constant.EDITTING_STATE)
 			{
-				//get the location of mouse within the PatternList
-				_touchX = _touch.globalX;
-				_touchY = _touch.globalY;
-				
-				//check mouse within object's image and double click
-				if(checkWithinImage() && _touch.tapCount == 1)
+				_touch = event.getTouch(this);
+				if(_touch != null)
 				{
-					if(!_notified)
+					//get the location of mouse within the PatternList
+					_touchX = _touch.globalX;
+					_touchY = _touch.globalY;
+					
+					//check mouse within object's image and double click
+					if(checkWithinImage() && _touch.tapCount == 1)
 					{
-						selectPatternToDrop();
-						_notified = true;
+						if(!_notified)
+						{
+							selectPatternToDrop();
+							_notified = true;
+						}
+						else
+							_notified = false;
 					}
-					else
-						_notified = false;
 				}
 			}
 		}
@@ -150,7 +157,7 @@ package object.chapterOne
 			for(var i:uint = 0 ; i < PATTERN_LIST.length ; i++)
 			{
 				if(PATTERN_NAME[i]){
-					object = {label:PATTERN_NAME[i], thumbnail:Assets.getAtlas(Constant.SPRITE_ONE).getTexture(PATTERN_PREFIX + PATTERN_LIST[i])};
+					object = {label:PATTERN_NAME[i], thumbnail:Assets.getAtlas(constant.Constant.SPRITE_ONE).getTexture(PATTERN_PREFIX + PATTERN_LIST[i])};
 					patternCollection.push(object);
 					object = null;
 				}			
@@ -181,6 +188,11 @@ package object.chapterOne
 			_patternList = null;
 			
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+		}
+	
+		public function changeState(currentState:String):void
+		{
+			_state = currentState;
 		}
 	}
 }

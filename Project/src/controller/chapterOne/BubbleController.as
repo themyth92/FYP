@@ -38,5 +38,10 @@ package controller.chapterOne
 				trace('The dialog position of the dialog bubble is not defined.');
 			}
 		}
+		
+		public function changeObjectState(currentState:String):void
+		{
+			this._dialogBubble.changeState(currentState);
+		}
 	}
 }

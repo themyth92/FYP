@@ -34,14 +34,10 @@ package main
 			
 			if(e.screenID.id != undefined){
 				switch(e.screenID.id){
-					
 					case Constant.LOADING_SCREEN:
-						trace('loading screen');
-						
-					break;
+						break;
 					
 					case Constant.FIRST_CHAPTER_FUNC_SCREEN:
-						trace('first chapter func screen');
 						this.removeChild(_loadingScreen);
 						this.addChild(_chapterOneScreen);
 						_loadingScreen = null;
@@ -49,8 +45,7 @@ package main
 					break;
 					
 					default:
-						trace('stupid');
-					break;
+						break;
 				}
 			}
 		}

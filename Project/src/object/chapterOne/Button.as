@@ -39,11 +39,25 @@ package object.chapterOne
 		private var _previewBtn 			 :feathers.controls.Button;
 		private var _controller 			 :Controller;
 		
+		//STATES VARIABLE
+		private var _state					 :String = Constant.INSTRUCTING_STATE;
+		
 		public function Button(controller:Controller)
 		{	
+			this._controller  = controller;
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);	
-			this._controller  = controller;
+			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+		
+		private function onEnterFrame(e:Event):void
+		{
+//			if(_state != Constant.EDITTING_STATE)
+//			{
+//				_submitBtn.isEnabled = false;
+//				_previewBtn.isEnabled = false;
+//			}
 		}
 		
 		private function onAddedToStage(e:Event):void{
@@ -69,13 +83,13 @@ package object.chapterOne
 		}
 		
 		private function onSubmitBtnTrigger(e:Event):void{
-			
-			_controller.notifyObserver({event:Constant.TRIGGER, arg:'', target:Constant.SUBMIT_BTN});
+			if(_state == Constant.EDITTING_STATE)
+				_controller.notifyObserver({event:Constant.TRIGGER, arg:'', target:Constant.SUBMIT_BTN});	
 		}
 		
 		private function onPreviewBtnTrigger(e:Event):void{
-			
-			_controller.notifyObserver({event:Constant.TRIGGER, arg:'', target:Constant.PREVIEW_BTN});
+			if(_state == Constant.EDITTING_STATE)
+				_controller.notifyObserver({event:Constant.TRIGGER, arg:'', target:Constant.PREVIEW_BTN});
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
@@ -88,5 +102,9 @@ package object.chapterOne
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 
+		public function changeState(currentState:String):void
+		{
+			_state = currentState;
+		}
 	}
 }

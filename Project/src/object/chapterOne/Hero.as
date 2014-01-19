@@ -32,6 +32,16 @@ package object.chapterOne
 		private var _heroEnable  :Boolean;
 		private var _hero        :Sprite;
 		
+		//STATES VARIABLE
+		private var _state					 :String = Constant.INSTRUCTING_STATE;
+		
+		//GAME STAT VARIABLE
+		private var _maxLife				:Number;
+		private var _currentLife			:Number;
+		private var _coinCollected			:Number = 0;
+		private var _counter   				:int = 60;
+		private var _isHit:Boolean;
+		
 		public function Hero(controller:Controller)
 		{	
 			this._controller  = controller;
@@ -45,6 +55,13 @@ package object.chapterOne
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+		}
+		
+		private function onAddedToStage(e:Event):void
+		{
+			heroAddToStage();
+			enableHero();
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function onRemoveFromStage(e:Event):void
@@ -142,13 +159,6 @@ package object.chapterOne
 			return arr;
 		}
 		
-		private function onAddedToStage(e:Event):void{
-			
-			heroAddToStage();
-			enableHero();
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		}
-		
 		private function heroAddToStage():void{
 			
 			var image:Image;
@@ -174,45 +184,94 @@ package object.chapterOne
 		}
 		
 		private function onEnterFrame(e:Event):void{
-			this._hero.x += _speedX;
-			this._hero.y += _speedY;
+			if(_state == Constant.PLAYING_STATE)
+			{
+				this._hero.x += _speedX;
+				this._hero.y += _speedY;
+				
+				var heroPos : Array = _controller.notifyForCollisionChecking(_hero.x, _hero.y);
+				
+				if(heroPos.length == 1)
+				{
+					//trace("do nothing");
+				}
+				else if(heroPos.length  == 2)
+				{
+					_controller.notifyCollectCoin(heroPos[1]);
+				}
+				else if (heroPos.length == 3)
+				{
+					this._hero.x = heroPos[1];
+					this._hero.y = heroPos[2];
+				}
+			}
 			
-			var heroPos : Array = _controller.notifyForCollisionChecking(_hero.x, _hero.y);
-			
-			if(heroPos.length == 1)
-			{
-				//trace("do nothing");
-			}
-			else if(heroPos.length  == 2)
-			{
-				_controller.notifyCollectCoin(heroPos[1]);
-			}
-			else if (heroPos.length == 3)
-			{
-				this._hero.x = heroPos[1];
-				this._hero.y = heroPos[2];
-			}
+			if(_isHit)
+				_counter++;
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void{
-			if(e.keyCode == Keyboard.LEFT){			
-				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_LEFT, target:Constant.HERO});
-			}
-			else if(e.keyCode == Keyboard.RIGHT){
-				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_RIGHT, target:Constant.HERO});
-			}
-			else if(e.keyCode == Keyboard.UP){
-				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_UP, target:Constant.HERO});
-			}
-			else if(e.keyCode == Keyboard.DOWN){
-				_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_DOWN, target:Constant.HERO});
+			if(_state == Constant.PLAYING_STATE)
+			{
+				if(e.keyCode == Keyboard.LEFT){			
+					_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_LEFT, target:Constant.HERO});
+				}
+				else if(e.keyCode == Keyboard.RIGHT){
+					_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_RIGHT, target:Constant.HERO});
+				}
+				else if(e.keyCode == Keyboard.UP){
+					_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_UP, target:Constant.HERO});
+				}
+				else if(e.keyCode == Keyboard.DOWN){
+					_controller.notifyObserver({event:Constant.KEY_PRESSED, arg:Constant.KEY_DOWN, target:Constant.HERO});
+				}
 			}
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void{
-			_speedX = 0;
-			_speedY = 0;
-			_controller.notifyObserver({event:Constant.KEY_UP, arg:_heroStatus, target:Constant.HERO});
+			if(_state == Constant.PLAYING_STATE)
+			{
+				_speedX = 0;
+				_speedY = 0;
+				_controller.notifyObserver({event:Constant.KEY_UP, arg:_heroStatus, target:Constant.HERO});
+			}
+		}
+	
+		public function changeState(currentState:String):void
+		{
+			_state = currentState;
+		}
+		
+		public function changeLife(isHit:Boolean, isBonus:Boolean):void
+		{
+			if(isHit)
+			{
+				_isHit = true;
+				if(_currentLife > 0)
+					if(_counter >= 60)
+					{
+						_currentLife --;
+						_counter    = 0;
+						_isHit = false;
+					}
+			}
+			if(isBonus)
+				if(_currentLife < _maxLife)
+					_currentLife ++;
+			
+			_controller.getGameStat("life",_currentLife);
+		}
+		
+		public function changeCoin():void
+		{
+			_coinCollected ++;
+			_controller.getGameStat("coin", _coinCollected);
+		}
+		
+		public function updateMaxLife(value:Number):void
+		{
+			_maxLife = value;
+			_currentLife = _maxLife;
 		}
 	}
 }

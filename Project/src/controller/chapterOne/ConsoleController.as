@@ -8,14 +8,14 @@ package controller.chapterOne
 {
 	import flashx.textLayout.formats.BackgroundColor;
 	
+	import mx.utils.StringUtil;
+	
 	import object.chapterOne.Console;
 	
 	import starling.errors.AbstractClassError;
-	
-	import mx.utils.StringUtil;
 
 	public class ConsoleController
-	{
+	{		
 		//CONSOLE VARIABLE
 		private var _console 					:Console;
 		private var _gotError					:Boolean;
@@ -256,13 +256,13 @@ package controller.chapterOne
 		  *------------------------------**/
 		
 		//Determines if a string is upper case
-		public function isUpperCase(value : String) : Boolean {
+		private function isUpperCase(value : String) : Boolean {
 			return isValidCode(value, 65, 90);
 			
 		}
 		
 		// Determines if a string is lower case 
-		public function isLowerCase(value : String) : Boolean {
+		private function isLowerCase(value : String) : Boolean {
 			return isValidCode(value, 97, 122);
 		}
 		
@@ -272,7 +272,7 @@ package controller.chapterOne
 		}
 		
 		// Determines if a string is letter
-		public function isLetter(value : String) : Boolean {
+		private function isLetter(value : String) : Boolean {
 			return (isLowerCase(value) || isUpperCase(value));
 		}
 		
@@ -287,6 +287,11 @@ package controller.chapterOne
 					return false;
 			}
 			return true;
+		}
+		
+		public function changeObjectState(currentState:String):void
+		{
+			this._console.changeState(currentState);
 		}
 	}
 }

@@ -15,7 +15,7 @@ package screen.chapterOne
 	import object.chapterOne.IndexBoard;
 	import object.chapterOne.InstrArrow;
 	import object.chapterOne.PatternList;
-	import object.chapterOne.Score;
+	import object.chapterOne.ScoreBoard;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -24,13 +24,14 @@ package screen.chapterOne
 	public class ChapterScreen extends Sprite
 	{
 		private var _commonObject : Dictionary;
-		private var _console 	   : Console;
+		private var _console 	  : Console;
 		private var _button       : Button;
 		private var _controller   : Controller;
 		private var _dialogBubble : DialogBubble;
 		private var _instrArrow   : InstrArrow;
 		private var _indexBoard   : IndexBoard;
 		private var _patternList  : PatternList;
+		private var _scoreBoard	  : ScoreBoard;
 		
 		public function ChapterScreen()
 		{
@@ -42,8 +43,9 @@ package screen.chapterOne
 			_instrArrow   = new InstrArrow();
 			_patternList  = new PatternList(_controller);
 			_indexBoard   = new IndexBoard(_controller);
+			_scoreBoard	  = new ScoreBoard(_controller);
 			
-			_controller.assignObjectController(_console, _dialogBubble, _instrArrow, _indexBoard);
+			_controller.assignObjectController(_console, _dialogBubble, _instrArrow, _indexBoard, _button, _patternList, _scoreBoard);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -97,6 +99,7 @@ package screen.chapterOne
 			this.addChild(_instrArrow);
 			this.addChild(_patternList);
 			this.addChild(_indexBoard);
+			this.addChild(_scoreBoard);
 			arrangeTexture();
 		}
 		
@@ -113,20 +116,23 @@ package screen.chapterOne
 			_commonObject['heart'].x = 192;
 			_commonObject['heart'].y = 33;
 			
-			_commonObject['scoreFace'] = 375;
-			_commonObject['scoreFace'] = 32;
+			_commonObject['volumeBar'].x = 615;
+			_commonObject['volumeBar'].y = 335;
 			
-			_commonObject['volumeBar'].x = 838;
-			_commonObject['volumeBar'].y = 549;
+			_commonObject['volumeDecBtn'].x = 615;
+			_commonObject['volumeDecBtn'].y = 350;
 			
-			_commonObject['volumeDecBtn'].x = 838;
-			_commonObject['volumeDecBtn'].y = 566;
+			_commonObject['volumeIncBtn'].x = 765;
+			_commonObject['volumeIncBtn'].y = 350;
 			
-			_commonObject['volumeIncBtn'].x = 1063;
-			_commonObject['volumeIncBtn'].y = 566;
+			_commonObject['volumeSlider'].x = 650;
+			_commonObject['volumeSlider'].y = 327;
 			
 			_commonObject['bottomSelectionFrame'].x = 96;
 			_commonObject['bottomSelectionFrame'].y = 451;
+			
+			_commonObject['pattern/pattern_03'].x = 80;
+			_commonObject['pattern/pattern_03'].y = 33;
 			
 			_console.x = 611;
 			_console.y = 48;
