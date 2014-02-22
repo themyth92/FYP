@@ -1,36 +1,38 @@
-/**************************
- * ====================== *
- * CONTROLLER FOR CONSOLE *
- * ====================== * 
- **************************/
+/*****************************************************
+ * ================================================= *
+ *            CONSOLE OBJECT'S CONTROLLER            *
+ * ================================================= * 
+ *****************************************************/
 
 package controller.chapterOne
 {
+	//import library
 	import flashx.textLayout.formats.BackgroundColor;
-	
 	import mx.utils.StringUtil;
-	
 	import object.chapterOne.Console;
-	
 	import starling.errors.AbstractClassError;
 
 	public class ConsoleController
 	{		
-		//CONSOLE VARIABLE
+		/*----------------------------
+		|	  Controller variable    |
+		-----------------------------*/
 		private var _console 					:Console;
 		private var _gotError					:Boolean;
 		private var _actionType					:Number;
 		private var _locationIndex				:Number;
 		private var _typeIndex					:String;
 		
-		//CONSOLE CONSTANT
-		private static const MIN_INDEX			:Number = 1;
-		private static const MAX_INDEX			:Number = 96;
-		private static const OBJECT_TYPE		:Array = new Array("brick", "xbox", "fire", "coin", "hero");
-		private static const ACTION_TYPE 		:Array = new Array("delete", "create");
-		private static const INVALID_ACTION		:Number = -1; 
-		private static const INVALID_LOCATION	:Number = -1;
-		private static const INVALID_TYPE		:String = null;
+		/*----------------------------
+		|	  Controller constant    |
+		-----------------------------*/
+		private static const MIN_INDEX			:Number 	= 1;
+		private static const MAX_INDEX			:Number 	= 96;
+		private static const OBJECT_TYPE		:Array 		= new Array("brick", "xbox", "fire", "coin", "hero");
+		private static const ACTION_TYPE 		:Array 		= new Array("delete", "create");
+		private static const INVALID_ACTION		:Number 	= -1; 
+		private static const INVALID_LOCATION	:Number 	= -1;
+		private static const INVALID_TYPE		:String 	= null;
 		
 		public function ConsoleController(console:Console)
 		{
@@ -250,6 +252,10 @@ package controller.chapterOne
 			return INVALID_TYPE;
 		}
 		
+		public function changeObjectState(currentState:String):void
+		{
+			this._console.changeState(currentState);
+		}
 		
 		/**------------------------------
 		   |            API             |
@@ -287,11 +293,6 @@ package controller.chapterOne
 					return false;
 			}
 			return true;
-		}
-		
-		public function changeObjectState(currentState:String):void
-		{
-			this._console.changeState(currentState);
 		}
 	}
 }

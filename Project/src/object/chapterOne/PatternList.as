@@ -9,7 +9,7 @@ package object.chapterOne
 	import assets.Assets;
 	
 	import constant.Constant;
-	import constant.chapterOne.Constant;
+	import constant.ChapterOneConstant;
 	
 	import controller.chapterOne.Controller;
 	
@@ -41,7 +41,7 @@ package object.chapterOne
 		private var _notified 					:Boolean;
 		
 		//STATES VARIABLE
-		private var _state					 :String = constant.chapterOne.Constant.INSTRUCTING_STATE;
+		private var _state					 :String = constant.ChapterOneConstant.INSTRUCTING_STATE;
 		
 		public function PatternList(controller:Controller)
 		{
@@ -68,7 +68,7 @@ package object.chapterOne
 		 * CHECK MOUSE DOUBLE CLICK **/
 		private function onTouch(event:TouchEvent):void
 		{
-			if(_state == constant.chapterOne.Constant.EDITTING_STATE)
+			if(_state == constant.ChapterOneConstant.EDITTING_STATE)
 			{
 				_touch = event.getTouch(this);
 				if(_touch != null)

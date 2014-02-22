@@ -6,7 +6,7 @@
 
 package controller.chapterOne
 {
-	import constant.chapterOne.Constant;
+	import constant.ChapterOneConstant;
 	
 	import object.chapterOne.Hero;
 	
@@ -30,31 +30,31 @@ package controller.chapterOne
 		public function moveHero(key:String):void{
 			
 			switch(key){
-				case Constant.KEY_LEFT:
+				case ChapterOneConstant.KEY_LEFT:
 					_hero.speedX = HERO_SPEED_BACKWARD;
 					_hero.speedY = 0;
-					_hero.heroStatus = Constant.HERO_STATUS_LEFT;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_LEFT;
 					_hero.showHero(2, 1);
 				break;
 				
-				case Constant.KEY_RIGHT:
+				case ChapterOneConstant.KEY_RIGHT:
 					_hero.speedX = HERO_SPEED_FORWARD;
 					_hero.speedY = 0;
-					_hero.heroStatus = Constant.HERO_STATUS_RIGHT;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_RIGHT;
 					_hero.showHero(3, 1);
 				break;
 				
-				case Constant.KEY_DOWN:
+				case ChapterOneConstant.KEY_DOWN:
 					_hero.speedX = 0;
 					_hero.speedY = HERO_SPEED_FORWARD;
-					_hero.heroStatus = Constant.HERO_STATUS_DOWN;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_DOWN;
 					_hero.showHero(1, 1);
 				break;
 				
-				case Constant.KEY_UP:
+				case ChapterOneConstant.KEY_UP:
 					_hero.speedX = 0;
 					_hero.speedY = HERO_SPEED_BACKWARD;
-					_hero.heroStatus = Constant.HERO_STATUS_UP;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_UP;
 					_hero.showHero(0, 1);
 				break;
 				
@@ -70,16 +70,16 @@ package controller.chapterOne
 			
 			switch(status){
 				
-				case Constant.HERO_STATUS_UP:
+				case ChapterOneConstant.HERO_STATUS_UP:
 					_hero.showHero(0,0);
 				break;
-				case Constant.HERO_STATUS_DOWN:
+				case ChapterOneConstant.HERO_STATUS_DOWN:
 					_hero.showHero(1,0);
 				break;
-				case Constant.HERO_STATUS_LEFT:
+				case ChapterOneConstant.HERO_STATUS_LEFT:
 					_hero.showHero(2,0);
 				break;
-				case Constant.HERO_STATUS_RIGHT:
+				case ChapterOneConstant.HERO_STATUS_RIGHT:
 					_hero.showHero(3,0);
 				break;
 			}

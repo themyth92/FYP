@@ -6,9 +6,10 @@
 
 package object.chapterOne
 {
+	//import library
 	import assets.Assets;
 	
-	import constant.chapterOne.Constant;
+	import constant.ChapterOneConstant;
 	
 	import controller.chapterOne.Controller;
 	
@@ -32,19 +33,27 @@ package object.chapterOne
 	
 	public class Console extends Sprite
 	{
-		private static const WARNING_SIGN_POSX:uint       = 130;
-		private static const WARNING_SIGN_POSY:uint       = 73;
+		/*----------------------------
+		|	    Console constant     |
+		-----------------------------*/
+		private static const WARNING_SIGN_POSX	:uint       	= 130;
+		private static const WARNING_SIGN_POSY	:uint       	= 73;
 		
-		private var _textField    	: TextInput;
-		private var _consoleNotes	: Image;
-		private var _text         	: String;
-		private var _errorSign    	: Image;
-		private var _enteredText 	: TextArea = new TextArea();
-		private var _executed		: Boolean = false;
-		private var _controller 	: Controller;
+		/*----------------------------
+		|	    Console variable     |
+		-----------------------------*/
+		private var _textField    				: TextInput;
+		private var _consoleNotes				: Image;
+		private var _errorSign    				: Image;
+		private var _text         				: String;
+		private var _enteredText 				: TextArea 		= new TextArea();
+		private var _executed					: Boolean 		= false;
+		private var _controller 				: Controller;
 		
-		//STATES VARIABLE
-		private var _state					 :String = Constant.INSTRUCTING_STATE;
+		/*----------------------------
+		|	    Console state        |
+		-----------------------------*/
+		private var _state					 	:String 		= ChapterOneConstant.INSTRUCTING_STATE;
 		
 		public function Console(controller:Controller)
 		{
@@ -55,14 +64,6 @@ package object.chapterOne
 			this.addEventListener(Event.ENTER_FRAME,onEnterFrame);
 		}
 		
-		private function onEnterFrame(e:Event):void
-		{
-			if(_state != Constant.EDITTING_STATE)
-				_textField.isEnabled = false;
-			else
-				_textField.isEnabled = true;
-		}
-		
 		public function get text():String
 		{
 			_text = _textField.text;
@@ -70,7 +71,7 @@ package object.chapterOne
 			_text = StringUtil.trim(_text);
 			return _text;
 		}
-
+		
 		public function set text(value:String):void
 		{
 			_text = value;
@@ -91,72 +92,7 @@ package object.chapterOne
 			else
 				_errorSign.visible = false;
 		}
-
-		private function onAddedToStage(e:Event):void{
-					
-			try{
-				
-				_errorSign    = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.WARNING_SIGN));
-				_textField    = new TextInput();
-				_consoleNotes = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE));
-				
-				_textField.x          					   = Constant.TEXTFIELD_POSX;
-				_textField.y          					   = Constant.TEXTFIELD_POSY;
-				_textField.width      					   = Constant.TEXTFIELD_WIDTH;
-				_textField.height     					   = Constant.TEXTFIELD_HEIGTH;
-				_textField.isEditable 					   = true;
-				
-				_textField.textEditorFactory               = function():ITextEditor{
-					var format:TextFieldTextEditor = new TextFieldTextEditor();
-					format.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
-					format.embedFonts = true;
-					return format;
-				};
-				
-				_enteredText.x = -500;
-				_enteredText.y = -50;
-				_enteredText.width = Constant.TEXTFIELD_WIDTH;
-				_enteredText.height = Constant.TEXTFIELD_HEIGTH;
-				_enteredText.isEditable = false;
-				_enteredText.textEditorProperties.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15);
-				_enteredText.backgroundSkin = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
-				
-				_textField.maxChars                        = 50;
-				_textField.backgroundSkin                  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CONSOLE_FOCUS));
-				
-				_errorSign.x                               = WARNING_SIGN_POSX;
-				_errorSign.y                               = WARNING_SIGN_POSY;
-			}
-			catch(e:Error){
-				
-				trace('Can not load texture');
-			}
 			
-			if(_consoleNotes != null && _textField != null && _errorSign != null){
-				
-				this.addChild(_consoleNotes);
-				this.addChild(_textField);
-				this.addChild(_errorSign);
-				this.addChild(_enteredText);
-				_enteredText.visible = false;
-				
-				toggleErrorSign();
-
-				this._textField.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
-			}
-		}
-		
-		private function onTextInputEnter(e:Event):void{
-			_controller.debug();
-		}
-		
-		private function onRemoveFromStage(e:Event):void{
-			this.removeChild(_consoleNotes);
-			this.removeChild(_textField);
-			_consoleNotes 	= null;
-			_textField   	= null;
-		}
-		
 		public function displayError(gotError:Boolean):Boolean
 		{
 			if(gotError)
@@ -177,30 +113,86 @@ package object.chapterOne
 			return true;
 		}
 		
-		private function createObject(s:String,n:Number):void
-		{
-			switch(n){
-				case 10:
-					_enteredText.x = 10;
-					_enteredText.y = 10;
-					break;
-				case 5:
-					_enteredText.x = -500;
-					_enteredText.y = -50;
-					break;
-			}
-			_enteredText.text = s + " " + n.toString();
-			_enteredText.visible = true;
-		}
-		
-		private function deleteObject(n:Number):void
-		{
-			_enteredText.visible = false;
-		}
-		
 		public function changeState(currentState:String):void
 		{
 			_state = currentState;
+		}
+		
+		/**====================================================================
+		 * |	                     EVENT HANDLERS 		                  | *
+		 * ====================================================================**/
+		private function onEnterFrame(e:Event):void
+		{
+			if(_state != ChapterOneConstant.EDITTING_STATE)
+				_textField.isEnabled = false;
+			else
+				_textField.isEnabled = true;
+		}
+		
+		private function onAddedToStage(e:Event):void{
+			
+			try{
+				
+				_errorSign    = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.WARNING_SIGN));
+				_textField    = new TextInput();
+				_consoleNotes = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.CONSOLE));
+				
+				_textField.x          					   = ChapterOneConstant.TEXTFIELD_POSX;
+				_textField.y          					   = ChapterOneConstant.TEXTFIELD_POSY;
+				_textField.width      					   = ChapterOneConstant.TEXTFIELD_WIDTH;
+				_textField.height     					   = ChapterOneConstant.TEXTFIELD_HEIGTH;
+				_textField.isEditable 					   = true;
+				
+				_textField.textEditorFactory               = function():ITextEditor{
+					var format:TextFieldTextEditor = new TextFieldTextEditor();
+					format.textFormat = new TextFormat(ChapterOneConstant.GROBOLD_FONT, 15);
+					format.embedFonts = true;
+					return format;
+				};
+				
+				_enteredText.x = -500;
+				_enteredText.y = -50;
+				_enteredText.width = ChapterOneConstant.TEXTFIELD_WIDTH;
+				_enteredText.height = ChapterOneConstant.TEXTFIELD_HEIGTH;
+				_enteredText.isEditable = false;
+				_enteredText.textEditorProperties.textFormat = new TextFormat(ChapterOneConstant.GROBOLD_FONT, 15);
+				_enteredText.backgroundSkin = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.CONSOLE_FOCUS));
+				
+				_textField.maxChars                        = 50;
+				_textField.backgroundSkin                  = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.CONSOLE_FOCUS));
+				
+				_errorSign.x                               = WARNING_SIGN_POSX;
+				_errorSign.y                               = WARNING_SIGN_POSY;
+			}
+			catch(e:Error){
+				
+				trace('Can not load texture');
+			}
+			
+			if(_consoleNotes != null && _textField != null && _errorSign != null){
+				
+				this.addChild(_consoleNotes);
+				this.addChild(_textField);
+				this.addChild(_errorSign);
+				this.addChild(_enteredText);
+				_enteredText.visible = false;
+				
+				toggleErrorSign();
+				
+				this._textField.addEventListener(FeathersEventType.ENTER, onTextInputEnter);
+				this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			}
+		}
+		
+		private function onTextInputEnter(e:Event):void{
+			_controller.receiveFromConsole(ChapterOneConstant.CONSOLE_ENTER,null);
+		}
+		
+		private function onRemoveFromStage(e:Event):void{
+			this.removeChild(_consoleNotes);
+			this.removeChild(_textField);
+			_consoleNotes 	= null;
+			_textField   	= null;
 		}
 	}
 }

@@ -1,14 +1,15 @@
 /*****************************************************
  * ================================================= *
- *                   BUTTON OBJECT                  *
+ *                   BUTTON OBJECT                   *
  * ================================================= * 
  *****************************************************/
 
 package object.chapterOne
 {
+	//Import library
 	import assets.Assets;
 	
-	import constant.chapterOne.Constant;
+	import constant.ChapterOneConstant;
 	
 	import controller.chapterOne.Controller;
 	
@@ -21,7 +22,9 @@ package object.chapterOne
 
 	public class Button extends Sprite
 	{
-		//BUTTON OBJECT CONSTANT
+		/*----------------------------
+		|	    Button constant      |
+		-----------------------------*/
 		private static const SUBMIT_NORMAL	 :String   	 = 'submitBtn/submitBtn_01';
 		private static const SUBMIT_DISABLED :String 	 = 'submitBtn/submitBtn_02';
 		private static const SUBMIT_HOVER	 :String     = 'submitBtn/submitBtn_04';
@@ -34,62 +37,81 @@ package object.chapterOne
 		
 		private static const SUBMIT_BTN_POSX :uint       = 93;
 		
-		//BUTTON OBJECT VARIABLE
+		/*----------------------------
+		 |	    Button variable      |
+		 -----------------------------*/
 		private var _submitBtn 				 :feathers.controls.Button;
 		private var _previewBtn 			 :feathers.controls.Button;
 		private var _controller 			 :Controller;
 		
-		//STATES VARIABLE
-		private var _state					 :String = Constant.INSTRUCTING_STATE;
+		/*----------------------------
+		|	    Button state         |
+		-----------------------------*/
+		private var _state					 :String = ChapterOneConstant.INSTRUCTING_STATE;
 		
 		public function Button(controller:Controller)
 		{	
 			this._controller  = controller;
 			
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);	
-			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.addEventListener(Event.ADDED_TO_STAGE		, onAddedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE	, onRemoveFromStage);	
+			this.addEventListener(Event.ENTER_FRAME			, onEnterFrame);
 		}
+		
+		public function changeState(currentState:String):void
+		{
+			_state = currentState;
+		}
+		
+		/**====================================================================
+		 * |	                     EVENT HANDLERS			                  | *
+		 * ====================================================================**/
 		
 		private function onEnterFrame(e:Event):void
 		{
-//			if(_state != Constant.EDITTING_STATE)
-//			{
-//				_submitBtn.isEnabled = false;
-//				_previewBtn.isEnabled = false;
-//			}
+			//if(_state != ChapterOneConstant.EDITTING_STATE)
+			//{
+			//	_submitBtn.isEnabled = false;
+			//	_previewBtn.isEnabled = false;
+			//}
 		}
 		
-		private function onAddedToStage(e:Event):void{
-			
+		private function onAddedToStage(e:Event):void
+		{
+			//"Submit" button configuration			
 			_submitBtn = new feathers.controls.Button();
-			_submitBtn.defaultSkin  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(SUBMIT_NORMAL));
-			_submitBtn.downSkin     = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(SUBMIT_CLICK));
-			_submitBtn.hoverSkin    = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(SUBMIT_HOVER));
-			_submitBtn.x            = SUBMIT_BTN_POSX;
-			
-			_previewBtn = new feathers.controls.Button();
-			_previewBtn.defaultSkin = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(PREVIEW_NORMAL));
-			_previewBtn.downSkin    = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(PREVIEW_CLICK));
-			_previewBtn.hoverSkin   = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(PREVIEW_HOVER));
+			_submitBtn.defaultSkin  	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_NORMAL));
+			_submitBtn.downSkin     	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_CLICK));
+			_submitBtn.hoverSkin    	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_HOVER));
+			_submitBtn.disabledSkin 	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_DISABLED));
+			_submitBtn.x            	= SUBMIT_BTN_POSX;
 			
 			this.addChild(_submitBtn);
+			
+			//"Preview" button configuration
+			_previewBtn = new feathers.controls.Button();
+			_previewBtn.defaultSkin 	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_NORMAL));
+			_previewBtn.downSkin    	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_CLICK));
+			_previewBtn.hoverSkin  		= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_HOVER));
+			_previewBtn.disabledSkin	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_DISABLED));
+			
 			this.addChild(_previewBtn);
 			
-			_submitBtn.addEventListener(Event.TRIGGERED, onSubmitBtnTrigger);
+			//Trigger eventListener for both buttons
+			_submitBtn.addEventListener	(Event.TRIGGERED, onSubmitBtnTrigger);
 			_previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 		}
 		
 		private function onSubmitBtnTrigger(e:Event):void{
-			if(_state == Constant.EDITTING_STATE)
-				_controller.notifyObserver({event:Constant.TRIGGER, arg:'', target:Constant.SUBMIT_BTN});	
+			if(_state == ChapterOneConstant.EDITTING_STATE)
+				_controller.receiveFromButton(constant.ChapterOneConstant.BUTTON_PRESS,null,{event:ChapterOneConstant.TRIGGER, arg:'', target:ChapterOneConstant.SUBMIT_BTN});	
 		}
 		
 		private function onPreviewBtnTrigger(e:Event):void{
-			if(_state == Constant.EDITTING_STATE)
-				_controller.notifyObserver({event:Constant.TRIGGER, arg:'', target:Constant.PREVIEW_BTN});
+			if(_state == ChapterOneConstant.EDITTING_STATE)
+				_controller.receiveFromButton(constant.ChapterOneConstant.BUTTON_PRESS,null,{event:ChapterOneConstant.TRIGGER, arg:'', target:ChapterOneConstant.PREVIEW_BTN});
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
@@ -100,11 +122,6 @@ package object.chapterOne
 			_previewBtn = null;
 			
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
-		}
-
-		public function changeState(currentState:String):void
-		{
-			_state = currentState;
 		}
 	}
 }

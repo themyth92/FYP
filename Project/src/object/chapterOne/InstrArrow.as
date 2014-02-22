@@ -8,7 +8,7 @@ package object.chapterOne
 {
 	import assets.Assets;
 	
-	import constant.chapterOne.Constant;
+	import constant.ChapterOneConstant;
 	
 	import flashx.textLayout.formats.Float;
 	
@@ -87,8 +87,8 @@ package object.chapterOne
 		
 		private function onAddedToStage(e:Event):void{
 			
-			_arrowLeft  = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.INSTRUC_ARROW_LEFT));
-			_arrowRight = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.INSTRUC_ARROW_RIGHT));
+			_arrowLeft  = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.INSTRUC_ARROW_LEFT));
+			_arrowRight = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.INSTRUC_ARROW_RIGHT));
 			
 			_leftPosX    = 0;
 			_leftPosY    = 0;

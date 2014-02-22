@@ -6,11 +6,12 @@
 
 package controller.chapterOne
 {
-	import constant.chapterOne.Constant;
+	import constant.ChapterOneConstant;
 	
 	import flash.events.UncaughtErrorEvent;
 	import flash.geom.Rectangle;
 	
+	import object.chapterOne.Enemies;
 	import object.chapterOne.Hero;
 	import object.chapterOne.IndexBoard;
 	
@@ -43,25 +44,27 @@ package controller.chapterOne
 		
 		//CHARACTER VARIABLE
 		private var _hero					 		:Hero;
+		private var _enemy1							:Enemies;
+		private var _enemy2							:Enemies;
 		
 		public function IndexBoardController(board:IndexBoard)
 		{
 			this._indexBoard     = board;
 			this._numberOfCoin 	 = 0;
 			this._hero           = _indexBoard.hero;
+			this._enemy1         = _indexBoard.enemy1;
+			this._enemy2		 = _indexBoard.enemy2;
 		}
 
 		/**================================================================
 		 * |                    BOARD CONTROL FUNCTION                    | *
 		 * ================================================================**/
-		
 		/*-----------------------------------------------------------------
 		  | @Get input as an array                                        |
 	      | @If array has 1 element  => incorrect array                   |
 		  | @If array has 2 elements => delete command                    |
 		  | @If array has 3 elements => create command                    |
-		  -----------------------------------------------------------------*/
-		
+		  -----------------------------------------------------------------*/	
 		public function analyzeArrayInput(arr:Array):void
 		{			
 			//NO COMMAND             => DO NOTHING
@@ -105,8 +108,7 @@ package controller.chapterOne
 		
 		/*---------------------------------------------------------------------
 		| @notify indexboard controller                                       |
-		-----------------------------------------------------------------------*/
-		
+		-----------------------------------------------------------------------*/		
 		public function dragDropAnalyze(type:String, x:Number, y:Number):Number
 		{
 			_indexBoard.createObject(type,mousePositionToBoardIndex(x,y)); 
@@ -116,8 +118,7 @@ package controller.chapterOne
 		/*----------------------------------------------------------------------
 		| @Use to check mouse position ionn index board                        |
 		| @Mouse position => index on index board                              |
-		------------------------------------------------------------------------*/
-		
+		------------------------------------------------------------------------*/		
 		private function mousePositionToBoardIndex(x:Number, y:Number):Number
 		{
 			var modular		:int;
@@ -150,8 +151,7 @@ package controller.chapterOne
 		
 		/*-----------------------------------------------------------------------
 		| @Check whether there is a coin                                        |		
-		-------------------------------------------------------------------------*/
-		
+		-------------------------------------------------------------------------*/	
 		public function checkCoinAvail():Boolean
 		{
 			if(_numberOfCoin <= 0)
@@ -197,31 +197,31 @@ package controller.chapterOne
 		public function moveHero(key:String):void
 		{
 			switch(key){
-				case Constant.KEY_LEFT:
+				case ChapterOneConstant.KEY_LEFT:
 					_hero.speedX 	 = HERO_SPEED_BACKWARD;
 					_hero.speedY 	 = 0;
-					_hero.heroStatus = Constant.HERO_STATUS_LEFT;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_LEFT;
 					_hero.showHero(2, 1);
 					break;
 				
-				case Constant.KEY_RIGHT:
+				case ChapterOneConstant.KEY_RIGHT:
 					_hero.speedX 	 = HERO_SPEED_FORWARD;
 					_hero.speedY 	 = 0;
-					_hero.heroStatus = Constant.HERO_STATUS_RIGHT;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_RIGHT;
 					_hero.showHero(3, 1);
 					break;
 				
-				case Constant.KEY_DOWN:
+				case ChapterOneConstant.KEY_DOWN:
 					_hero.speedX 	 = 0;
 					_hero.speedY 	 = HERO_SPEED_FORWARD;
-					_hero.heroStatus = Constant.HERO_STATUS_DOWN;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_DOWN;
 					_hero.showHero(1, 1);
 					break;
 				
-				case Constant.KEY_UP:
+				case ChapterOneConstant.KEY_UP:
 					_hero.speedX  	 = 0;
 					_hero.speedY  	 = HERO_SPEED_BACKWARD;
-					_hero.heroStatus = Constant.HERO_STATUS_UP;
+					_hero.heroStatus = ChapterOneConstant.HERO_STATUS_UP;
 					_hero.showHero(0, 1);
 					break;
 				
@@ -240,16 +240,16 @@ package controller.chapterOne
 			
 			switch(status)
 			{		
-				case Constant.HERO_STATUS_UP:
+				case ChapterOneConstant.HERO_STATUS_UP:
 					_hero.showHero(0,0);
 					break;
-				case Constant.HERO_STATUS_DOWN:
+				case ChapterOneConstant.HERO_STATUS_DOWN:
 					_hero.showHero(1,0);
 					break;
-				case Constant.HERO_STATUS_LEFT:
+				case ChapterOneConstant.HERO_STATUS_LEFT:
 					_hero.showHero(2,0);
 					break;
-				case Constant.HERO_STATUS_RIGHT:
+				case ChapterOneConstant.HERO_STATUS_RIGHT:
 					_hero.showHero(3,0);
 					break;
 			}
@@ -392,6 +392,58 @@ package controller.chapterOne
 		public function updateLifeOnGameStart(value:Number):void
 		{
 			this._hero.updateMaxLife(value);
+		}		
+		/**====================================================================
+		 * |                      ENEMIES CONTROL FUNCTION                    | *
+		 * ====================================================================**/
+		public function followPlayer(enemy:Enemies, heroX:Number, heroY:Number):Array
+		{
+			var positionArr: Array;
+			if(!isNaN(heroX))
+			{	
+				var distanceX	:Number		= enemy.enemyX - (heroX + _hero.x);
+				var distanceY	:Number		= enemy.enemyY - (heroY + _hero.y);
+				var distance	:Number		= Math.sqrt(distanceX*distanceX + distanceY*distanceY);
+				var enemyMoveX	:Number		= enemy.moveX;
+				var enemyMoveY	:Number		= enemy.moveY;
+				
+				if(distance <= enemy.agroRange)
+				{
+					var moveX 	:Number		= enemy.turnRate * distanceX / distance;
+					var moveY	:Number		= enemy.turnRate * distanceY / distance;
+					
+					enemyMoveX -= moveX;
+					enemyMoveY -= moveY;
+					
+					var moveDistance	:Number		= Math.sqrt(enemyMoveX*enemyMoveX + enemyMoveY*enemyMoveY);
+					
+					enemyMoveX = enemy.speed * enemyMoveX / moveDistance;
+					enemyMoveY = enemy.speed * enemyMoveY / moveDistance;
+					
+					positionArr = [enemyMoveX,enemyMoveY];
+					return positionArr;
+				}
+				else
+				{
+					enemyMoveX = 0;
+					enemyMoveY = 0;
+					positionArr = [enemyMoveX,enemyMoveY];
+					return positionArr;
+				}
+			}
+			positionArr = [false];
+			return positionArr;
+		}
+		
+		private function patrolAround():void
+		{
+			//enemy.moveX
+			//enemy.moveY
+		}
+		
+		public function checkObstacleCollision():void
+		{
+			
 		}
 	}
 }

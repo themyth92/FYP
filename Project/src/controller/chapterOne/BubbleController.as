@@ -6,7 +6,7 @@
 
 package controller.chapterOne
 {
-	import constant.chapterOne.Constant;
+	import constant.ChapterOneConstant;
 	
 	import object.chapterOne.DialogBubble;
 	
@@ -25,9 +25,9 @@ package controller.chapterOne
 				
 				dialogNum ++ ;
 				
-				if(dialogNum <= Constant.DIALOG.length){
+				if(dialogNum <= ChapterOneConstant.DIALOG.length){
 					
-					_dialogBubble.changeDialogTextField(Constant.DIALOG[dialogNum]);
+					_dialogBubble.changeDialogTextField(ChapterOneConstant.DIALOG[dialogNum]);
 					_dialogBubble.dialogCurPos = dialogNum;
 				}
 				else{
