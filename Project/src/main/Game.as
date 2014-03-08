@@ -4,8 +4,10 @@ package main
 	
 	import events.NavigationEvent;
 	
-	import screen.chapterOne.ChapterScreen;
-	import screen.loading.LoadingScreen;
+	import screen.ChapterOneScreen;
+	import screen.CreateScreen;
+	import screen.LoadingScreen;
+	import screen.MainScreen;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -13,14 +15,17 @@ package main
 	public class Game extends Sprite
 	{
 		private var _loadingScreen    :LoadingScreen;
-		private var _chapterOneScreen : screen.chapterOne.ChapterScreen;
+		private var _chapterOneScreen :screen.ChapterOneScreen;
+		private var _mainScreen		  :MainScreen;
+		private var _createScreen	  :CreateScreen;
 		
 		public function Game()
 		{
 			super();
-			_loadingScreen    = new LoadingScreen();
-			_chapterOneScreen = new screen.chapterOne.ChapterScreen();
-			
+			_loadingScreen   	= new LoadingScreen();
+			_chapterOneScreen 	= new screen.ChapterOneScreen();
+			_mainScreen  		= new MainScreen();
+			_createScreen		= new CreateScreen();
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -37,13 +42,20 @@ package main
 					case Constant.LOADING_SCREEN:
 						break;
 					
-					case Constant.FIRST_CHAPTER_FUNC_SCREEN:
-						this.removeChild(_loadingScreen);
+					case Constant.FIRST_CHAPTER_SCREEN:
+						this.removeChild(_mainScreen);
 						this.addChild(_chapterOneScreen);
-						_loadingScreen = null;
-
-					break;
+						break;
 					
+					case Constant.MAIN_SCREEN:
+						this.removeChild(_loadingScreen);
+						this.addChild(_mainScreen);
+						break;
+					
+					case Constant.CREATE_GAME_SCREEN:
+						this.removeChild(_mainScreen);
+						this.addChild(_createScreen);
+						break;
 					default:
 						break;
 				}

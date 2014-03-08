@@ -23,6 +23,34 @@ package assets
 		[Embed(source = '../media/sprite/loadingPage/preLoader.png')]
 		private static const AtlasTextureLoadingPage:Class;
 		
+		//embed the start game page
+		[Embed(source = '../media/sprite/StartPage/StartGameSpriteSheet.png')]
+		private static const AtlasTextureMain:Class;
+		
+		[Embed(source = '../media/sprite/StartPage/StartGameSpriteSheet.xml', mimeType = 'application/octet-stream')]
+		private static const AtlasXmlMain    :Class;
+		
+		//embed the characters sprite sheet
+		[Embed(source = '../media/sprite/Characters/Characters.png')]
+		private static const AtlasTextureCharacters:Class;
+		
+		[Embed(source = '../media/sprite/Characters/Characters.xml', mimeType = 'application/octet-stream')]
+		private static const AtlasXmlCharacters    :Class;
+		
+		//embed the characters sprite sheet
+		[Embed(source = '../media/sprite/Screens/screens.png')]
+		private static const AtlasTextureScreens:Class;
+		
+		[Embed(source = '../media/sprite/Screens/screens.xml', mimeType = 'application/octet-stream')]
+		private static const AtlasXmlScreens    :Class;
+		
+		//embed the create page sprite sheet
+		[Embed(source = '../media/sprite/Create Page/Object.png')]
+		private static const AtlasTextureObjects:Class;
+				
+		[Embed(source = '../media/sprite/Create Page/Object.xml', mimeType = 'application/octet-stream')]
+		private static const AtlasXmlObjects    :Class;
+						
 		//embed the xml for the loading page sprite sheet
 		[Embed(source = '../media/sprite/loadingPage/preLoader.xml', mimeType = 'application/octet-stream')]
 		private static const AtlasXmlLoadingPage    :Class;
@@ -39,7 +67,7 @@ package assets
 			@ return the texture according to 
 			@ the name
 		======================================**/
-		private static function getTexture(textureName : String):Texture{
+		public static function getTexture(textureName : String):Texture{
 
 			//condition if the private gameTexture for a specific name has not been initialized
 			//initialize it instead of creating a new texture
@@ -88,6 +116,68 @@ package assets
 						if(!storeAtlas(texture, xml, name))
 							return null;
 					break;
+					
+					case Constant.MAIN_SCREEN:
+						//try catch if the embeded image can not be found inside the project file
+						try{
+							texture                   = getTexture('AtlasTextureMain');
+							xml                       = XML(new AtlasXmlMain);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
+						break;
+					case Constant.CREATE_GAME_SCREEN:
+						//try catch if the embeded image can not be found inside the project file
+						try{
+							texture                   = getTexture('AtlasTextureObjects');
+							xml                       = XML(new AtlasXmlObjects);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
+						break;					
+					case Constant.CHARACTERS_SPRITE:
+						//try catch if the embeded image can not be found inside the project file
+						try{
+							texture                   = getTexture('AtlasTextureCharacters');
+							xml                       = XML(new AtlasXmlCharacters);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
+						break;
+					
+					case Constant.SCREEN_SPRITE:
+						//try catch if the embeded image can not be found inside the project file
+						try{
+							texture                   = getTexture('AtlasTextureScreens');
+							xml                       = XML(new AtlasXmlScreens);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
+						break;
 					//all the texture loaded from the loader class already
 					//if it can not be founded inside the dictionary object then \
 					//means that the the file has not been loaded or the name of the object in to
