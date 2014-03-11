@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:a90629fe853afee188635bfc5ac1107b:1/1$ -->
+<TextureAtlas imagePath="screens.png">
+    <SubTexture name="GrassScreen" x="2" y="2" width="440" height="360"/>
+    <SubTexture name="WaterScreen" x="2" y="364" width="440" height="360"/>
+</TextureAtlas>
