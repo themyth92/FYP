@@ -1,6 +1,6 @@
 package main
 {
-/*	import constant.Constant;
+	import constant.Constant;
 	
 	import events.NavigationEvent;
 	
@@ -8,18 +8,14 @@ package main
 	import screen.CreateScreen;
 	import screen.LoadingScreen;
 	import screen.MainScreen;
-<<<<<<< HEAD
-	*/
-=======
+
 	import screen.StoryStage1;
-	
->>>>>>> 5155acc9e4fdeb1331c75a3b29419814ea685151
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
 	public class Game extends Sprite
 	{
-/*		private var _loadingScreen    :LoadingScreen;
+		private var _loadingScreen    :LoadingScreen;
 		private var _chapterOneScreen :screen.ChapterOneScreen;
 		private var _mainScreen		  :MainScreen;
 		private var _createScreen	  :CreateScreen;
@@ -72,6 +68,6 @@ package main
 						break;
 				}
 			}
-		}*/
+		}
 	}
 }
