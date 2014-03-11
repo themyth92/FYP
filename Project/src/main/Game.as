@@ -8,6 +8,7 @@ package main
 	import screen.CreateScreen;
 	import screen.LoadingScreen;
 	import screen.MainScreen;
+	import screen.StoryStage1;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -18,6 +19,7 @@ package main
 		private var _chapterOneScreen :screen.ChapterOneScreen;
 		private var _mainScreen		  :MainScreen;
 		private var _createScreen	  :CreateScreen;
+		private var _storyStage1		:StoryStage1;
 		
 		public function Game()
 		{
@@ -26,6 +28,7 @@ package main
 			_chapterOneScreen 	= new screen.ChapterOneScreen();
 			_mainScreen  		= new MainScreen();
 			_createScreen		= new CreateScreen();
+			_storyStage1		= new StoryStage1();
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -56,6 +59,11 @@ package main
 						this.removeChild(_mainScreen);
 						this.addChild(_createScreen);
 						break;
+					
+					case Constant.STORY_SCREEN_1:
+						this.removeChild(_mainScreen);
+						this.addChild(_storyStage1);
+						
 					default:
 						break;
 				}
