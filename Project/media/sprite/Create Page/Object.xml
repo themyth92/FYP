@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:e9353b4991a32c53c2bdf4b903a0d4ba:1/1$ -->
+<TextureAtlas imagePath="Object.png">
+    <SubTexture name="Console" x="2" y="2" width="193" height="34"/>
+    <SubTexture name="Dialogue" x="197" y="2" width="631" height="139"/>
+    <SubTexture name="Grid" x="2" y="143" width="440" height="360"/>
+    <SubTexture name="InformationBoard" x="444" y="143" width="255" height="420"/>
+    <SubTexture name="InputBox" x="701" y="143" width="55" height="20"/>
+    <SubTexture name="Play_Button" x="758" y="143" width="130" height="60"/>
+    <SubTexture name="Preview_Button" x="890" y="143" width="130" height="60"/>
+    <SubTexture name="Publish_Button" x="2" y="565" width="130" height="60"/>
+    <SubTexture name="Radio (tick)" x="134" y="565" width="201" height="176"/>
+    <SubTexture name="Radio (untick)" x="337" y="565" width="201" height="176"/>
+    <SubTexture name="mainFrame" x="540" y="565" width="463" height="373"/>
+</TextureAtlas>
