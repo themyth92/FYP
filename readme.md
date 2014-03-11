@@ -22,8 +22,9 @@ All the media file that used in the src project.
 
 * Source folder :
 
-All the library that we use in our project. It includes __starling framework__ and __FPS recorder__
+All the library that we use in our project. It includes __starling framework__, __feathers UI framework__ and __FPS recorder__
 
 Source : 
 	[Starling framework](http://gamua.com/starling/) 
 	[FPSRecord](https://github.com/mrdoob/Hi-ReS-Stats)
+	[feathers](http://feathersui.com/)
