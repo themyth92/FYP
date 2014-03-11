@@ -16,6 +16,7 @@ package constant
 		public static const MAIN_SCREEN					:String = 'mainScreen';
 		public static const CREATE_GAME_SCREEN			:String	= 'createScreen';
 		public static const ABOUT_SCREEN				:String = 'aboutScreen';
+		public static const STORY_SCREEN_1				:String	= 'storyStage1';
 		
 		//sprite sheet dictionary name
 		public static const SPRITE_ONE:String      	  	     = 'spriteOne';
@@ -44,9 +45,11 @@ package constant
 		public static const GROBOLD_FONT: String              = 'Grobold';
 		
 		//Object position
-		public static const FRAME_POS		:Point		= new Point(30 , 50);
+		public static const FRAME_CREATE_POS:Point		= new Point(30 , 50);
+		public static const FRAME_STORY_POS	:Point		= new Point(160, 50);
 		public static const CONSOLE_POS		:Point		= new Point(525, 50);
-		public static const GRID_POS		:Point		= new Point(41 , 57);
+		public static const GRID_CREATE_POS	:Point		= new Point(41 , 57);
+		public static const GRID_STORY_POS	:Point		= new Point(171 , 57);
 		public static const INFOBOARD_POS	:Point		= new Point(500, 30);
 		public static const PREVIEWB_POS	:Point		= new Point(30 , 420);
 		public static const STARTB_POS		:Point		= new Point(190, 420);
