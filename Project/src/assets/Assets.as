@@ -58,6 +58,11 @@ package assets
 		private static var _gameTexture 	  	:Dictionary = new Dictionary();
 		private static var _gameTextureAtlas 	:Dictionary = new Dictionary();
 		
+		//all the texture that loaded from server will be store in this variable
+		private static var _userTexture       :Array      = new Array();
+		//used to store all the user data return from server
+		private static var _userData          :Object     = {};
+		
 		/**======================================
 			@ get texture from a single string
 			@ param : textureName
@@ -213,6 +218,60 @@ package assets
 			}
 			
 			return false;
+		}
+		
+		/*
+		 * server part
+		   all the data from server will be stored and save here
+		*/
+		//store the texture of user defined from server with this function
+		public static function storeUserTexture(texture:Texture, title : String, type : String):void{
+			
+			//check if texture != null
+			if(texture != null && title != null && type != null){
+				try{
+					var obj : Object = {};
+					
+					obj.title = title;
+					obj.type  = type;
+					obj.img   = texture;
+					
+					_userTexture.push(obj);
+				}
+				catch(error: Error){
+					throw(error);
+				}
+			}
+		}
+		
+		//return the user texture variable
+		public static function getUserTexture():Array{
+			return _userTexture;		
+		}
+		
+		//store the user question
+		public static function storeUserQuestion(title : String, select : String, answers : Array):void{
+			
+			if(title != null && select != null && answers != null){
+				
+				try{
+					var obj : Object = {};
+					
+					obj.title   = title;
+					obj.select  = select;
+					obj.answers = answers;
+					
+					_userData.question = new Array();
+					_userData.question.push(obj);
+				}
+				catch(error:Error){
+					throw(error);
+				}
+			}
+		}
+		
+		public static function getUserQuestion():Array{
+			return _userData.question;
 		}
 	}
 }

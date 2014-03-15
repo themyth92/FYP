@@ -4,7 +4,7 @@ package serverCom
 	
 	public class ServerClientCom
 	{
-		public  var qsImgList : Object;
+		private  var qsImgList : Object;
 		
 		public function ServerClientCom()
 		{

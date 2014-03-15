@@ -42,7 +42,6 @@ package main
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
 			this.addChild(_loadingScreen);
-			
 		}
 		
 		private function onChangeScreen(e:NavigationEvent):void{

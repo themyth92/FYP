@@ -10,19 +10,23 @@ package screen
 	
 	import constant.Constant;
 	
+	import controller.TextureController.TextureLoaderControl;
+	
 	import events.NavigationEvent;
 	
 	import object.LoaderObject;
 	
+	import serverCom.ServerClientCom;
+	
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import controller.TextureController.TextureLoaderControl;
 		
 	public class LoadingScreen extends Sprite
 	{	
 		private var _textureLoader : TextureLoaderControl;
 		private var _loaderObject  : LoaderObject;
+		private var _serCliObj     : ServerClientCom;
 		
 		public function LoadingScreen()
 		{
@@ -37,11 +41,14 @@ package screen
 			
 			_loaderObject   = new LoaderObject();
 			_textureLoader  = new TextureLoaderControl();
+			_serCliObj      = new ServerClientCom();
 			
 			this.addChild(_loaderObject);
 			this.addChild(_textureLoader);
 			
-			_textureLoader.loadTexture();	
+			var qsImgList:Object = _serCliObj.retrieveQuestionAndImageListFromServer();
+			
+			_textureLoader.loadUserTexture(getImgList(qsImgList));	
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
@@ -49,6 +56,34 @@ package screen
 			this.removeChild(_loaderObject);
 			_loaderObject  = null;
 			_textureLoader = null;
+		}
+		
+		//process to return the image list from data from server
+		private function getImgList(qsImgList : Object):Array{
+			
+			if(qsImgList != {}){
+				
+				if(qsImgList.image){
+					
+					return qsImgList.image;
+				}
+			}
+			
+			return new Array();
+		}
+		
+		//process to return the question list from data from server
+		private function getQsList(qsImgList : Object):Array{
+			
+			if(qsImgList != {}){
+				
+				if(qsImgList.question){
+					
+					return qsImgList.question;
+				}
+			}
+			
+			return new Array();
 		}
 	}
 }
