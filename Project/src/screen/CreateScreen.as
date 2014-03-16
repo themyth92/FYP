@@ -226,8 +226,8 @@ package screen
 		
 		private function setupGameObject():void
 		{
-			_console.x 		= Constant.CONSOLE_POS.x;
-			_console.y 		= Constant.CONSOLE_POS.y;
+			_console.x 		= Constant.CONSOLE_CREATE_POS.x;
+			_console.y 		= Constant.CONSOLE_CREATE_POS.y;
 			
 			_dialogue.x 	= Constant.DIALOGUE_POS.x;
 			_dialogue.y 	= Constant.DIALOGUE_POS.y;

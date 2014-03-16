@@ -10,6 +10,11 @@ package main
 	import screen.MainScreen;
 
 	import screen.StoryStage1;
+	import screen.StoryStage2;
+	import screen.StoryStage3;
+	import screen.StoryStage4;
+	import screen.StoryStage5;
+	
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
@@ -20,6 +25,10 @@ package main
 		private var _mainScreen		  :MainScreen;
 		private var _createScreen	  :CreateScreen;
 		private var _storyStage1		:StoryStage1;
+		private var _storyStage2		:StoryStage2;
+		private var _storyStage3		:StoryStage3;
+		private var _storyStage4		:StoryStage4;
+		private var _storyStage5		:StoryStage5;
 		
 		public function Game()
 		{
@@ -29,6 +38,11 @@ package main
 			_mainScreen  		= new MainScreen();
 			_createScreen		= new CreateScreen();
 			_storyStage1		= new StoryStage1();
+			_storyStage2		= new StoryStage2();
+			_storyStage3		= new StoryStage3();
+			_storyStage4		= new StoryStage4();
+			_storyStage5		= new StoryStage5();
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -63,6 +77,30 @@ package main
 					case Constant.STORY_SCREEN_1:
 						this.removeChild(_mainScreen);
 						this.addChild(_storyStage1);
+						break;
+						
+					case Constant.STORY_SCREEN_2:
+						this.removeChild(_mainScreen);
+						this.removeChild(_storyStage1);
+						this.addChild(_storyStage2);
+						break;
+						
+					case Constant.STORY_SCREEN_3:
+						this.removeChild(_mainScreen);
+						this.removeChild(_storyStage2);
+						this.addChild(_storyStage3);
+						break;
+						
+					case Constant.STORY_SCREEN_4:
+						this.removeChild(_mainScreen);
+						this.removeChild(_storyStage3);
+						this.addChild(_storyStage4);
+						break;
+					case Constant.STORY_SCREEN_5:
+						this.removeChild(_mainScreen);
+						this.removeChild(_storyStage4);
+						this.addChild(_storyStage5);
+						break;
 						
 					default:
 						break;

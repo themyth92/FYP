@@ -10,6 +10,7 @@ package object.inGameObject
 	
 	import constant.ChapterOneConstant;
 	import constant.Constant;
+	import constant.StoryConstant;
 	
 	import controller.ObjectController.Controller;
 	
@@ -56,6 +57,7 @@ package object.inGameObject
 		private var _patternType	   : Vector.<String>;
 		private var _patternIndex      : Vector.<uint>;
 		private var _maxCoin		   : Number = 0;
+		private var _screen				:String;
 		
 		//HERO VARARIABLES
 		private var _enemy1		   : Enemies;
@@ -147,9 +149,13 @@ package object.inGameObject
 			_patternCollection = new Vector.<Image>();
 			_patternIndex      = new Vector.<uint>();
 			_patternType 	   = new Vector.<String>();
-					
+			
 			this._tileVector = new Vector.<Object>();
 			makeTiles();
+			
+			_screen = _controller.screen;
+			if(_screen != Constant.CREATE_GAME_SCREEN)
+				setupPattern();
 			
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -158,7 +164,18 @@ package object.inGameObject
 		/** ENTER_FRAME **/
 		private function onEnterFrame(event:Event):void
 		{
-
+			if(_screen == Constant.STORY_SCREEN_2)
+			{
+				if(_controller.stage2Info()[0])
+				{
+					var enemyIMG :Image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_4'));
+					var enemyPos :Point	= indexToPoint(StoryConstant.STAGE2_ENEMY_POS);
+					enemyIMG.x = enemyPos.x;
+					enemyIMG.y = enemyPos.y;
+					this.addChild(enemyIMG);
+				}
+			}
+			
 			if(_state == constant.ChapterOneConstant.PLAYING_STATE)
 			{
 				_timer ++;
@@ -178,6 +195,57 @@ package object.inGameObject
 						enemyPatrol(_enemy2);
 				}
 			}
+		}
+		
+		private function setupPattern():void
+		{
+			var collection 	:Vector.<String>;
+			var index		:Vector.<uint>;
+			var type		:Vector.<String>;
+			var pos			:uint;
+			
+			switch(_screen){
+				case Constant.STORY_SCREEN_1:
+					collection 	= StoryConstant.STAGE1_COLLECTION;
+					index		= StoryConstant.STAGE1_INDEX;
+					type		= StoryConstant.STAGE1_TYPE;
+					pos			= StoryConstant.STAGE1_PLAYER_POS;
+					patternToStage(collection,index,type,pos);
+					break;
+				case Constant.STORY_SCREEN_2:
+					collection 	= StoryConstant.STAGE2_COLLECTION;
+					index		= StoryConstant.STAGE2_INDEX;
+					type		= StoryConstant.STAGE2_TYPE;
+					pos			= StoryConstant.STAGE2_PLAYER_POS;
+					patternToStage(collection,index,type,pos);
+					break;
+			}
+		}
+		
+		private function patternToStage(collection:Vector.<String>,index:Vector.<uint>,type:Vector.<String>,pos:uint):void
+		{
+			var obstacles :Image;
+			var walkable :Boolean = false;
+			for(var i:uint=0; i<collection.length; i++)
+			{
+				obstacles = new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i]));
+				_patternCollection.push(obstacles);
+			}
+			
+			_patternIndex      = index;
+			_patternType 	   = type;
+			for(var j:uint=0; j<_patternType.length; j++)
+			{
+				if(_patternType[j] == COIN_TYPE)
+				{
+					_maxCoin ++;
+					_controller.getGameStat("max coin", _maxCoin);
+					walkable = true;						
+				}
+				positionObjectOnStage(_patternCollection[j], _patternIndex[j], walkable);				
+			}
+			
+			createHero(pos);
 		}
 		
 		private function updateHeroPosition():void
@@ -255,7 +323,7 @@ package object.inGameObject
 		/** CREATE OBJECT BASED ON TYPE AND INDEX **/
 		public function createObject(name:String, index:uint):void
 		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE)
+			if((_state == constant.ChapterOneConstant.EDITTING_STATE && _screen == Constant.CREATE_GAME_SCREEN) || (_screen != Constant.CREATE_GAME_SCREEN))
 			{
 				this.deleteObject(index);
 				
@@ -319,7 +387,7 @@ package object.inGameObject
 		/** CREATE CHARACTER **/
 		public function createHero(index:Number):Boolean
 		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE)
+			if(_state == constant.ChapterOneConstant.EDITTING_STATE || _screen != Constant.CREATE_GAME_SCREEN)
 			{
 				var modular      : int  = index % MAXIMUM_COLUMN;
 				var rowIndex 	 : uint = 0;
@@ -736,6 +804,11 @@ package object.inGameObject
 					}
 				}	
 			}
+		}
+		
+		public function finishStage():void
+		{
+			_controller.isWon = true;
 		}
 	}
 }

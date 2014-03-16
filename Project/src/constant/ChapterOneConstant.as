@@ -97,6 +97,8 @@ package constant
 		public static const BUTTON_PRESS	: String = "buttonPressed";
 		public static const CONSOLE_ENTER	: String = "consoleEnterPressed";
 		public static const STATE_CHANGE	: String = "stateChange";
+		public static const	ERROR_NOTIFY1	: String = "errorNotify1";
+		public static const	ERROR_NOTIFY2	: String = "errorNotify2";
 		
 		/* Obstacles type */
 		public static const BLOCK_TYPE		:String	= "blockType";

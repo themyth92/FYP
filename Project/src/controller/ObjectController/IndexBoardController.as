@@ -342,6 +342,10 @@ package controller.ObjectController
 								{
 									popUpQuestion();
 								}
+								if(objectType[i] == "goal")
+								{
+									wonTheStage();
+								}
 							}
 							else
 							{
@@ -363,6 +367,10 @@ package controller.ObjectController
 								if(objectType[i] == "01")
 								{
 									popUpQuestion();
+								}
+								if(objectType[i] == "goal")
+								{
+									wonTheStage();
 								}
 							}					
 						}
@@ -403,6 +411,11 @@ package controller.ObjectController
 		{
 			this._hero.updateMaxLife(value);
 		}		
+		
+		private function wonTheStage():void
+		{
+			_indexBoard.finishStage();
+		}
 		/**====================================================================
 		 * |                      ENEMIES CONTROL FUNCTION                    | *
 		 * ====================================================================**/

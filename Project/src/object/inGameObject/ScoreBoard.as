@@ -39,6 +39,10 @@ package object.inGameObject
 		private var _lifeText	: TextField;
 		private var _timeText	: TextField;
 		
+		private var _coinIMG	: Image;
+		private var _lifeIMG	: Image;
+		private var _timeIMG	: Image;
+		
 		private var _maxLife 	:Number;
 		
 		private var _controller	    : Controller;

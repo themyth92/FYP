@@ -86,7 +86,7 @@ package object.inGameObject
 		 * ====================================================================**/
 		private function onEnterFrame(e:Event):void
 		{
-			if(_state != ChapterOneConstant.EDITTING_STATE)
+			if(_state != ChapterOneConstant.EDITTING_STATE && _state != ChapterOneConstant.INSTRUCTING_STATE)
 				_console.isEnabled = false;
 			else
 				_console.isEnabled = true;
@@ -128,7 +128,6 @@ package object.inGameObject
 		private function onRemoveFromStage(e:Event):void
 		{
 			this.removeChild(_console);
-			_console   	= null;
 		}
 		
 		/**====================================================================

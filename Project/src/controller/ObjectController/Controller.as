@@ -8,6 +8,8 @@ package controller.ObjectController
 {
 	//Import library
 	import constant.ChapterOneConstant;
+	import constant.Constant;
+	import constant.StoryConstant;
 	
 	import controller.ObjectController.BubbleController;
 	import controller.ObjectController.ButtonController;
@@ -64,9 +66,44 @@ package controller.ObjectController
 		private var _maxCoin				 : Number = 0;
 		private var _currentLife			 : Number;
 		private var _maxLife				 : Number = 0;
+		private var _isWon					:Boolean = false;
+		private var _screen					:String;
+		private var _currDialogPos			:uint = 0;
+		
+		// STAGE VARIABLE
+		/* Stage 2 */
+		private var _stage2Monster		:Boolean;
+		private var _stage2Console		:Boolean;
+		private var _consoleChecking	:Boolean;
 		
 		public function Controller(){
 			
+		}
+		
+		public function assignScreen(screen:String):void
+		{
+			_screen = screen;
+			updateScreen(_screen);
+		}
+		
+		private function updateScreen(screen:String):void
+		{
+			_dialogBubbleController.currScreen(screen);
+		}
+		
+		public function get screen():String
+		{
+			return _screen;
+		}
+		
+		public function set isWon(isWon:Boolean):void
+		{
+			_isWon = isWon;
+		}
+		
+		public function get isWon():Boolean
+		{
+			return _isWon;
 		}
 		
 		public function assignObjectController(console: Console, dialogBubble: Dialogue, instrArrow: InstrArrow, indexBoard: IndexBoard, button: Button, patternList: ObstaclesBoard, scoreBoard: ScoreBoard):void
@@ -86,6 +123,21 @@ package controller.ObjectController
 			_buttonController		= new ButtonController		(_button);
 			_patternListController  = new ObstaclesBoardController	(_patternList);
 			_scoreBoardController 	= new ScoreBoardController	(_scoreBoard);
+		}
+		
+		public function updateStage2Info(monsterOn:Boolean, consoleOn:Boolean, consoleCheck:Boolean):void{
+			if(monsterOn)
+				_stage2Monster	= true;
+			if(consoleOn)
+				_stage2Console	= true;
+			if(consoleCheck)
+				_consoleChecking = true;
+		}
+		
+		public function stage2Info():Array
+		{
+			var result:Array = new Array(_stage2Monster, _stage2Console, _consoleChecking);
+			return result;	
 		}
 		
 		public function startGame(player:Array, enemy1:Array, enemy2:Array):String
@@ -239,12 +291,20 @@ package controller.ObjectController
 		}
 		
 		private function changeToPlayingState():void
-		{
-			_consoleController		.changeObjectState	(ChapterOneConstant.PLAYING_STATE);
+		{	
 			_dialogBubbleController	.changeObjectState	(ChapterOneConstant.PLAYING_STATE);
 			_indexBoardController	.changeObjectState	(ChapterOneConstant.PLAYING_STATE);
 			_scoreBoardController	.changeObjectState	(ChapterOneConstant.PLAYING_STATE);
-			_patternListController	.changeObjectState  (ChapterOneConstant.PLAYING_STATE);
+			
+			if(_screen != Constant.STAGE1_SCREEN)
+			{
+				_consoleController		.changeObjectState	(ChapterOneConstant.PLAYING_STATE);
+			}
+			
+			if(_screen == Constant.CREATE_GAME_SCREEN)
+			{
+				_patternListController	.changeObjectState  (ChapterOneConstant.PLAYING_STATE);
+			}
 			
 			if(_maxLife == 0)
 				_maxLife = 5;
@@ -311,6 +371,22 @@ package controller.ObjectController
 					break;
 				case ChapterOneConstant.CONSOLE_ENTER:
 					var commandArr:Array = _consoleController.consoleControllerActivate();
+					if(commandArr[0] == false && _screen == Constant.STORY_SCREEN_2)
+					{
+						notifyDialogueController(ChapterOneConstant.ERROR_NOTIFY1,null);
+					}
+					else
+					{
+						if(commandArr[0]==1 && commandArr[1]==0 && commandArr[2]==57)
+						{
+							_consoleChecking = false;
+							notifyDialogueController(ChapterOneConstant.DIALOG_CHANGE,null);
+						}
+						else
+						{
+							notifyDialogueController(ChapterOneConstant.ERROR_NOTIFY2,null);
+						}
+					}
 					_indexBoardController.analyzeArrayInput(commandArr);
 					break;
 				default:
@@ -412,8 +488,18 @@ package controller.ObjectController
 			switch(type)
 			{
 				case ChapterOneConstant.DIALOG_CHANGE:
-					_dialogBubbleController.changeDialog(e.arg);		
-					break;			
+					if(e != null)
+						_currDialogPos = e.arg;
+					else
+						_currDialogPos += 1;
+					_dialogBubbleController.changeDialog(_currDialogPos);		
+					break;	
+				case ChapterOneConstant.ERROR_NOTIFY1:
+					_dialogBubbleController.errorNotify(1);
+					break;
+				case ChapterOneConstant.ERROR_NOTIFY2:
+					_dialogBubbleController.errorNotify(2);
+					break;
 				default:
 					break;
 			}

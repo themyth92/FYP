@@ -245,6 +245,7 @@ package object.inGameObject
 		 * |	                     EVENT HANDLERS			                  | *
 		 * ====================================================================**/
 		private function onEnterFrame(e:Event):void{
+			//trace(_state);
 			if(_state == ChapterOneConstant.PLAYING_STATE)
 			{
 				this._hero.x += _speedX;

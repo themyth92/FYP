@@ -11,6 +11,7 @@ package object.inGameObject
 	
 	import constant.ChapterOneConstant;
 	import constant.Constant;
+	import constant.StoryConstant;
 	
 	import controller.ObjectController.Controller;
 	
@@ -31,6 +32,7 @@ package object.inGameObject
 		private var _dialogueContainer	:Image;
 		private var _dialogueAuthor		:TextField;
 		private var _dialogCurPos  		:uint;
+		private var _screen				:String;
 		
 		/*----------------------------
 		|	     Bubble state        |
@@ -41,9 +43,9 @@ package object.inGameObject
 		{	
 			this._controller = controller;
 			
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener(Event.ADDED_TO_STAGE, 	onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
-			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.addEventListener(Event.ENTER_FRAME, 		onEnterFrame);
 		}
 		
 		public function set dialogCurPos(value:uint):void
@@ -54,10 +56,26 @@ package object.inGameObject
 		public function changeDialogTextField(text:String):void
 		{
 			_dialogue.text = text;
+			if(_screen == Constant.STORY_SCREEN_2)
+			{
+				if(text == StoryConstant.STAGE2_INSTRUCTION[StoryConstant.STAGE2_INSTR_SHOW_MONSTER])
+					_controller.updateStage2Info(true,false,false);
+				else if(text == StoryConstant.STAGE2_INSTRUCTION[StoryConstant.STAGE2_INSTR_SHOW_CONSOLE])
+					_controller.updateStage2Info(false,true,false);
+				else if(text == StoryConstant.STAGE2_INSTRUCTION[StoryConstant.STAGE2_INSTR_CONSOLE_CHECK])
+					_controller.updateStage2Info(false,false,true);
+			}
+					
 			if(text == null)
 			{
-				trace("text null")
-				_controller.receiveFromDialogue(ChapterOneConstant.STATE_CHANGE, ChapterOneConstant.EDITTING_STATE, null);
+				if(_screen == Constant.CREATE_GAME_SCREEN)
+				{
+					_controller.receiveFromDialogue(ChapterOneConstant.STATE_CHANGE, ChapterOneConstant.EDITTING_STATE, null);
+				}
+				else 
+				{
+					_controller.receiveFromDialogue(ChapterOneConstant.STATE_CHANGE, ChapterOneConstant.PLAYING_STATE, null);
+				}
 			}
 		}
 		
@@ -71,12 +89,13 @@ package object.inGameObject
 		 * ====================================================================**/
 		private function onAddedToStage(e:Event):void
 		{
-			_dialogue 		= new TextField(500 , 100, ChapterOneConstant.WELCOME_DIALOG ,ChapterOneConstant.GROBOLD_FONT);
+			_dialogue 		= new TextField(500 , 100, null ,ChapterOneConstant.GROBOLD_FONT, 18);
 			_dialogCurPos 	= 0;
 					
 			_dialogue.x = ChapterOneConstant.DIALOG_POSX;
 			_dialogue.y = ChapterOneConstant.DIALOG_POSY + 30;
 			
+			_screen = _controller.screen;
 			this.addChild(_dialogue);
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -100,6 +119,14 @@ package object.inGameObject
 			{
 				this._dialogue.visible 	 = false;
 				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+			}
+			else if(_screen == Constant.STORY_SCREEN_2 && _controller.stage2Info()[2])
+			{
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+			}
+			else if(_screen == Constant.STORY_SCREEN_2 && !_controller.stage2Info()[2])
+			{
+				this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			}
 			else
 			{

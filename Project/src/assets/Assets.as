@@ -24,11 +24,18 @@ package assets
 		private static const AtlasTextureLoadingPage:Class;
 		
 		//embed the start game page
-		[Embed(source = '../media/sprite/StartPage/StartGameSpriteSheet.png')]
+		[Embed(source = '../media/sprite/Start Page/StartGameSpriteSheet.png')]
 		private static const AtlasTextureMain:Class;
 		
-		[Embed(source = '../media/sprite/StartPage/StartGameSpriteSheet.xml', mimeType = 'application/octet-stream')]
+		[Embed(source = '../media/sprite/Start Page/StartGameSpriteSheet.xml', mimeType = 'application/octet-stream')]
 		private static const AtlasXmlMain    :Class;
+		
+		//embed the start game page
+		[Embed(source = '../media/sprite/Obstacles/Obstacles.png')]
+		private static const AtlasTextureObstacles:Class;
+		
+		[Embed(source = '../media/sprite/Obstacles/Obstacles.xml', mimeType = 'application/octet-stream')]
+		private static const AtlasXmlObstacles    :Class;
 		
 		//embed the characters sprite sheet
 		[Embed(source = '../media/sprite/Characters/Characters.png')]
@@ -38,11 +45,25 @@ package assets
 		private static const AtlasXmlCharacters    :Class;
 		
 		//embed the characters sprite sheet
+		[Embed(source = '../media/sprite/Backgrounds/Backgrounds.png')]
+		private static const AtlasTextureBg:Class;
+		
+		[Embed(source = '../media/sprite/Backgrounds/Backgrounds.xml', mimeType = 'application/octet-stream')]
+		private static const AtlasXmlBg    :Class;
+		
+		//embed the characters sprite sheet
 		[Embed(source = '../media/sprite/Screens/screens.png')]
 		private static const AtlasTextureScreens:Class;
 		
 		[Embed(source = '../media/sprite/Screens/screens.xml', mimeType = 'application/octet-stream')]
 		private static const AtlasXmlScreens    :Class;
+		
+		//embed the common assets sprite sheet
+		[Embed(source = '../media/sprite/Common Assets/CommonAssets.png')]
+		private static const AtlasTextureCommonAssets:Class;
+		
+		[Embed(source = '../media/sprite/Common Assets/CommonAssets.xml', mimeType = 'application/octet-stream')]
+		private static const AtlasXmlCommonAssets    :Class;
 		
 		//embed the create page sprite sheet
 		[Embed(source = '../media/sprite/Create Page/Object.png')]
@@ -132,6 +153,7 @@ package assets
 						if(!storeAtlas(texture, xml, name))
 							return null;
 						break;
+					
 					case Constant.CREATE_GAME_SCREEN:
 						//try catch if the embeded image can not be found inside the project file
 						try{
@@ -146,8 +168,9 @@ package assets
 						
 						if(!storeAtlas(texture, xml, name))
 							return null;
-						break;					
-					case Constant.CHARACTERS_SPRITE:
+						break;
+					
+					case Constant.PLAYER_SPRITE:
 						//try catch if the embeded image can not be found inside the project file
 						try{
 							texture                   = getTexture('AtlasTextureCharacters');
@@ -178,6 +201,51 @@ package assets
 						if(!storeAtlas(texture, xml, name))
 							return null;
 						break;
+					
+					case Constant.COMMON_ASSET_SPRITE:
+						try{
+							texture                   = getTexture('AtlasTextureCommonAssets');
+							xml                       = XML(new AtlasXmlCommonAssets);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
+						break;
+					
+					case Constant.BACKGROUND_SPRITE:
+						try{
+							texture                   = getTexture('AtlasTextureBg');
+							xml                       = XML(new AtlasXmlBg);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
+						break;
+					case Constant.OBSTACLES_SPRITE:
+						try{
+							texture                   = getTexture('AtlasTextureObstacles');
+							xml                       = XML(new AtlasXmlObstacles);
+						}
+						catch(e:Error){
+							trace(e);
+							
+							return null;
+						}
+						
+						if(!storeAtlas(texture, xml, name))
+							return null;
+						break;
+					
 					//all the texture loaded from the loader class already
 					//if it can not be founded inside the dictionary object then \
 					//means that the the file has not been loaded or the name of the object in to

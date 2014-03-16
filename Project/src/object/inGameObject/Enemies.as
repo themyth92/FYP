@@ -103,7 +103,7 @@ package object.inGameObject
 		private function onAddedToStage(event:Event):void
 		{
 			
-			this._image = new Image(Assets.getAtlas(Constant.CHARACTERS_SPRITE).getTexture('Enemy_' + _imageNo.toString()));
+			this._image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy_' + _imageNo.toString()));
 		
 			this.addChild(this._image);
 			
