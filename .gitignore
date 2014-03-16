@@ -216,3 +216,11 @@ pip-log.txt
 /Project/.actionScriptProperties
 /Project/bin-debug/GameDev.html
 /Project/bin-debug/GameDev.swf
+
+/Project/.actionScriptProperties
+
+/Project/bin-debug
+
+/Project/bin-debug/history/history.js
+/Project/bin-debug/history/historyFrame.html
+/Project/bin-debug/history/history.css
