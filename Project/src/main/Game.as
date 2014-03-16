@@ -9,15 +9,12 @@ package main
 	import screen.LoadingScreen;
 	import screen.MainScreen;
 	import screen.StoryStage1;
-<<<<<<< HEAD
 	import screen.StoryStage2;
 	import screen.StoryStage3;
 	import screen.StoryStage4;
 	import screen.StoryStage5;
-=======
 	
 	import serverCom.ServerClientCom;
->>>>>>> c88c5414886084ac80486e833357b26ecd9618c9
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -30,14 +27,13 @@ package main
 		private var _mainScreen		  :MainScreen;
 		private var _createScreen	  :CreateScreen;
 		private var _storyStage1		:StoryStage1;
-<<<<<<< HEAD
+
 		private var _storyStage2		:StoryStage2;
 		private var _storyStage3		:StoryStage3;
 		private var _storyStage4		:StoryStage4;
 		private var _storyStage5		:StoryStage5;
-=======
+
 		private var _com   :ServerClientCom
->>>>>>> c88c5414886084ac80486e833357b26ecd9618c9
 		
 		public function Game()
 		{
@@ -47,14 +43,13 @@ package main
 			_mainScreen  		= new MainScreen();
 			_createScreen		= new CreateScreen();
 			_storyStage1		= new StoryStage1();
-<<<<<<< HEAD
 			_storyStage2		= new StoryStage2();
 			_storyStage3		= new StoryStage3();
 			_storyStage4		= new StoryStage4();
 			_storyStage5		= new StoryStage5();
-=======
+
 			_com                = new ServerClientCom();	
->>>>>>> c88c5414886084ac80486e833357b26ecd9618c9
+
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
