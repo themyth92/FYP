@@ -61,12 +61,10 @@ package screen
 		//process to return the image list from data from server
 		private function getImgList(qsImgList : Object):Array{
 			
+			
 		/*	if(qsImgList != {}){
 				
-				if(qsImgList.image){
-					
-					return qsImgList.image;
-				}
+	
 			}*/
 			
 			return new Array();

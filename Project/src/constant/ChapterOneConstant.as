@@ -31,8 +31,8 @@ package constant
 		
 		public static const WARNING_SIGN  			:String       			= 'warningSign';
 		
-		public static const HERO_MALE_STAND			:Array        			= new Array('Male/male_up_01', 'Male/male_down_01','Male/male_left_01', 'Male/male_right_01');
-		public static const HERO_MALE_RUN			:Array         			= new Array('Male/male_up_', 'Male/male_down_', 'Male/male_left_', 'Male/male_right_');
+		public static const HERO_MALE_STAND			:Array        			= new Array('Player - Male/male_up_01', 'Player - Male/male_down_01','Player - Male/male_left_01', 'Player - Male/male_right_01');
+		public static const HERO_MALE_RUN			:Array         			= new Array('Player - Male/male_up_', 'Player - Male/male_down_', 'Player - Male/male_left_', 'Player - Male/male_right_');
 		
 		/* Dialog bubble */
 		public static const DIALOG_TEXTFIELD_WIDTH	:uint  					= 200;

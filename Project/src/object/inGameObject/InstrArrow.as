@@ -87,8 +87,8 @@ package object.inGameObject
 		
 		private function onAddedToStage(e:Event):void{
 			
-			_arrowLeft  = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.INSTRUC_ARROW_LEFT));
-			_arrowRight = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.INSTRUC_ARROW_RIGHT));
+//			_arrowLeft  = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.INSTRUC_ARROW_LEFT));
+//			_arrowRight = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.INSTRUC_ARROW_RIGHT));
 			
 			_leftPosX    = 0;
 			_leftPosY    = 0;

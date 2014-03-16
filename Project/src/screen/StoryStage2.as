@@ -137,10 +137,10 @@ package screen
 			this.removeChild(_console);
 			this.removeChild(_indexBoard);
 			this.removeChild(_scoreBoard);
-			this._console.dispose();
-			this._dialogue.dispose();
-			this._indexBoard.dispose();
-			this._scoreBoard.dispose();
+//			this._console.dispose();
+//			this._dialogue.dispose();
+//			this._indexBoard.dispose();
+//			this._scoreBoard.dispose();
 			this.removeEventListener(Event.ADDED_TO_STAGE, onRemoveFromStage);
 		}
 		

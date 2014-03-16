@@ -93,7 +93,7 @@ package object.inGameObject
 		}
 		
 		private function onAddedToStage(e:Event):void{
-			_errorSign  = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.WARNING_SIGN));
+			_errorSign  = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(ChapterOneConstant.WARNING_SIGN));
 			
 			_console 	= new TextInput();
 			_console.width   = ChapterOneConstant.TEXTFIELD_WIDTH;
@@ -128,6 +128,8 @@ package object.inGameObject
 		private function onRemoveFromStage(e:Event):void
 		{
 			this.removeChild(_console);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 			_console = null;
 		}
 		

@@ -12,6 +12,8 @@ package object.inGameObject
 	import feathers.controls.TextInput;
 	import feathers.data.ListCollection;
 	import feathers.events.FeathersEventType;
+	import feathers.layout.AnchorLayout;
+	import feathers.themes.MetalWorksMobileTheme;
 	
 	import flash.geom.Point;
 	import flash.utils.getTimer;
@@ -93,11 +95,13 @@ package object.inGameObject
 			
 			this._timeIMG	 = new feathers.controls.Button();
 			this._timeIMG.defaultIcon = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.CLOCK_IMG));
+			this._timeIMG.defaultSkin = null;
 			this._timeIMG.x  = TIME_IMG_POS.x;
 			this._timeIMG.y  = TIME_IMG_POS.y;
 			
 			this._lifeIMG 	 = new feathers.controls.Button();
 			this._lifeIMG.defaultIcon = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.LIFE_IMG));
+			this._lifeIMG.defaultSkin = null;
 			this._lifeIMG.x  = LIFE_IMG_POS.x;
 			this._lifeIMG.y  = LIFE_IMG_POS.y;
 			
@@ -107,23 +111,30 @@ package object.inGameObject
 			this.addChild(this._coinIMG);
 			this.addChild(this._timeIMG);
 			this.addChild(this._lifeIMG);
-			
-			this.addEventListener(Event.TRIGGERED, onButtonClicked);
+				
+			this._timeIMG.addEventListener(Event.TRIGGERED, onButtonClicked);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
+			new MetalWorksMobileTheme();
+			var button : feathers.controls.Button = new feathers.controls.Button();
+			button.label = 'click me';
+			button.x =200;
+			button.y =150;
+			this.addChild(button);
 		}
 		
 		private function onRemoveFromStage(event:Event):void
 		{
-			Alert.show("I just wanted you to know that I have a very important message to share with you.", "Alert", new ListCollection(
-				[
-					{ label: "OK" }
-				]));
-	
+			
 		}
 		
 		private function onButtonClicked(event:Event):void
 		{
-			
+			trace('aleate');
+			Alert.show("I just wanted you to know that I have a very important message to share with you.", "Alert", new ListCollection(
+				[
+					{ label: "OK" }
+				]));	
 		}
 		
 		private function onTouch(event:TouchEvent):void
@@ -168,7 +179,6 @@ package object.inGameObject
 					board.height = 50;
 					board.isEditable = true;
 					board.text = input;
-					board.backgroundSkin = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.CONSOLE_FOCUS));
 					this.addChild(board);
 					this.board.addEventListener(FeathersEventType.ENTER, onLifeEnter);
 					
@@ -180,7 +190,6 @@ package object.inGameObject
 					board.height = 50;
 					board.isEditable = true;
 					board.text = input;
-					board.backgroundSkin = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.CONSOLE_FOCUS));
 					this.addChild(board);
 					this.board.addEventListener(FeathersEventType.ENTER, onTimeEnter);
 					

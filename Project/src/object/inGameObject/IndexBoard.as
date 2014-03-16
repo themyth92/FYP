@@ -41,7 +41,7 @@ package object.inGameObject
 		private var _state 	:String = constant.ChapterOneConstant.INSTRUCTING_STATE;
 		
 		//CONSTANT
-		private static const PATTERN_PREFIX:String	 = 'pattern/pattern_';
+		private static const PATTERN_PREFIX:String	 = 'pattern_';
 		private static const MAXIMUM_COLUMN:uint 	 = 11;
 		private static const MAXIMUM_ROW:uint        = 9;
 		private static const PIXEL_MOVE:int 	     = 40;
@@ -274,6 +274,8 @@ package object.inGameObject
 		/** REMOVE_FROM_STAGE **/
 		private function onRemoveFromStage	(e:Event):void
 		{
+			this._touchArea.removeEventListener(TouchEvent.TOUCH, onTouch);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
@@ -312,7 +314,6 @@ package object.inGameObject
 			{
 				this._isTriggered 	= isTriggered;
 				this._dragType      = type;
-				this._testImg       = new Image(Assets.getAtlas(constant.Constant.SPRITE_ONE).getTexture(PATTERN_PREFIX + type));
 			}
 		}
 		
@@ -330,7 +331,7 @@ package object.inGameObject
 				var walkable:Boolean = false;
 				try{
 					
-					var img:Image = new Image(Assets.getAtlas(constant.Constant.SPRITE_ONE).getTexture(PATTERN_PREFIX + name));
+					var img:Image = new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + name));
 					
 					if(name == COIN_TYPE)
 					{

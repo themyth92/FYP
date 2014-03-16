@@ -96,6 +96,7 @@ package main
 					case Constant.STORY_SCREEN_3:
 						this.removeChild(_mainScreen);
 						this.removeChild(_storyStage2);
+						_storyStage2 = null;
 						this.addChild(_storyStage3);
 						break;
 						

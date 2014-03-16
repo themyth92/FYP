@@ -68,7 +68,7 @@ package screen
 					}
 					else{
 						
-						displayObject = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CHAP_ONE_TEXTURE_ARRAY[index]));
+						//displayObject = new Image(Assets.getAtlas(Constant.SPRITE_ONE).getTexture(Constant.CHAP_ONE_TEXTURE_ARRAY[index]));
 					}
 					
 					_commonObject[Constant.CHAP_ONE_TEXTURE_ARRAY[index]] = displayObject;
