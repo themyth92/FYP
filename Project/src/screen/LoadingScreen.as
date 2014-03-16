@@ -63,10 +63,10 @@ package screen
 			
 			if(qsImgList != {}){
 				
-				if(qsImgList.image){
-					
-					return qsImgList.image;
-				}
+//				if(qsImgList.image){
+//					
+//					return qsImgList.image;
+//				}
 			}
 			
 			return new Array();

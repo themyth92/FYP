@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:9677f6b7fc067d885f126bac1b073ab5:1/1$ -->
+<!-- $TexturePacker:SmartUpdate:20b2ffcfe7bab2fc9f61f144d0326fa8:1/1$ -->
 <TextureAtlas imagePath="CommonAssets.png">
     <SubTexture name="Clock" x="2" y="2" width="40" height="40"/>
     <SubTexture name="Coin" x="44" y="2" width="40" height="40"/>
@@ -13,4 +13,5 @@
     <SubTexture name="escButton" x="572" y="143" width="50" height="50"/>
     <SubTexture name="helpButton" x="624" y="143" width="50" height="50"/>
     <SubTexture name="mainFrame" x="2" y="321" width="463" height="373"/>
+    <SubTexture name="warningSign" x="467" y="321" width="21" height="27"/>
 </TextureAtlas>

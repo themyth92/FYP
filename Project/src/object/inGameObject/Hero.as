@@ -10,6 +10,7 @@ package object.inGameObject
 	import assets.Assets;
 	
 	import constant.ChapterOneConstant;
+	import constant.Constant;
 	
 	import controller.ObjectController.Controller;
 	
@@ -185,8 +186,8 @@ package object.inGameObject
 			
 			for(var index:uint = 0 ; index < ChapterOneConstant.HERO_MALE_STAND.length ; index++){
 				
-				image = new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
-				movie = new MovieClip(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
+				image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
+				movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
 				_heroStand.push(image);
 				_heroRun.push(movie);
 			}

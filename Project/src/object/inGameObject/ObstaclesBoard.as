@@ -138,7 +138,7 @@ package object.inGameObject
 			for(var i:uint = 0 ; i < PATTERN_LIST.length ; i++)
 			{
 				if(PATTERN_NAME[i]){
-					object = {label:PATTERN_NAME[i], thumbnail:Assets.getAtlas(constant.Constant.SPRITE_ONE).getTexture(PATTERN_PREFIX + PATTERN_LIST[i])};
+					object = {label:PATTERN_NAME[i], thumbnail:Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + PATTERN_LIST[i])};
 					patternCollection.push(object);
 					object = null;
 				}			

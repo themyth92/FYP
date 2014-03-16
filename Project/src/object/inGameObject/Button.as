@@ -79,27 +79,27 @@ package object.inGameObject
 		private function onAddedToStage(e:Event):void
 		{
 			//"Submit" button configuration			
-			_submitBtn = new feathers.controls.Button();
-			_submitBtn.defaultSkin  	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_NORMAL));
-			_submitBtn.downSkin     	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_CLICK));
-			_submitBtn.hoverSkin    	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_HOVER));
-			_submitBtn.disabledSkin 	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_DISABLED));
-			_submitBtn.x            	= SUBMIT_BTN_POSX;
-			
-			this.addChild(_submitBtn);
-			
-			//"Preview" button configuration
-			_previewBtn = new feathers.controls.Button();
-			_previewBtn.defaultSkin 	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_NORMAL));
-			_previewBtn.downSkin    	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_CLICK));
-			_previewBtn.hoverSkin  		= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_HOVER));
-			_previewBtn.disabledSkin	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_DISABLED));
-			
-			this.addChild(_previewBtn);
-			
-			//Trigger eventListener for both buttons
-			_submitBtn.addEventListener	(Event.TRIGGERED, onSubmitBtnTrigger);
-			_previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
+//			_submitBtn = new feathers.controls.Button();
+//			_submitBtn.defaultSkin  	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_NORMAL));
+//			_submitBtn.downSkin     	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_CLICK));
+//			_submitBtn.hoverSkin    	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_HOVER));
+//			_submitBtn.disabledSkin 	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(SUBMIT_DISABLED));
+//			_submitBtn.x            	= SUBMIT_BTN_POSX;
+//			
+//			this.addChild(_submitBtn);
+//			
+//			//"Preview" button configuration
+//			_previewBtn = new feathers.controls.Button();
+//			_previewBtn.defaultSkin 	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_NORMAL));
+//			_previewBtn.downSkin    	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_CLICK));
+//			_previewBtn.hoverSkin  		= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_HOVER));
+//			_previewBtn.disabledSkin	= new Image(Assets.getAtlas(ChapterOneConstant.SPRITE_ONE).getTexture(PREVIEW_DISABLED));
+//			
+//			this.addChild(_previewBtn);
+//			
+//			//Trigger eventListener for both buttons
+//			_submitBtn.addEventListener	(Event.TRIGGERED, onSubmitBtnTrigger);
+//			_previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 		}
