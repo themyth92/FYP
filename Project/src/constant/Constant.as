@@ -88,6 +88,7 @@ package constant
 		public static const LIFE_IMG		:String		= "Life";
 		public static const ESCB_IMG		:String		= "escButton";
 		public static const HELPB_IMG		:String		= "helpButton";
+		public static const COIN_IMG		:String		= "Coin";
 		
 		/* Create SpriteSheet */
 		public static const GRID_IMG		:String		= "Grid";

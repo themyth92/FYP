@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:a7091140bef79290661ab2cdaec8bedd:1/1$ -->
+<!-- $TexturePacker:SmartUpdate:9677f6b7fc067d885f126bac1b073ab5:1/1$ -->
 <TextureAtlas imagePath="CommonAssets.png">
     <SubTexture name="Clock" x="2" y="2" width="40" height="40"/>
-    <SubTexture name="Console" x="44" y="2" width="193" height="34"/>
-    <SubTexture name="Dialogue" x="239" y="2" width="631" height="139"/>
-    <SubTexture name="GameGuider" x="872" y="2" width="120" height="120"/>
-    <SubTexture name="Life" x="2" y="143" width="53" height="45"/>
-    <SubTexture name="Radio (tick)" x="57" y="143" width="201" height="176"/>
-    <SubTexture name="Radio (untick)" x="260" y="143" width="201" height="176"/>
-    <SubTexture name="escButton" x="463" y="143" width="50" height="50"/>
-    <SubTexture name="helpButton" x="515" y="143" width="50" height="50"/>
+    <SubTexture name="Coin" x="44" y="2" width="40" height="40"/>
+    <SubTexture name="Console" x="86" y="2" width="193" height="34"/>
+    <SubTexture name="Dialogue" x="281" y="2" width="631" height="139"/>
+    <SubTexture name="GameGuider" x="2" y="143" width="120" height="120"/>
+    <SubTexture name="Life" x="124" y="143" width="40" height="40"/>
+    <SubTexture name="Radio (tick)" x="166" y="143" width="201" height="176"/>
+    <SubTexture name="Radio (untick)" x="369" y="143" width="201" height="176"/>
+    <SubTexture name="escButton" x="572" y="143" width="50" height="50"/>
+    <SubTexture name="helpButton" x="624" y="143" width="50" height="50"/>
     <SubTexture name="mainFrame" x="2" y="321" width="463" height="373"/>
 </TextureAtlas>

@@ -3,12 +3,17 @@ package object.inGameObject
 	import assets.Assets;
 	
 	import constant.ChapterOneConstant;
+	import constant.Constant;
 	
 	import controller.ObjectController.Controller;
 	
+	import feathers.controls.Alert;
+	import feathers.controls.Button;
 	import feathers.controls.TextInput;
+	import feathers.data.ListCollection;
 	import feathers.events.FeathersEventType;
 	
+	import flash.geom.Point;
 	import flash.utils.getTimer;
 	
 	import starling.display.Image;
@@ -23,10 +28,12 @@ package object.inGameObject
 	
 	public class ScoreBoard extends Sprite
 	{ 
-		private static const COIN_BOARD_X : Number  = 60;
-		private static const LIFE_BOARD_X : Number 	= 185;
-		private static const TIME_BOARD_X : Number  = 300;
-		private static const SCOREBOARD_Y : Number  = 10;
+		private static const COIN_BOARD_POS : Point = new Point(60, 10);
+		private static const COIN_IMG_POS	: Point	= new Point(40, 8);
+		private static const LIFE_BOARD_POS : Point	= new Point(185,10);
+		private static const LIFE_IMG_POS	: Point	= new Point(150, 8);
+		private static const TIME_BOARD_POS : Point = new Point(300,10);
+		private static const TIME_IMG_POS	: Point	= new Point(265, 8);
 		
 		//STATES VARIABLE
 		private var _state				  :String = ChapterOneConstant.INSTRUCTING_STATE;
@@ -35,18 +42,21 @@ package object.inGameObject
 
 		private var _comfirmQuad : Quad;
 		
+		/* Information Text */
 		private var _coinText	: TextField;
 		private var _lifeText	: TextField;
 		private var _timeText	: TextField;
 		
+		/* Image */
 		private var _coinIMG	: Image;
-		private var _lifeIMG	: Image;
-		private var _timeIMG	: Image;
+		private var _lifeIMG	: feathers.controls.Button;
+		private var _timeIMG	: feathers.controls.Button;
 		
 		private var _maxLife 	:Number;
 		
 		private var _controller	    : Controller;
 		
+		/* Time variable */
 		private var _markTime		: int = 0;
 		private var _minutesOn		: int = 5;
 		private var _secondsOn		: int = 60;
@@ -56,36 +66,62 @@ package object.inGameObject
 		public function ScoreBoard(controller:Controller)
 		{
 			this._controller   = controller;
-
-			super();
-			
-			this.addEventListener(Event.ADDED_TO_STAGE	   , onAddedToStage);
-			this.addEventListener(Event.REMOVED_FROM_STAGE , onRemoveFromStage);
-			this.addEventListener(TouchEvent.TOUCH		   , onTouch);
-			this.addEventListener(EnterFrameEvent.ENTER_FRAME, updateTimeTracker);
+		
+			this.addEventListener(Event.ADDED_TO_STAGE	  		, onAddedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE 		, onRemoveFromStage);
+			this.addEventListener(TouchEvent.TOUCH		   		, onTouch);
+			this.addEventListener(EnterFrameEvent.ENTER_FRAME	, updateTimeTracker);
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
-			_coinText = new TextField(100, 30, "0/0", "Grobold", 24, 0xffffff, false);
-			_coinText.x = COIN_BOARD_X;
-			_coinText.y = SCOREBOARD_Y;
-			this.addChild(_coinText);
+			this._coinText 	 = new TextField(100, 30, "0/0", "Grobold", 24, 0xffffff, false);
+			this._coinText.x = COIN_BOARD_POS.x;
+			this._coinText.y = COIN_BOARD_POS.y;
+						
+			this._lifeText 	 = new TextField(70, 30, "0/0", "Grobold", 24, 0xffffff, false);
+			this._lifeText.x = LIFE_BOARD_POS.x;
+			this._lifeText.y = LIFE_BOARD_POS.y;
+						
+			this._timeText 	 = new TextField(100, 30, "00:00", "Grobold", 24, 0xffffff, false);
+			this._timeText.x = TIME_BOARD_POS.x;
+			this._timeText.y = TIME_BOARD_POS.y;
 			
-			_lifeText = new TextField(70, 30, "0/0", "Grobold", 24, 0xffffff, false);
-			_lifeText.x = LIFE_BOARD_X;
-			_lifeText.y = SCOREBOARD_Y;
-			_lifeText.touchable = true;
-			this.addChild(_lifeText);
+			this._coinIMG 	 = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.COIN_IMG));
+			this._coinIMG.x  = COIN_IMG_POS.x;
+			this._coinIMG.y  = COIN_IMG_POS.y;
 			
-			_timeText = new TextField(100, 30, "00:00", "Grobold", 24, 0xffffff, false);
-			_timeText.x = TIME_BOARD_X;
-			_timeText.y = SCOREBOARD_Y;
-			_timeText.touchable = true;
-			this.addChild(_timeText);
+			this._timeIMG	 = new feathers.controls.Button();
+			this._timeIMG.defaultIcon = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.CLOCK_IMG));
+			this._timeIMG.x  = TIME_IMG_POS.x;
+			this._timeIMG.y  = TIME_IMG_POS.y;
+			
+			this._lifeIMG 	 = new feathers.controls.Button();
+			this._lifeIMG.defaultIcon = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.LIFE_IMG));
+			this._lifeIMG.x  = LIFE_IMG_POS.x;
+			this._lifeIMG.y  = LIFE_IMG_POS.y;
+			
+			this.addChild(this._coinText);
+			this.addChild(this._lifeText);
+			this.addChild(this._timeText);
+			this.addChild(this._coinIMG);
+			this.addChild(this._timeIMG);
+			this.addChild(this._lifeIMG);
+			
+			this.addEventListener(Event.TRIGGERED, onButtonClicked);
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function onRemoveFromStage(event:Event):void
+		{
+			Alert.show("I just wanted you to know that I have a very important message to share with you.", "Alert", new ListCollection(
+				[
+					{ label: "OK" }
+				]));
+	
+		}
+		
+		private function onButtonClicked(event:Event):void
 		{
 			
 		}

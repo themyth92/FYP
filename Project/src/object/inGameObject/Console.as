@@ -128,6 +128,7 @@ package object.inGameObject
 		private function onRemoveFromStage(e:Event):void
 		{
 			this.removeChild(_console);
+			_console = null;
 		}
 		
 		/**====================================================================

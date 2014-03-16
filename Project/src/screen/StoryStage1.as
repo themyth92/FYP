@@ -117,9 +117,13 @@ package screen
 			this.removeChild(_screen);
 			this.removeChild(_guiderIMG);
 			this.removeChild(_escButton);
+			
 			this.removeChild(_dialogue);
 			this.removeChild(_indexBoard);
 			this.removeChild(_scoreBoard);
+			this._dialogue.dispose();
+			this._indexBoard.dispose();
+			this._scoreBoard.dispose();
 			this.removeEventListener(Event.ADDED_TO_STAGE, onRemoveFromStage);
 		}
 		

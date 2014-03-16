@@ -30,7 +30,6 @@ package screen
 		private var _frameIMG		:Image;
 		private var _dialogueIMG	:Image;
 		private var _guiderIMG		:Image;
-		private var _lifeIMG		:Image;
 		private var _escButton		:Button;
 		
 		private var _controller		:Controller;
@@ -39,21 +38,21 @@ package screen
 		{
 			super();
 			
-			_controller 	= new Controller ();
-			_console		= new Console(_controller);
-			_dialogue		= new Dialogue(_controller);
-			_indexBoard		= new IndexBoard(_controller);
-			_scoreBoard		= new ScoreBoard(_controller);
+			this._controller 	= new Controller ();
+			this._console		= new Console(this._controller);
+			this._dialogue		= new Dialogue(this._controller);
+			this._indexBoard	= new IndexBoard(this._controller);
+			this._scoreBoard	= new ScoreBoard(this._controller);
 			
-			_controller.assignObjectController(_console, _dialogue, null, _indexBoard, null, null, _scoreBoard);
-			_controller.assignScreen(Constant.STORY_SCREEN_3);
+			this._controller.assignObjectController(this._console, this._dialogue, null, this._indexBoard, null, null, this._scoreBoard);
+			this._controller.assignScreen(Constant.STORY_SCREEN_3);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
-			placeImageOnScreen();
-			setupGameObject();
+			this.placeImageOnScreen();
+			this.setupGameObject();
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClicked);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
@@ -69,7 +68,6 @@ package screen
 			this._frameIMG 		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.FRAME_IMG));
 			this._dialogueIMG 	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.DIALOGUE_IMG));
 			this._guiderIMG		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.GUIDER_IMG));
-			this._lifeIMG		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.LIFE_IMG));
 			this._escButton		= new Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.ESCB_IMG));
 			
 			/* Place the image to correct position on screen */
@@ -89,31 +87,31 @@ package screen
 			this._escButton.y		= Constant.ESCB_POS.y;
 			
 			/* Add image to display */
-			this.addChild(_background);
-			this.addChild(_frameIMG);
-			this.addChild(_dialogueIMG);
-			this.addChild(_screen);
-			this.addChild(_guiderIMG);
-			this.addChild(_escButton);
+			this.addChild(this._background);
+			this.addChild(this._frameIMG);
+			this.addChild(this._dialogueIMG);
+			this.addChild(this._screen);
+			this.addChild(this._guiderIMG);
+			this.addChild(this._escButton);
 		}
 		
 		private function setupGameObject():void
 		{
-			_console.x 		= Constant.CONSOLE_PLAY_POS.x;
-			_console.y 		= Constant.CONSOLE_PLAY_POS.y;
+			this._console.x 	= Constant.CONSOLE_PLAY_POS.x;
+			this._console.y 	= Constant.CONSOLE_PLAY_POS.y;
 			
-			_dialogue.x 	= Constant.DIALOGUE_POS.x + 75;
-			_dialogue.y 	= Constant.DIALOGUE_POS.y + 20;
+			this._dialogue.x 	= Constant.DIALOGUE_POS.x + 75;
+			this._dialogue.y 	= Constant.DIALOGUE_POS.y + 20;
 			
-			_indexBoard.x 	= Constant.GRID_STORY_POS.x;
-			_indexBoard.y 	= Constant.GRID_STORY_POS.y;
+			this._indexBoard.x 	= Constant.GRID_STORY_POS.x;
+			this._indexBoard.y 	= Constant.GRID_STORY_POS.y;
 			
-			_scoreBoard.x 	= 160;
+			this._scoreBoard.x 	= 160;
 			
-			this.addChild(_console);
-			this.addChild(_dialogue);
-			this.addChild(_indexBoard);
-			this.addChild(_scoreBoard);
+			this.addChild(this._console);
+			this.addChild(this._dialogue);
+			this.addChild(this._indexBoard);
+			this.addChild(this._scoreBoard);
 		}
 		
 		private function onButtonClicked(event:Event):void
@@ -127,17 +125,23 @@ package screen
 		
 		private function onRemoveFromStage(event:Event):void
 		{
-			this.removeChild(_background);
-			this.removeChild(_frameIMG);
-			this.removeChild(_dialogueIMG);
-			this.removeChild(_screen);
-			this.removeChild(_guiderIMG);
-			this.removeChild(_escButton);
-			this.removeChild(_dialogue);
-			this.removeChild(_console);
-			this.removeChild(_indexBoard);
-			this.removeChild(_scoreBoard);
-			this.removeEventListener(Event.ADDED_TO_STAGE, onRemoveFromStage);
+			this.removeChild(this._background);
+			this.removeChild(this._frameIMG);
+			this.removeChild(this._dialogueIMG);
+			this.removeChild(this._screen);
+			this.removeChild(this._guiderIMG);
+			this.removeChild(this._escButton);
+			
+			this.removeChild(this._dialogue);
+			this.removeChild(this._console);
+			this.removeChild(this._indexBoard);
+			this.removeChild(this._scoreBoard);
+			this._console.dispose();
+			this._dialogue.dispose();
+			this._indexBoard.dispose();
+			this._scoreBoard.dispose();
+			
+			this.removeEventListener(Event.ADDED_TO_STAGE, this.onRemoveFromStage);
 		}
 		
 		private function onEnterFrame(event:Event):void
