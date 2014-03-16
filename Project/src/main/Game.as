@@ -9,12 +9,10 @@ package main
 	import screen.LoadingScreen;
 	import screen.MainScreen;
 	import screen.StoryStage1;
-
 	import screen.StoryStage2;
 	import screen.StoryStage3;
 	import screen.StoryStage4;
 	import screen.StoryStage5;
-
 	
 	import serverCom.ServerClientCom;
 	
@@ -49,7 +47,9 @@ package main
 			_storyStage3		= new StoryStage3();
 			_storyStage4		= new StoryStage4();
 			_storyStage5		= new StoryStage5();
+
 			_com                = new ServerClientCom();	
+
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
