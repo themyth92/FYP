@@ -274,6 +274,7 @@ package object.inGameObject
 		/** REMOVE_FROM_STAGE **/
 		private function onRemoveFromStage	(e:Event):void
 		{
+			this.dispose();
 			this._touchArea.removeEventListener(TouchEvent.TOUCH, onTouch);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);

@@ -9,7 +9,11 @@ package object.inGameObject
 	
 	import feathers.controls.Alert;
 	import feathers.controls.Button;
+	import feathers.controls.Header;
+	import feathers.controls.Panel;
+	import feathers.controls.PickerList;
 	import feathers.controls.TextInput;
+	import feathers.core.PopUpManager;
 	import feathers.data.ListCollection;
 	import feathers.events.FeathersEventType;
 	import feathers.layout.AnchorLayout;
@@ -18,6 +22,7 @@ package object.inGameObject
 	import flash.geom.Point;
 	import flash.utils.getTimer;
 	
+	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -51,11 +56,11 @@ package object.inGameObject
 		
 		/* Image */
 		private var _coinIMG	: Image;
-		private var _lifeIMG	: feathers.controls.Button;
-		private var _timeIMG	: feathers.controls.Button;
+		private var _lifeIMG	: starling.display.Button;
+		private var _timeIMG	: starling.display.Button;
 		
-		private var _maxLife 	:Number;
-		
+		private var _maxLife 	:Number = 5;
+		private var _panel		:Panel;
 		private var _controller	    : Controller;
 		
 		/* Time variable */
@@ -71,12 +76,13 @@ package object.inGameObject
 		
 			this.addEventListener(Event.ADDED_TO_STAGE	  		, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE 		, onRemoveFromStage);
-			this.addEventListener(TouchEvent.TOUCH		   		, onTouch);
 			this.addEventListener(EnterFrameEvent.ENTER_FRAME	, updateTimeTracker);
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
+			new MetalWorksMobileTheme();
+			
 			this._coinText 	 = new TextField(100, 30, "0/0", "Grobold", 24, 0xffffff, false);
 			this._coinText.x = COIN_BOARD_POS.x;
 			this._coinText.y = COIN_BOARD_POS.y;
@@ -93,15 +99,11 @@ package object.inGameObject
 			this._coinIMG.x  = COIN_IMG_POS.x;
 			this._coinIMG.y  = COIN_IMG_POS.y;
 			
-			this._timeIMG	 = new feathers.controls.Button();
-			this._timeIMG.defaultIcon = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.CLOCK_IMG));
-			this._timeIMG.defaultSkin = null;
+			this._timeIMG	 = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.CLOCK_IMG));
 			this._timeIMG.x  = TIME_IMG_POS.x;
 			this._timeIMG.y  = TIME_IMG_POS.y;
 			
-			this._lifeIMG 	 = new feathers.controls.Button();
-			this._lifeIMG.defaultIcon = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.LIFE_IMG));
-			this._lifeIMG.defaultSkin = null;
+			this._lifeIMG 	 = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.LIFE_IMG));
 			this._lifeIMG.x  = LIFE_IMG_POS.x;
 			this._lifeIMG.y  = LIFE_IMG_POS.y;
 			
@@ -112,15 +114,9 @@ package object.inGameObject
 			this.addChild(this._timeIMG);
 			this.addChild(this._lifeIMG);
 				
-			this._timeIMG.addEventListener(Event.TRIGGERED, onButtonClicked);
+			this._timeIMG.addEventListener(Event.TRIGGERED, onTimeClicked);
+			this._lifeIMG.addEventListener(Event.TRIGGERED, onLifeClicked);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			
-			new MetalWorksMobileTheme();
-			var button : feathers.controls.Button = new feathers.controls.Button();
-			button.label = 'click me';
-			button.x =200;
-			button.y =150;
-			this.addChild(button);
 		}
 		
 		private function onRemoveFromStage(event:Event):void
@@ -128,100 +124,103 @@ package object.inGameObject
 			
 		}
 		
-		private function onButtonClicked(event:Event):void
+		private function onLifeClicked(event:Event):void
 		{
-			trace('aleate');
-			Alert.show("I just wanted you to know that I have a very important message to share with you.", "Alert", new ListCollection(
-				[
-					{ label: "OK" }
-				]));	
-		}
-		
-		private function onTouch(event:TouchEvent):void
-		{
-			if(_state == ChapterOneConstant.EDITTING_STATE)
+			_panel = new Panel();
+			_panel.width = 250;
+			
+			var lifeEdit:TextInput = new TextInput();
+			lifeEdit.x = 70;
+			lifeEdit.width = 80;
+			
+			lifeEdit.prompt = formatLeadingZero(_maxLife);
+			_panel.addChild(lifeEdit);
+			
+			var closeButton :feathers.controls.Button = new feathers.controls.Button();
+			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseLifeWindow(lifeEdit)});
+			closeButton.x = 75;
+			closeButton.y = 75;
+			closeButton.label = "Ok";
+			
+			_panel.headerFactory = function():Header
 			{
-				var touchLife			: Touch;
-				var touchTime			: Touch;
-				var touchcomfirm		: Touch;
-				
-				touchLife = event.getTouch(this._lifeText);
-				touchTime = event.getTouch(this._timeText);
-				touchcomfirm = event.getTouch(this._comfirmQuad);
-				if(touchLife)
-					modifyLife();
-				else if(touchTime)
-					modifyTime();
-				else if(touchcomfirm)
-					updateLifeTracker(Number(board.text),Number(board.text));
+				var header:Header = new Header();
+				header.title = "Life";
+				return header;
 			}
+			
+			_panel.addChild(closeButton);
+			PopUpManager.addPopUp( _panel);
 		}
 		
-		private function modifyLife():void
+		private function onCloseLifeWindow(life:TextInput):void
 		{
-			var maxLife : String;
-			maxLife = displayEditBoard("life");			
-		}
-		
-		private function modifyTime():void
-		{
-			displayEditBoard("time");
-		}
-		
-		private function displayEditBoard(type:String):String
-		{
-			var input : String;
-			switch (type){
-				case "life":
-					board.x = 500;
-					board.y = 300;
-					board.width = 50;
-					board.height = 50;
-					board.isEditable = true;
-					board.text = input;
-					this.addChild(board);
-					this.board.addEventListener(FeathersEventType.ENTER, onLifeEnter);
-					
-					break;
-				case "time":
-					board.x = 200;
-					board.y = 300;
-					board.width = 50;
-					board.height = 50;
-					board.isEditable = true;
-					board.text = input;
-					this.addChild(board);
-					this.board.addEventListener(FeathersEventType.ENTER, onTimeEnter);
-					
-					break;
-			}
-			return input;
-		}
-		
-		private function onLifeEnter(e:Event):void
-		{	
-			_maxLife = Number(board.text);
+			PopUpManager.removePopUp( _panel, true );
+			if(life.text != null)
+				_maxLife = Number(life.text);
+			
 			_controller.getGameStat("max life", _maxLife);
-			this.removeChild(board);
+			reviewLife();
 		}
 		
-		private function onTimeEnter(e:Event):void
+		private function onTimeClicked(event:Event):void
 		{
-			_minutesOn =  Number(board.text.substr(0,board.text.indexOf(","))) + 1;
-			_secondsOn =  Number(board.text.substr(board.text.indexOf(",")+1, board.text.length));
-			this.removeChild(board);
+			_panel = new Panel();
+			_panel.width = 250;
+						
+			var colonText :TextField = new TextField(100, 30, ":",'Verdana', 24, 0xffffff, false);
+			colonText.x = 65;
+			colonText.y = 10;
+			var minuteText:TextInput = new TextInput();
+			minuteText.x = 30;
+			minuteText.textEditorProperties.fontSize = 20;
+			minuteText.width = 75;
+			var secondText:TextInput = new TextInput();
+			secondText.x = 125;
+			secondText.textEditorProperties.fontSize = 20;
+			secondText.width = 75;
+
+			minuteText.prompt = formatLeadingZero(_minutesOn);
+			secondText.prompt = "00";
+			_panel.addChild(colonText);
+			_panel.addChild(minuteText);
+			_panel.addChild(secondText);
+			
+			var closeButton :feathers.controls.Button = new feathers.controls.Button();
+			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseTimeWindow(minuteText, secondText)});
+			closeButton.x = 75;
+			closeButton.y = 75;
+			closeButton.label = "Ok";
+			
+			_panel.headerFactory = function():Header
+			{
+				var header:Header = new Header();
+				header.title = "Time";
+				return header;
+			}
+				
+			_panel.addChild(closeButton);
+			PopUpManager.addPopUp( _panel);
 		}
 		
+		private function onCloseTimeWindow(minute:TextInput, second:TextInput):void
+		{
+			PopUpManager.removePopUp( _panel, true );
+			if(minute.text != null)
+				_minutesOn = Number(minute.text);
+			if(second.text != null)
+				_secondsOn = Number(second.text);
+			reviewTime();
+		}
+
 		public function updateCoinTracker(currentCoin:Number, maxCoin:Number):void
 		{
-			if(_state == ChapterOneConstant.PLAYING_STATE)
-				_coinText.text = currentCoin + "/" + maxCoin;
+			_coinText.text = currentCoin + "/" + maxCoin;
 		}
 		
 		public function updateLifeTracker(currentLife:Number, maxLife:Number):void
 		{
-			if(_state == ChapterOneConstant.PLAYING_STATE)
-				_lifeText.text = currentLife + "/" + maxLife;
+			_lifeText.text = currentLife + "/" + maxLife;
 		}
 		
 		public function updateTimeTracker(event:EnterFrameEvent):void
@@ -239,6 +238,16 @@ package object.inGameObject
 				}
 				_timeText.text = formatLeadingZero(minutes) + " : " + formatLeadingZero(seconds);
 			}
+		}
+		
+		private function reviewTime():void
+		{
+			_timeText.text = formatLeadingZero(_minutesOn) + " : " + formatLeadingZero(_secondsOn);
+		}
+		
+		private function reviewLife():void
+		{
+			_lifeText.text = _maxLife + "/" + _maxLife;
 		}
 		
 		private function formatLeadingZero(value:Number):String
