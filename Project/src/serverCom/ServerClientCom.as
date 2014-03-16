@@ -4,17 +4,22 @@ package serverCom
 	
 	public class ServerClientCom
 	{
-		private  var qsImgList : Object;
+		private  var qsImgList       : Object;
 		
 		public function ServerClientCom()
 		{
-			qsImgList = {};
+			qsImgList        = {};
 		}
 		
 		public function retrieveQuestionAndImageListFromServer():Object{
 			
 			qsImgList = ExternalInterface.call('returnUserQuestionListAndImage');
 			return qsImgList;
+		}
+		
+		public function saveUserIngameState(userIngameState : uint):void{
+			
+			ExternalInterface.call('saveUserIngameState', userIngameState);
 		}
 	}
 }

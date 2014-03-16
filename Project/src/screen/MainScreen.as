@@ -24,6 +24,7 @@ package screen
 		{
 			super();
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
 		private function onAddedToStage(event:Event):void
@@ -57,16 +58,33 @@ package screen
 			var buttonClicked : Button = event.target as Button;
 			if(buttonClicked == _createButton)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.CREATE_GAME_SCREEN}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.CREATE_GAME_SCREEN, needSaveState : true}, true));
+				this.removeEventListener(Event.TRIGGERED, onMainClick);
 			}
 			else if(buttonClicked == _playButton)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_1}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_1, needSaveState : true}, true));
+				this.removeEventListener(Event.TRIGGERED, onMainClick);
 			}
 			else if(buttonClicked == _aboutButton)
 			{
 				
 			}
+		}
+		
+		private function onRemoveFromStage(event:Event):void{
+			
+			this.removeChild(_background);
+			this.removeChild(_title);
+			this.removeChild(_playButton);
+			this.removeChild(_createButton);
+			this.removeChild(_aboutButton);
+			
+			_background   = null;
+			_title        = null;
+			_playButton   = null;
+			_createButton = null;
+			_aboutButton  = null;
 		}
 	}
 }

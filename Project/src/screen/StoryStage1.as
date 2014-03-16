@@ -12,50 +12,56 @@ package screen
 	import object.inGameObject.IndexBoard;
 	import object.inGameObject.ScoreBoard;
 	
+	import serverCom.ServerClientCom;
+	import gameData.GameData;
+	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
+	
 	public class StoryStage1 extends Sprite
 	{
 		private var _dialogue		:Dialogue;
-		private var _indexBoard		:IndexBoard;
-		private var _scoreBoard		:ScoreBoard;
+		private var _indexBoard	:IndexBoard;
+		private var _scoreBoard	:ScoreBoard;
 		
-		private var _background		:Image;
-		private var _screen			:Image;
+		private var _background	:Image;
+		private var _screen		:Image;
 		private var _frameIMG		:Image;
 		private var _dialogueIMG	:Image;
 		private var _guiderIMG		:Image;
 		private var _lifeIMG		:Image;
 		private var _escButton		:Button;
+		private var _com           :ServerClientCom;
 				
-		private var _controller		:Controller;
+		private var _controller	:Controller;
 		
 		public function StoryStage1()
 		{
-			super();
+			super();		
 			
-			_controller 	= new Controller ();
-			_dialogue		= new Dialogue(_controller);
-			_indexBoard		= new IndexBoard(_controller);
-			_scoreBoard		= new ScoreBoard(_controller);
-			
-			_controller.assignObjectController(null, _dialogue, null, _indexBoard, null, null, _scoreBoard);
-			_controller.assignScreen(Constant.STORY_SCREEN_1);
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
+			_controller 	= new Controller ();
+			_dialogue		= new Dialogue(_controller);
+			_indexBoard		= new IndexBoard(_controller);
+			_scoreBoard		= new ScoreBoard(_controller);
+			_com            = new ServerClientCom();
+			
+			_controller.assignObjectController(null, _dialogue, null, _indexBoard, null, null, _scoreBoard);
+			_controller.assignScreen(Constant.STORY_SCREEN_1);
+			
 			placeImageOnScreen();
 			setupGameObject();
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClicked);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function placeImageOnScreen():void
@@ -117,14 +123,23 @@ package screen
 			this.removeChild(_screen);
 			this.removeChild(_guiderIMG);
 			this.removeChild(_escButton);
-			
 			this.removeChild(_dialogue);
 			this.removeChild(_indexBoard);
 			this.removeChild(_scoreBoard);
-			this._dialogue.dispose();
-			this._indexBoard.dispose();
-			this._scoreBoard.dispose();
-			this.removeEventListener(Event.ADDED_TO_STAGE, onRemoveFromStage);
+			
+			_background  = null;
+			_frameIMG    = null;
+			_dialogueIMG = null;
+			_screen      = null;
+			_guiderIMG   = null;
+			_escButton   = null;
+			_dialogue    = null;
+			_indexBoard  = null;
+			_scoreBoard  = null;
+			_controller  = null;
+			_com         = null;
+
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
 		private function onButtonClicked(event:Event):void
@@ -133,6 +148,7 @@ package screen
 			if(buttonClicked == _escButton)
 			{
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN}, true));
+				this.removeEventListener(Event.TRIGGERED, onButtonClicked);
 			}
 		}
 		
@@ -140,8 +156,18 @@ package screen
 		{
 			var isWon :Boolean;
 			isWon = _controller.isWon;
-			if(isWon)
+			if(isWon){
+				
+				//save the state to server with the state number 1
+				//which means user has passed the first state
+				_com.saveUserIngameState(1);
+				
+				//save the state of the user in game
+				GameData.setGameState(2);
+				
+				//dispatch event to change screen
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_2}, true));
+			}
 		}
 	}
 }

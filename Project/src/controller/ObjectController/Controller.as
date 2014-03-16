@@ -79,7 +79,7 @@ package controller.ObjectController
 		public function Controller(){
 			
 		}
-		
+
 		public function assignScreen(screen:String):void
 		{
 			_screen = screen;

@@ -15,6 +15,7 @@ package main
 	import screen.StoryStage5;
 	
 	import serverCom.ServerClientCom;
+	import gameData.GameData;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -22,10 +23,10 @@ package main
 	
 	public class Game extends Sprite
 	{
-	private var _loadingScreen    :LoadingScreen;
-		private var _chapterOneScreen :screen.ChapterOneScreen;
-		private var _mainScreen		  :MainScreen;
-		private var _createScreen	  :CreateScreen;
+		private var _loadingScreen     :LoadingScreen;
+		private var _chapterOneScreen  :screen.ChapterOneScreen;
+		private var _mainScreen		:MainScreen;
+		private var _createScreen	    :CreateScreen;
 		private var _storyStage1		:StoryStage1;
 
 		private var _storyStage2		:StoryStage2;
@@ -39,7 +40,6 @@ package main
 		{
 			super();
 			_loadingScreen   	= new LoadingScreen();
-			_chapterOneScreen 	= new screen.ChapterOneScreen();
 			_mainScreen  		= new MainScreen();
 			_createScreen		= new CreateScreen();
 			_storyStage1		= new StoryStage1();
@@ -49,7 +49,6 @@ package main
 			_storyStage5		= new StoryStage5();
 
 			_com                = new ServerClientCom();	
-
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -62,57 +61,74 @@ package main
 		
 		private function onChangeScreen(e:NavigationEvent):void{
 			
-			if(e.screenID.id != undefined){
-				switch(e.screenID.id){
-					case Constant.LOADING_SCREEN:
-						break;
+			if(e.screenID.needSaveState != undefined){
+				if(GameData.getGameState() == 2){
 					
-					case Constant.FIRST_CHAPTER_SCREEN:
-						this.removeChild(_mainScreen);
-						this.addChild(_chapterOneScreen);
-						break;
+					this.removeChild(_mainScreen);
+					this.addChild(_storyStage2);
+				}
+				
+				if(GameData.getGameState() == 1){
 					
-					case Constant.MAIN_SCREEN:
-						this.removeChild(_loadingScreen);
-						this.addChild(_mainScreen);
-						break;
-					
-					case Constant.CREATE_GAME_SCREEN:
-						this.removeChild(_mainScreen);
-						this.addChild(_createScreen);
-						break;
-					
-					case Constant.STORY_SCREEN_1:
-						this.removeChild(_mainScreen);
-						this.addChild(_storyStage1);
-						break;
+					this.removeChild(_mainScreen);
+					this.addChild(_storyStage1);
+				}
+			}
+			else{
+				if(e.screenID.id != undefined){
+					switch(e.screenID.id){
+						case Constant.LOADING_SCREEN:
+							break;
 						
-					case Constant.STORY_SCREEN_2:
-						this.removeChild(_mainScreen);
-						this.removeChild(_storyStage1);
-						this.addChild(_storyStage2);
-						break;
+						case Constant.MAIN_SCREEN:
+							this.removeChild(_loadingScreen);
+							this.removeChild(_storyStage1);
+							this.removeChild(_storyStage2);
+							this.removeChild(_storyStage3);
+							this.removeChild(_storyStage3);
+							this.removeChild(_storyStage4);
+							this.removeChild(_storyStage5);
+							this.removeChild(_createScreen);
+							this.addChild(_mainScreen);
+							break;
 						
-					case Constant.STORY_SCREEN_3:
-						this.removeChild(_mainScreen);
-						this.removeChild(_storyStage2);
-						_storyStage2 = null;
-						this.addChild(_storyStage3);
-						break;
+						case Constant.CREATE_GAME_SCREEN:
+							this.removeChild(_mainScreen);
+							this.addChild(_createScreen);
+							break;
 						
-					case Constant.STORY_SCREEN_4:
-						this.removeChild(_mainScreen);
-						this.removeChild(_storyStage3);
-						this.addChild(_storyStage4);
-						break;
-					case Constant.STORY_SCREEN_5:
-						this.removeChild(_mainScreen);
-						this.removeChild(_storyStage4);
-						this.addChild(_storyStage5);
-						break;
-						
-					default:
-						break;
+						case Constant.STORY_SCREEN_1:
+							this.removeChild(_mainScreen);
+							this.addChild(_storyStage1);
+							break;
+							
+						case Constant.STORY_SCREEN_2:
+							this.removeChild(_mainScreen);
+							this.removeChild(_storyStage1);
+							this.addChild(_storyStage2);
+							break;
+							
+						case Constant.STORY_SCREEN_3:
+							this.removeChild(_mainScreen);
+							this.removeChild(_storyStage2);
+							_storyStage2 = null;
+							this.addChild(_storyStage3);
+							break;
+							
+						case Constant.STORY_SCREEN_4:
+							this.removeChild(_mainScreen);
+							this.removeChild(_storyStage3);
+							this.addChild(_storyStage4);
+							break;
+						case Constant.STORY_SCREEN_5:
+							this.removeChild(_mainScreen);
+							this.removeChild(_storyStage4);
+							this.addChild(_storyStage5);
+							break;
+							
+						default:
+							break;
+					}
 				}
 			}
 		}
