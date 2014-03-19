@@ -61,7 +61,7 @@ package main
 		
 		private function onChangeScreen(e:NavigationEvent):void{
 			
-			if(e.screenID.needSaveState != undefined){
+		/*	if(e.screenID.needSaveState != undefined){
 				if(GameData.getGameState() == 2){
 					
 					this.removeChild(_mainScreen);
@@ -74,7 +74,7 @@ package main
 					this.addChild(_storyStage1);
 				}
 			}
-			else{
+			else{*/
 				if(e.screenID.id != undefined){
 					switch(e.screenID.id){
 						case Constant.LOADING_SCREEN:
@@ -130,7 +130,7 @@ package main
 							break;
 					}
 				}
-			}
+			//}
 		}
 	}
 }

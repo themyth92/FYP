@@ -66,9 +66,9 @@ package constant
 		public static const GRID_CREATE_POS		:Point		= new Point(41 , 57);
 		public static const GRID_STORY_POS		:Point		= new Point(171 , 57);
 		public static const INFOBOARD_POS		:Point		= new Point(500, 30);
-		public static const PREVIEWB_POS		:Point		= new Point(30 , 420);
-		public static const STARTB_POS			:Point		= new Point(190, 420);
-		public static const PUBLISHB_POS		:Point		= new Point(350, 420);
+		public static const PREVIEWB_POS		:Point		= new Point(30 , 450);
+		public static const STARTB_POS			:Point		= new Point(190, 450);
+		public static const PUBLISHB_POS		:Point		= new Point(360, 450);
 		public static const DIALOGUE_POS		:Point		= new Point(60 , 450);
 		public static const OBSBOARD_POS		:Point		= new Point(15, 85);
 		public static const GUIDER_POS			:Point		= new Point(10, 470);

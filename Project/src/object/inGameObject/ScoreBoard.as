@@ -81,7 +81,7 @@ package object.inGameObject
 		
 		private function onAddedToStage(event:Event):void
 		{
-			new MetalWorksMobileTheme();
+			//new MetalWorksMobileTheme();
 			
 			this._coinText 	 = new TextField(100, 30, "0/0", "Grobold", 24, 0xffffff, false);
 			this._coinText.x = COIN_BOARD_POS.x;

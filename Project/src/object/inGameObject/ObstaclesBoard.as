@@ -30,7 +30,7 @@ package object.inGameObject
 	public class ObstaclesBoard extends Sprite
 	{
 		//PATTERN CONST
-		private static const PATTERN_PREFIX		:String  = 'pattern/pattern_';
+		private static const PATTERN_PREFIX		:String  = 'pattern_';
 		private static const PATTERN_LIST		:Array   = ['00','01','02','03'];
 		private static const PATTERN_NAME		:Array   = ['brick','fire','xbox','coin'];
 		private static const PATTERN_POS 		:Array   = [100, 455];
@@ -127,7 +127,6 @@ package object.inGameObject
 					}
 			}
 		}
-		
 		
 		private function onAddedToStage(e:Event):void{
 			
