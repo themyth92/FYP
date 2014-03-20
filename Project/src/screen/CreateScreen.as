@@ -6,9 +6,13 @@ package screen
 	
 	import controller.ObjectController.Controller;
 	
+	import feathers.controls.List;
 	import feathers.controls.TextInput;
+	import feathers.dragDrop.IDragSource;
+	import feathers.dragDrop.IDropTarget;
 	
 	import object.inGameObject.Console;
+	import object.CreateGameObject.CreateGameBoard;
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.IndexBoard;
 	import object.inGameObject.ObstaclesBoard;
@@ -16,6 +20,7 @@ package screen
 	
 	import starling.display.Button;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
@@ -50,25 +55,30 @@ package screen
 		private var _controller		:Controller;
 		
 		//Player characters info
-		private var _playerPos		:TextInput;
-		private var _gender			:TextInput;
+		private var _playerPosInput		:TextInput;
+		private var _genderInput			:TextInput;
 		
 		//Enemy 1 character info
-		private var _enemy1Type		:TextInput;
-		private var _enemy1Pos		:TextInput;
-		private var _enemy1Speed	:TextInput;
-		private var _enemy1Image	:TextInput;
+		private var _enemy1InputType		:TextInput;
+		private var _enemy1InputPos		:TextInput;
+		private var _enemy1InputSpeed	:TextInput;
+		private var _enemy1InputImage	:TextInput;
 		
 		//Enemy 2 character info	
-		private var _enemy2Type		:TextInput;
-		private var _enemy2Pos		:TextInput;
-		private var _enemy2Speed	:TextInput;
-		private var _enemy2Image	:TextInput;
+		private var _enemy2InputType		:TextInput;
+		private var _enemy2InputPos		:TextInput;
+		private var _enemy2InputSpeed	:TextInput;
+		private var _enemy2InputImage	:TextInput;
+		
+		//added object
+		private var _userDefinedQuestion : Array;
+		private var _userDefinedObstacle : Array;
+		private var _gameBoard           : CreateGameBoard;
 		
 		public function CreateScreen()
 		{
 			super();
-			_controller 		= new Controller();
+			/*_controller 		= new Controller();
 			
 			_console 			= new Console		(_controller);
 			_dialogue 			= new Dialogue		(_controller);
@@ -76,17 +86,20 @@ package screen
 			_obstaclesBoard 	= new ObstaclesBoard(_controller);
 			_scoreBoard			= new ScoreBoard	(_controller);
 			
-			_controller.assignObjectController(_console, _dialogue, null, _indexBoard, null, _obstaclesBoard, _scoreBoard);
+			_controller.assignObjectController(_console, _dialogue, null, _indexBoard, null, _obstaclesBoard, _scoreBoard);*/
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
-			placeImageOnScreen();
+		/*	placeImageOnScreen();
 			setupInformationGetter();
 			setupGameObject();
 			
-			this.addEventListener(Event.TRIGGERED, onButtonClicked);
+			this.addEventListener(Event.TRIGGERED, onButtonClicked);*/
+			_gameBoard = new CreateGameBoard();
+			
+			this.addChild(_gameBoard);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -142,86 +155,86 @@ package screen
 		
 		private function setupInformationGetter():void
 		{
-			_playerPos 		= new TextInput();
-			_gender			= new TextInput();
+			_playerPosInput 		= new TextInput();
+			_genderInput			= new TextInput();
 			
-			_enemy1Type 	= new TextInput();
-			_enemy1Pos		= new TextInput();
-			_enemy1Speed	= new TextInput();
-			_enemy1Image	= new TextInput();
+			_enemy1InputType 	= new TextInput();
+			_enemy1InputPos		= new TextInput();
+			_enemy1InputSpeed	= new TextInput();
+			_enemy1InputImage	= new TextInput();
 			
-			_enemy2Type 	= new TextInput();
-			_enemy2Pos		= new TextInput();
-			_enemy2Speed	= new TextInput();
-			_enemy2Image	= new TextInput();
+			_enemy2InputType 	= new TextInput();
+			_enemy2InputPos		= new TextInput();
+			_enemy2InputSpeed	= new TextInput();
+			_enemy2InputImage	= new TextInput();
 			
 			/* Set background for each input box */
-			_playerPos.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
-			_gender.backgroundSkin 		= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_playerPosInput.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_genderInput.backgroundSkin 		= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
 			
-			_enemy1Type.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
-			_enemy1Pos.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
-			_enemy1Speed.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
-			_enemy1Image.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy1InputType.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy1InputPos.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy1InputSpeed.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy1InputImage.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
 			
-			_enemy2Type.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
-			_enemy2Pos.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
-			_enemy2Speed.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
-			_enemy2Image.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy2InputType.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy2InputPos.backgroundSkin 	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy2InputSpeed.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
+			_enemy2InputImage.backgroundSkin = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INPUTBOX_IMG));
 			
 			/* Place them on the correct position on the screen */
-			_playerPos.x 	= 196 + Constant.INFOBOARD_POS.x;	_playerPos.y 	= 281 + Constant.INFOBOARD_POS.y;
-			_gender.x 	 	= 70  + Constant.INFOBOARD_POS.x;	_gender.y 		= 281 + Constant.INFOBOARD_POS.y;
+			_playerPosInput.x 	= 196 + Constant.INFOBOARD_POS.x;	_playerPosInput.y 	= 281 + Constant.INFOBOARD_POS.y;
+			_genderInput.x 	 	= 70  + Constant.INFOBOARD_POS.x;	_genderInput.y 		= 281 + Constant.INFOBOARD_POS.y;
 			
-			_enemy1Type.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy1Type.y 	= 321 + Constant.INFOBOARD_POS.y;
-			_enemy1Pos.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy1Pos.y 	= 321 + Constant.INFOBOARD_POS.y;
-			_enemy1Speed.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy1Speed.y 	= 343 + Constant.INFOBOARD_POS.y;
-			_enemy1Image.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy1Image.y 	= 343 + Constant.INFOBOARD_POS.y;
+			_enemy1InputType.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy1InputType.y 	= 321 + Constant.INFOBOARD_POS.y;
+			_enemy1InputPos.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy1InputPos.y 	= 321 + Constant.INFOBOARD_POS.y;
+			_enemy1InputSpeed.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy1InputSpeed.y 	= 343 + Constant.INFOBOARD_POS.y;
+			_enemy1InputImage.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy1InputImage.y 	= 343 + Constant.INFOBOARD_POS.y;
 			
-			_enemy2Type.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy2Type.y 	= 376 + Constant.INFOBOARD_POS.y;
-			_enemy2Pos.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy2Pos.y 	= 376 + Constant.INFOBOARD_POS.y;
-			_enemy2Speed.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy2Speed.y 	= 398 + Constant.INFOBOARD_POS.y;
-			_enemy2Image.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy2Image.y 	= 398 + Constant.INFOBOARD_POS.y;
+			_enemy2InputType.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy2InputType.y 	= 376 + Constant.INFOBOARD_POS.y;
+			_enemy2InputPos.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy2InputPos.y 	= 376 + Constant.INFOBOARD_POS.y;
+			_enemy2InputSpeed.x 	= 70  + Constant.INFOBOARD_POS.x; 	_enemy2InputSpeed.y 	= 398 + Constant.INFOBOARD_POS.y;
+			_enemy2InputImage.x 	= 196 + Constant.INFOBOARD_POS.x; 	_enemy2InputImage.y 	= 398 + Constant.INFOBOARD_POS.y;
 			
 			/* Restrict user input to numberic or alphabet */
-			_playerPos.restrict 	= "0-9";
-			_gender.restrict 		= "A-Z";
+			_playerPosInput.restrict 	= "0-9";
+			_genderInput.restrict 		= "A-Z";
 			
-			_enemy1Type.restrict 	= "0-9";
-			_enemy1Pos.restrict 	= "0-9";
-			_enemy1Speed.restrict 	= "\\. 0-9";
-			_enemy1Image.restrict 	= "0-9";
+			_enemy1InputType.restrict 	= "0-9";
+			_enemy1InputPos.restrict 	= "0-9";
+			_enemy1InputSpeed.restrict 	= "\\. 0-9";
+			_enemy1InputImage.restrict 	= "0-9";
 			
-			_enemy2Type.restrict 	= "0-9";
-			_enemy2Pos.restrict 	= "0-9";
-			_enemy2Speed.restrict 	= "\\. 0-9";
-			_enemy2Image.restrict 	= "0-9";
+			_enemy2InputType.restrict 	= "0-9";
+			_enemy2InputPos.restrict 	= "0-9";
+			_enemy2InputSpeed.restrict 	= "\\. 0-9";
+			_enemy2InputImage.restrict 	= "0-9";
 			
-			_playerPos.maxChars 	= 2;
-			_gender.maxChars 		= 6;
+			_playerPosInput.maxChars 	= 2;
+			_genderInput.maxChars 		= 6;
 			
 			/* Limit number of characters user can input */
-			_enemy1Type.maxChars	= 2;
-			_enemy1Pos.maxChars 	= 2;
-			_enemy1Speed.maxChars 	= 5;
-			_enemy1Image.maxChars 	= 2;
+			_enemy1InputType.maxChars	= 2;
+			_enemy1InputPos.maxChars 	= 2;
+			_enemy1InputSpeed.maxChars 	= 5;
+			_enemy1InputImage.maxChars 	= 2;
 			
-			_enemy2Type.maxChars 	= 2;
-			_enemy2Pos.maxChars 	= 2;
-			_enemy2Speed.maxChars 	= 5;
-			_enemy2Image.maxChars 	= 2;
+			_enemy2InputType.maxChars 	= 2;
+			_enemy2InputPos.maxChars 	= 2;
+			_enemy2InputSpeed.maxChars 	= 5;
+			_enemy2InputImage.maxChars 	= 2;
 			
 			/* Add Information Box to display */
-			this.addChild(_playerPos);
-			this.addChild(_gender);
-			this.addChild(_enemy1Type);
-			this.addChild(_enemy1Pos);
-			this.addChild(_enemy1Speed);
-			this.addChild(_enemy1Image);
-			this.addChild(_enemy2Type);
-			this.addChild(_enemy2Pos);
-			this.addChild(_enemy2Speed);
-			this.addChild(_enemy2Image);	
+			this.addChild(_playerPosInput);
+			this.addChild(_genderInput);
+			this.addChild(_enemy1InputType);
+			this.addChild(_enemy1InputPos);
+			this.addChild(_enemy1InputSpeed);
+			this.addChild(_enemy1InputImage);
+			this.addChild(_enemy2InputType);
+			this.addChild(_enemy2InputPos);
+			this.addChild(_enemy2InputSpeed);
+			this.addChild(_enemy2InputImage);	
 		}
 		
 		private function setupGameObject():void
@@ -251,9 +264,9 @@ package screen
 		private function onButtonClicked(event:Event):void
 		{
 			var buttonClicked	:Button = event.target as Button;
-			var playerInfo		:Array  = new Array(_playerPos.text, _gender.text);
-			var enemy1Info		:Array  = new Array(_enemy1Type.text, _enemy1Pos.text, _enemy1Speed.text, _enemy1Image.text);
-			var enemy2Info		:Array  = new Array(_enemy2Type.text, _enemy2Pos.text, _enemy2Speed.text, _enemy2Image.text);
+			var playerInfo		:Array  = new Array(_playerPosInput.text, _genderInput.text);
+			var enemy1Info		:Array  = new Array(_enemy1InputType.text, _enemy1InputPos.text, _enemy1InputSpeed.text, _enemy1InputImage.text);
+			var enemy2Info		:Array  = new Array(_enemy2InputType.text, _enemy2InputPos.text, _enemy2InputSpeed.text, _enemy2InputImage.text);
 			
 			if(buttonClicked == _startButton)
 			{

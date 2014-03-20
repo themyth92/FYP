@@ -128,7 +128,6 @@ package object.inGameObject
 			}
 		}
 		
-		
 		private function onAddedToStage(e:Event):void{
 			
 			_patternList = new List();

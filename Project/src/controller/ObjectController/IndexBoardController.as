@@ -190,6 +190,11 @@ package controller.ObjectController
 			_indexBoard.deleteObject(index);
 		}
 		
+		public function removeLockOnCorrect(index:uint):void
+		{
+			_indexBoard.deleteObject(index);
+		}
+		
 		/**====================================================================
 		 * |                    CHARACTER CONTROL FUNCTION                    | *
 		 * ====================================================================**/
@@ -422,7 +427,7 @@ package controller.ObjectController
 			_indexBoard.finishStage();
 		}
 		
-		private function checkPlayerCollideEnemy():void
+		public function checkPlayerCollideEnemy():void
 		{
 			var isCollided	:Boolean;
 			var collisionRe	:Array;
@@ -435,7 +440,6 @@ package controller.ObjectController
 			else
 			{
 				var enemyList	:Vector.<Enemies> = _indexBoard.enemyList;
-				
 				var playerX		:Number = this._indexBoard.hero.playerX;
 				var playerY		:Number = this._indexBoard.hero.playerY;
 				var vx			:Number;
@@ -443,6 +447,7 @@ package controller.ObjectController
 					
 				for(var i:uint = 0; i<enemyList.length; i++)
 				{
+					trace(enemyList[i].enemyX, enemyList[i].image.width/2);
 					vx = (playerX + (_hero.width/2)) - (enemyList[i].enemyX + (enemyList[i].image.width/2));
 					vx = (playerY + (_hero.height/2)) - (enemyList[i].enemyY + (enemyList[i].image.height/2));
 					
@@ -450,22 +455,8 @@ package controller.ObjectController
 					{
 						if(Math.abs(vy) < _hero.height/2 + enemyList[i].image.height/2)
 						{	
-							var overlap_X	: Number = _hero.width/2 + enemyList[i].image.width/2 - Math.abs(vx);
-							var overlap_Y	: Number = _hero.height/2 + enemyList[i].image.height/2 - Math.abs(vy);
-							
-							if(overlap_X > overlap_Y)
-							{
-								if(vy>0)
-								{
-									playerY = playerY + overlap_Y;
-									isCollided = true;
-								}
-								else
-								{
-									playerY = playerY - overlap_Y;
-									isCollided = true;
-								}
-							}
+							trace("hitEnemy");
+							takeDamage();
 						}
 					}
 				}

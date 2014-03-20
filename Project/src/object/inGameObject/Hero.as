@@ -265,6 +265,7 @@ package object.inGameObject
 			//trace(_state);
 			if(_state == ChapterOneConstant.PLAYING_STATE)
 			{
+				this._controller.checkCollision();
 				this._hero.x += _speedX;
 				this._hero.y += _speedY;
 				

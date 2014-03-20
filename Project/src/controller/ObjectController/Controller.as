@@ -76,10 +76,18 @@ package controller.ObjectController
 		private var _stage2Console		:Boolean;
 		private var _consoleChecking	:Boolean;
 		
+		private var _isCorrect			:Boolean;
+		
 		public function Controller(){
 			
 		}
-
+		
+		public function updateAnswerStatus(isCorrect:Boolean):void{
+			this._isCorrect = isCorrect;
+			if(this._screen == Constant.STORY_SCREEN_5 && this._isCorrect)
+				this.notifyIndexBoardController("stage5RemoveLock");
+		}
+			
 		public function assignScreen(screen:String):void
 		{
 			_screen = screen;
@@ -207,6 +215,11 @@ package controller.ObjectController
 			_heroX = x;
 			_heroY = y;
 			return _indexBoardController.collisionDetect(x,y);
+		}
+		
+		public function checkCollision():void
+		{
+			_indexBoardController.checkPlayerCollideEnemy();
 		}
 		
 		public function notifyCollectCoin(index:uint):void
@@ -530,6 +543,9 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
+				case "stage5RemoveLock":
+					this._indexBoardController.removeLockOnCorrect(StoryConstant.STAGE5_QUESTION_POS);
+					break;
 				default:
 					break;
 			}	

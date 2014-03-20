@@ -5,6 +5,8 @@ package object.inGameObject
 	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
+	import controller.ObjectController.Controller;
+	
 	import feathers.controls.Button;
 	import feathers.controls.Header;
 	import feathers.controls.LayoutGroup;
@@ -45,11 +47,13 @@ package object.inGameObject
 		private var _isPoppedUp		:Boolean = false;
 		private var _isCorrect		:Boolean;
 		private var _mcqLayout		:VerticalLayout;
+		private var _controller		:Controller;
 		
-		public function Question(type:String)
+		public function Question(controller:Controller, type:String)
 		{
-			_type = type;
-			_isDisplayed = true;
+			this._controller = controller;
+			this._type = type;
+			this._isDisplayed = true;
 			
 			if(_type == Constant.MCQ_QUESTION)
 			{
@@ -158,11 +162,13 @@ package object.inGameObject
 		
 		private function onSubmitShortAns(answer:TextInput):void{
 			_isCorrect = checkAnswer(answer.text,0);
+			this._controller.updateAnswerStatus(this._isCorrect);
 			displayResult(_isCorrect);
 		}
 		
 		private function onSubmitMCQAns(answer:ToggleGroup):void{
 			_isCorrect = checkAnswer(null,answer.selectedIndex);
+			this._controller.updateAnswerStatus(this._isCorrect);
 			displayResult(_isCorrect);
 		}
 		

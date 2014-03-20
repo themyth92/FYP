@@ -99,9 +99,12 @@ package object.inGameObject
 		
 		private function onAddedToStage(event:Event):void
 		{
+
 			new MetalWorksMobileTheme();
 			var displayText :Array = setupScoreBoardText();
-			
+
+			//new MetalWorksMobileTheme();
+
 			this._coinText 	 = new TextField(100, 30, displayText[0], "Grobold", 24, 0xffffff, false);
 			this._coinText.x = COIN_BOARD_POS.x;
 			this._coinText.y = COIN_BOARD_POS.y;			

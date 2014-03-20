@@ -290,7 +290,7 @@ package object.inGameObject
 			this._enemy1 = new Enemies(this._controller, pos[0], pos[1], type, speed, img, 1);
 			this._enemy1.x = pos[0];
 			this._enemy1.y = pos[1];
-			this._gotFollow = true;
+			this._gotPatrol = true;
 			
 			_controller.updateUnits(_enemy1, null, null);
 			
@@ -766,7 +766,7 @@ package object.inGameObject
 		
 		public function displayQuestion():void
 		{
-			var qns: Question = new Question(Constant.MCQ_QUESTION);
+			var qns: Question = new Question(this._controller, Constant.MCQ_QUESTION);
 			this.addChild(qns);
 		}
 		

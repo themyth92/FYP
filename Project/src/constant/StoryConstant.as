@@ -82,9 +82,9 @@ package constant
 																	"And that evil Gauro only gave my Master 1 life.",
 																	"Huh? How do I know? Look at the top. There is a number beside the 'heart' icon, that indicates how many lives the player have. If it reaches 0, the game ends.",
 																	"Can we get more? That's a good question. Let's me think.",
-																	"Nice thought! I will hack into the system so that you can update my Master life to a certain number so he won't die easily. Wait!",
+																	"Nice thought! I will try and hack into the system so that you can update my Master life to a certain number so he won't die easily. Wait!",
 																	"There you go. Click on the 'heart' icon to update the life.",
-																	"There is 3 guards, so 4 or 5 lives for this stage should be enough.",
+																	"There is 2 guards, so 3 lives should be enough for now.",
 																	"Great work! Since this is 'Patrolling' guards only, they wont chase after my Master. Just run pass them to enter the cave.",
 																	"That takes care of them. Now remember, if you want to make a game, dont ever do like the evil Gauro. Give the player a decent number of lives, otherwise, your game would be too hard or even not winable.",
 																	"Keep that in mind and let's keep moving.");
@@ -124,21 +124,20 @@ package constant
 																	"WHAT! This stage gives us only 5 seconds to reach the exit. That evil Gauro.",
 																	"Wait, follow my instruction. Click on the clock.",
 																	"Great! Now change the time to '1:30', which means 1 minutes and 30 seconds. That should be enough for us to get to the exit.",
-																	"Dont forgot to change the 'hearth' also. It will be changed to the initialized value for that stage. So you need to watch out.",
-																	"Ok! Once you've done, Press 'Start' to begin the stage.",
+																	"Watch out, your life got reset back to 1. The monster is coming. There is no time to change the 'heart' now, let's run.",
 																	"We exited the cave. Now you see the important of the time you gave the player. If it's too little, your game turns out to be too difficult or again not winable.",
 																	"Give a approriate amount of time if you ever made a game. OK?");
-		
+		public static const STAGE4_START_GAME	:Number = 6;
 		public static const STAGE4_COLLECTION	:Vector.<String> = new <String>["pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01",
 			"pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
-			"pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
+			"pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
 			"pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02",
 			"Goal"];
 		public static const STAGE4_INDEX	  	:Vector.<uint> = new <uint>[1,2,3,4,5,6,7,8,9,10,11,
-																			14,23,25,27,28,29,30,31,32,33,34,36,38,45,47,48,49,51,52,53,54,56,60,62,65,67,68,69,73,75,80,84,86,88,91,92,93,94,95,97,
+																			14,23,25,27,28,29,30,31,32,33,34,36,38,45,47,48,49,51,52,53,54,56,60,62,65,67,68,69,71,73,75,80,84,86,88,91,92,93,94,95,97,
 																			15,16,17,18,19,20,21,22,26,37,63,64,74,78,79,85,89,90,96,
 																			99];
-		public static const STAGE4_TYPE		  	:Vector.<String> = new <String>["00","00","00","00","00",
+		public static const STAGE4_TYPE		  	:Vector.<String> = new <String>["00","00","00","00","00","00",
 			"00","00","00","00","00","00","00","00","00","00","00",
 			"00","00","00","00","00","00","00","00","00","00","00",
 			"00","00","00","00","00","00","00","00","00","00","00",
@@ -148,7 +147,7 @@ package constant
 		
 		public static const STAGE4_PLAYER_POS	:uint	= 46;
 		public static const STAGE4_ENEMY_POS	:uint	= 12;
-		public static const STAGE4_ENEMY_TYPE	:String = 'followEnemy';
+		public static const STAGE4_ENEMY_TYPE	:String = 'patrolEnemy';
 		public static const STAGE4_ENEMY_SPD	:Number = 0.5;
 		public static const STAGE4_ENEMY_IMG	:Number = 3;
 		
@@ -167,5 +166,6 @@ package constant
 																				"Question",
 																				"goal"];
 		public static const STAGE5_PLAYER_POS	:uint = 45;
+		public static const STAGE5_QUESTION_POS	:uint = 50;
 	}
 }
