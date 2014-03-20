@@ -123,5 +123,11 @@ package constant
 		
 		public static const FOLLOW_TYPE	:String = "followEnemy";
 		public static const PATROL_TYPE	:String = "patrolEnemy";
+		
+		/**====================================================================
+		 * |  		                  QUESTION TYPE   			              | *
+		 * ====================================================================**/
+		public static const SHORT_QUESTION	:String	= "shortQns";
+		public static const MCQ_QUESTION 	:String = "mcqQns";
 	}
 }

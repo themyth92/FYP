@@ -53,6 +53,7 @@ package controller.ObjectController
 		private var _hero					 		:Hero;
 		private var _enemy1							:Enemies;
 		private var _enemy2							:Enemies;
+		private var _isDisplayedQuiz:Boolean;
 		
 		public function IndexBoardController(board:IndexBoard)
 		{
@@ -338,7 +339,7 @@ package controller.ObjectController
 								{
 									takeDamage();
 								}
-								if(objectType[i] == "01")
+								if(objectType[i] == "Question")
 								{
 									popUpQuestion();
 								}
@@ -364,7 +365,7 @@ package controller.ObjectController
 								{
 									takeDamage();
 								}
-								if(objectType[i] == "01")
+								if(objectType[i] == "Question")
 								{
 									popUpQuestion();
 								}
@@ -404,7 +405,11 @@ package controller.ObjectController
 	
 		private function popUpQuestion():void
 		{
-			_indexBoard.displayQuestion();
+			if(!_isDisplayedQuiz)
+			{
+				_indexBoard.displayQuestion();
+				this._isDisplayedQuiz = true;
+			}
 		}	
 		
 		public function updateLifeOnGameStart(value:Number):void
@@ -415,6 +420,56 @@ package controller.ObjectController
 		private function wonTheStage():void
 		{
 			_indexBoard.finishStage();
+		}
+		
+		private function checkPlayerCollideEnemy():void
+		{
+			var isCollided	:Boolean;
+			var collisionRe	:Array;
+			
+			if(_indexBoard.enemyList.length == 0)
+			{
+				isCollided = false;
+				collisionRe = new Array(isCollided);
+			}
+			else
+			{
+				var enemyList	:Vector.<Enemies> = _indexBoard.enemyList;
+				
+				var playerX		:Number = this._indexBoard.hero.playerX;
+				var playerY		:Number = this._indexBoard.hero.playerY;
+				var vx			:Number;
+				var vy			:Number;
+					
+				for(var i:uint = 0; i<enemyList.length; i++)
+				{
+					vx = (playerX + (_hero.width/2)) - (enemyList[i].enemyX + (enemyList[i].image.width/2));
+					vx = (playerY + (_hero.height/2)) - (enemyList[i].enemyY + (enemyList[i].image.height/2));
+					
+					if(Math.abs(vx) < _hero.width/2 + enemyList[i].image.width/2)
+					{
+						if(Math.abs(vy) < _hero.height/2 + enemyList[i].image.height/2)
+						{	
+							var overlap_X	: Number = _hero.width/2 + enemyList[i].image.width/2 - Math.abs(vx);
+							var overlap_Y	: Number = _hero.height/2 + enemyList[i].image.height/2 - Math.abs(vy);
+							
+							if(overlap_X > overlap_Y)
+							{
+								if(vy>0)
+								{
+									playerY = playerY + overlap_Y;
+									isCollided = true;
+								}
+								else
+								{
+									playerY = playerY - overlap_Y;
+									isCollided = true;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		/**====================================================================
 		 * |                      ENEMIES CONTROL FUNCTION                    | *

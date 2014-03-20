@@ -61,20 +61,20 @@ package main
 		
 		private function onChangeScreen(e:NavigationEvent):void{
 			
-			if(e.screenID.needSaveState != undefined){
-				if(GameData.getGameState() == 2){
-					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage2);
-				}
-				
-				if(GameData.getGameState() == 1){
-					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage1);
-				}
-			}
-			else{
+//			if(e.screenID.needSaveState != undefined){
+//				if(GameData.getGameState() == 2){
+//					
+//					this.removeChild(_mainScreen);
+//					this.addChild(_storyStage2);
+//				}
+//				
+//				if(GameData.getGameState() == 1){
+//					
+//					this.removeChild(_mainScreen);
+//					this.addChild(_storyStage1);
+//				}
+//			}
+//			else{
 				if(e.screenID.id != undefined){
 					switch(e.screenID.id){
 						case Constant.LOADING_SCREEN:
@@ -130,7 +130,7 @@ package main
 							break;
 					}
 				}
-			}
+//			}
 		}
 	}
 }

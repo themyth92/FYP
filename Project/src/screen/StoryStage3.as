@@ -147,17 +147,12 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon())
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_3}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_4}, true));
 		}
 		
 		private function isWon():Boolean
 		{
 			return _controller.isWon;
-		}
-		
-		private function displayConsoleState():Boolean
-		{
-			return _controller.stage2Info()[1];
 		}
 	}
 }

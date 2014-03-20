@@ -127,7 +127,10 @@ package controller.ObjectController
 		
 		public function updateStage2Info(monsterOn:Boolean, consoleOn:Boolean, consoleCheck:Boolean):void{
 			if(monsterOn)
+			{
 				_stage2Monster	= true;
+				_indexBoard.stage2MonsterOn();
+			}
 			if(consoleOn)
 				_stage2Console	= true;
 			if(consoleCheck)
@@ -307,7 +310,7 @@ package controller.ObjectController
 			}
 			
 			if(_maxLife == 0)
-				_maxLife = 5;
+				_maxLife = 1;
 			_currentLife 	= _maxLife;
 			_coinCollected 	= 0;
 			_indexBoardController.updateLifeOnGameStart(_maxLife);

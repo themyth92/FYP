@@ -30,7 +30,7 @@ package object.inGameObject
 	public class ObstaclesBoard extends Sprite
 	{
 		//PATTERN CONST
-		private static const PATTERN_PREFIX		:String  = 'pattern/pattern_';
+		private static const PATTERN_PREFIX		:String  = 'pattern_';
 		private static const PATTERN_LIST		:Array   = ['00','01','02','03'];
 		private static const PATTERN_NAME		:Array   = ['brick','fire','xbox','coin'];
 		private static const PATTERN_POS 		:Array   = [100, 455];
@@ -138,7 +138,7 @@ package object.inGameObject
 			for(var i:uint = 0 ; i < PATTERN_LIST.length ; i++)
 			{
 				if(PATTERN_NAME[i]){
-					object = {label:PATTERN_NAME[i], thumbnail:Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + PATTERN_LIST[i])};
+					object = {label:PATTERN_NAME[i], thumbnail:Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture('pattern_00')};
 					patternCollection.push(object);
 					object = null;
 				}			

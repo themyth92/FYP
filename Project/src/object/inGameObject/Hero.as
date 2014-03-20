@@ -22,6 +22,8 @@ package object.inGameObject
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
+	import starling.filters.BlurFilter;
+	import starling.filters.ColorMatrixFilter;
 
 	public class Hero extends Sprite
 	{	
@@ -29,8 +31,10 @@ package object.inGameObject
 		|	      Hero constant      |
 		-----------------------------*/
 		private var _controller  :Controller;
-		private var _heroStand   :Array;
-		private var _heroRun     :Array;
+		private var _normalStand   :Array;
+		private var _normalRun     :Array;
+		private var _hitStand	 :Array;
+		private var _hitRun		 :Array;
 		private var _initialX	 :Number;
 		private var _initialY	 :Number;
 		private var _playerX	 :Number;
@@ -58,8 +62,10 @@ package object.inGameObject
 		public function Hero(controller:Controller)
 		{	
 			this._controller  = controller;
-			this._heroStand   = new Array();
-			this._heroRun     = new Array();
+			this._normalStand   = new Array();
+			this._normalRun     = new Array();
+			this._hitStand   = new Array();
+			this._hitRun     = new Array();
 			this._speedX      = 0;
 			this._speedY      = 0;
 			this._heroStatus  = null;
@@ -117,51 +123,51 @@ package object.inGameObject
 		
 		public function showHero(index:int, status:uint = 0):void{
 			
-			if(index >= _heroStand.length){
+			if(index >= _normalStand.length){
 				trace('Function: ShowHero, Error: Out of bound');
 				return ;
 			}
 			
 			if(index < 0){
 				//do not show anything
-				for(var i:uint = 0 ; i < _heroStand.length ; i++)
+				for(var i:uint = 0 ; i < _normalStand.length ; i++)
 				{
-					_heroStand[i].visible = false;	
-					_heroRun[i].visible   = false;
+					_normalStand[i].visible = false;	
+					_normalRun[i].visible   = false;
 				}	
 				return;
 			}
 			
 			if(status == 0)
 			{
-				for(i = 0 ; i < _heroStand.length ; i++){
+				for(i = 0 ; i < _normalStand.length ; i++){
 					
-					if(i==index && _heroStand[i] != null){
+					if(i==index && _normalStand[i] != null){
 						
-						_heroStand[i].visible = true;
+						_normalStand[i].visible = true;
 					}
 						
 					else{
 						
-						_heroStand[i].visible = false;	
+						_normalStand[i].visible = false;	
 					}
 						
-					_heroRun[i].visible = false;
+					_normalRun[i].visible = false;
 				}			
 			}
 			else{
-				for(i = 0 ; i < _heroRun.length ; i++){
+				for(i = 0 ; i < _normalRun.length ; i++){
 					
-					if(i == index && _heroRun[i] != null){
+					if(i == index && _normalRun[i] != null){
 						
-						_heroRun[i].visible = true;
+						_normalRun[i].visible = true;
 					}		
 					else{
 						
-						_heroRun[i].visible = false;
+						_normalRun[i].visible = false;
 					}
 					
-					_heroStand[i].visible = false;
+					_normalStand[i].visible = false;
 				}
 			}
 		}
@@ -184,19 +190,29 @@ package object.inGameObject
 			var image:Image;
 			var movie:MovieClip;
 			
+			var blur:BlurFilter = new BlurFilter();
 			for(var index:uint = 0 ; index < ChapterOneConstant.HERO_MALE_STAND.length ; index++){
 				
 				image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
 				movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
-				_heroStand.push(image);
-				_heroRun.push(movie);
+				
+				_normalStand.push(image);
+				_normalRun.push(movie);
+				
+//				image.alpha = 0.7;
+//				image.filter = blur;
+//				movie.alpha = 0.7;
+//				movie.filter = blur;
+//				_hitStand.push(image);
+//				_hitRun.push(movie);
+				
 			}
 			
-			for(index = 0; index < _heroStand.length; index++){
-				this._hero.addChild(_heroStand[index]);
+			for(index = 0; index < _normalStand.length; index++){
+				this._hero.addChild(_normalStand[index]);
 				
-				Starling.juggler.add(_heroRun[index]);
-				this._hero.addChild(_heroRun[index]);
+				Starling.juggler.add(_normalRun[index]);
+				this._hero.addChild(_normalRun[index]);
 			}
 			this.addChild(_hero);
 			this.showHero(2, 0);

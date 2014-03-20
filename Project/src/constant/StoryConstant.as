@@ -89,6 +89,32 @@ package constant
 																	"That takes care of them. Now remember, if you want to make a game, dont ever do like the evil Gauro. Give the player a decent number of lives, otherwise, your game would be too hard or even not winable.",
 																	"Keep that in mind and let's keep moving.");
 		
+		public static const STAGE3_COLLECTION	:Vector.<String> = new <String>["pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05","pattern_05",
+																				"pattern_08","pattern_08","pattern_08","pattern_08",
+																				"pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04",
+																				"pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04","pattern_04",
+																				"Goal"];
+		public static const STAGE3_INDEX	  	:Vector.<uint> = new <uint>[37, 41, 48, 49, 51, 52, 59, 63, 70, 71, 73, 74, 81, 82, 84, 85, 92, 96,
+																			58, 64, 78, 88,  
+																			34, 35, 36, 42, 43, 44, 45, 46, 47, 53, 54, 55, 56, 57, 58, 64,
+																			65, 66, 67, 68, 69, 75, 76, 77, 78, 79, 80, 86, 87, 88, 89, 90, 91, 97, 98, 99,
+																			94];
+		public static const STAGE3_TYPE		  	:Vector.<String> = new <String>["00", "00", "00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00","00","00","00","goal"]; 
+		
+		public static const STAGE3_PLAYER_POS	:uint	= 6;
+		
+		public static const STAGE3_ENEMY1_POS	:uint   = 38;
+		public static const STAGE3_ENEMY1_END	:uint   = 40;
+		public static const STAGE3_ENEMY2_POS	:uint 	= 62;
+		public static const STAGE3_ENEMY2_END	:uint   = 60;
+		public static const STAGE3_ENEMY_TYPE	:String   = 'patrolEnemy';
+		public static const STAGE3_ENEMY_SPD	:Number = 0.05;
+		public static const STAGE3_ENEMY_IMG	:Number = 1;
+
 		/**====================================================================
 		 * |	                     	STAGE 4		                      | *
 		 * ====================================================================**/
@@ -102,7 +128,30 @@ package constant
 																	"Ok! Once you've done, Press 'Start' to begin the stage.",
 																	"We exited the cave. Now you see the important of the time you gave the player. If it's too little, your game turns out to be too difficult or again not winable.",
 																	"Give a approriate amount of time if you ever made a game. OK?");
-
+		
+		public static const STAGE4_COLLECTION	:Vector.<String> = new <String>["pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01","pattern_01",
+			"pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
+			"pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
+			"pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02","pattern_02",
+			"Goal"];
+		public static const STAGE4_INDEX	  	:Vector.<uint> = new <uint>[1,2,3,4,5,6,7,8,9,10,11,
+																			14,23,25,27,28,29,30,31,32,33,34,36,38,45,47,48,49,51,52,53,54,56,60,62,65,67,68,69,73,75,80,84,86,88,91,92,93,94,95,97,
+																			15,16,17,18,19,20,21,22,26,37,63,64,74,78,79,85,89,90,96,
+																			99];
+		public static const STAGE4_TYPE		  	:Vector.<String> = new <String>["00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","00",
+			"00","00","00","00","00","00","00","00","00","00","goal"]; 
+		
+		public static const STAGE4_PLAYER_POS	:uint	= 46;
+		public static const STAGE4_ENEMY_POS	:uint	= 12;
+		public static const STAGE4_ENEMY_TYPE	:String = 'followEnemy';
+		public static const STAGE4_ENEMY_SPD	:Number = 0.5;
+		public static const STAGE4_ENEMY_IMG	:Number = 3;
+		
 		/**====================================================================
 		 * |	                     	STAGE 5 		                      | *
 		 * ====================================================================**/
@@ -110,6 +159,13 @@ package constant
 																	"Let's head in");
 
 		
-		
+		public static const STAGE5_COLLECTION	:Vector.<String> = new <String>["pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
+																				"Lock_Red",
+																				"Goal"];
+		public static const STAGE5_INDEX		:Vector.<uint>	 = new <uint>[6,17,28,39,61,72,83,94,50,55];
+		public static const STAGE5_TYPE 		:Vector.<String> = new <String>["00","00","00","00","00","00","00","00",
+																				"Question",
+																				"goal"];
+		public static const STAGE5_PLAYER_POS	:uint = 45;
 	}
 }

@@ -22,6 +22,10 @@ package object.inGameObject
 	import flash.geom.Point;
 	import flash.utils.getTimer;
 	
+	import mx.utils.StringUtil;
+	
+	import screen.StoryStage1;
+	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -41,7 +45,7 @@ package object.inGameObject
 		private static const LIFE_IMG_POS	: Point	= new Point(150, 8);
 		private static const TIME_BOARD_POS : Point = new Point(300,10);
 		private static const TIME_IMG_POS	: Point	= new Point(265, 8);
-		
+		private static const END_TIME		: Array = new Array("00","00");
 		//STATES VARIABLE
 		private var _state				  :String = ChapterOneConstant.INSTRUCTING_STATE;
 		
@@ -59,41 +63,58 @@ package object.inGameObject
 		private var _lifeIMG	: starling.display.Button;
 		private var _timeIMG	: starling.display.Button;
 		
-		private var _maxLife 	:Number = 5;
+		private var _maxLife 	:Number = 1;
+		private var _maxCoin	:Number = 0;
+		private var _currLife	:Number = 1;
+		private var _currCoin	:Number = 0;
 		private var _panel		:Panel;
 		private var _controller	    : Controller;
 		
 		/* Time variable */
 		private var _markTime		: int = 0;
-		private var _minutesOn		: int = 5;
-		private var _secondsOn		: int = 60;
+		private var _minutesOn		: int = 1;
+		private var _secondsOn		: int = 30;
 		
 		private var _startPlaying	: Boolean = true;
+		private var _isPoppedUp		: Boolean;
+		private var _isOutOfTime	: Boolean = false;
+		private var _screen			: String;
 		
 		public function ScoreBoard(controller:Controller)
 		{
-			this._controller   = controller;
-		
+			this._controller    = controller;
+			this._screen	 	= _controller.screen;
+			
 			this.addEventListener(Event.ADDED_TO_STAGE	  		, onAddedToStage);
+			this.addEventListener(Event.ENTER_FRAME				, onEnterFrame);
 			this.addEventListener(Event.REMOVED_FROM_STAGE 		, onRemoveFromStage);
 			this.addEventListener(EnterFrameEvent.ENTER_FRAME	, updateTimeTracker);
+		}
+		
+		private function onEnterFrame(event:Event):void
+		{
+			_coinText.text = this._currCoin + "/" + this._maxCoin;
+			_lifeText.text = this._currLife + "/" + this._maxLife;
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
 			new MetalWorksMobileTheme();
+			var displayText :Array = setupScoreBoardText();
 			
-			this._coinText 	 = new TextField(100, 30, "0/0", "Grobold", 24, 0xffffff, false);
+			this._coinText 	 = new TextField(100, 30, displayText[0], "Grobold", 24, 0xffffff, false);
 			this._coinText.x = COIN_BOARD_POS.x;
-			this._coinText.y = COIN_BOARD_POS.y;
-						
-			this._lifeText 	 = new TextField(70, 30, "0/0", "Grobold", 24, 0xffffff, false);
+			this._coinText.y = COIN_BOARD_POS.y;			
+			
+			this._lifeText 	 = new TextField(70, 30, displayText[1], "Grobold", 24, 0xffffff, false);
 			this._lifeText.x = LIFE_BOARD_POS.x;
 			this._lifeText.y = LIFE_BOARD_POS.y;
 						
-			this._timeText 	 = new TextField(100, 30, "00:00", "Grobold", 24, 0xffffff, false);
+			this._timeText 	 = new TextField(100, 30, displayText[2], "Grobold", 24, 0xffffff, false);
 			this._timeText.x = TIME_BOARD_POS.x;
 			this._timeText.y = TIME_BOARD_POS.y;
+			
+			setupScoreBoardText();
 			
 			this._coinIMG 	 = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.COIN_IMG));
 			this._coinIMG.x  = COIN_IMG_POS.x;
@@ -117,6 +138,62 @@ package object.inGameObject
 			this._timeIMG.addEventListener(Event.TRIGGERED, onTimeClicked);
 			this._lifeIMG.addEventListener(Event.TRIGGERED, onLifeClicked);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		private function setupScoreBoardText():Array
+		{
+			var result :Array;
+			switch(this._screen){
+				case Constant.STORY_SCREEN_1:
+					result = new Array("0/0", "1/1", "01:30");
+					_maxCoin	= 0;
+					_maxLife 	= 1;
+					_currLife	= _maxLife;
+					_currCoin 	= _maxCoin;
+					_minutesOn 	= 1;
+					_secondsOn  = 30;
+					break;
+				case Constant.STORY_SCREEN_2:
+					result = new Array("0/0", "1/1", "01:30");
+					_maxCoin	= 0;
+					_maxLife 	= 1;
+					_currLife	= _maxLife;
+					_currCoin 	= _maxCoin;
+					_minutesOn 	= 1;
+					_secondsOn  = 30;
+					break;
+				case Constant.STORY_SCREEN_3:
+					result = new Array("0/0", "1/1", "01:30");
+					_maxCoin	= 0;
+					_maxLife 	= 1;
+					_currLife	= _maxLife;
+					_currCoin 	= _maxCoin;
+					_minutesOn 	= 1;
+					_secondsOn  = 30;
+					break;
+				case Constant.STORY_SCREEN_4:
+					result = new Array("0/0", "1/1", "00:05");
+					_maxCoin	= 0;
+					_maxLife 	= 1;
+					_currLife	= _maxLife;
+					_currCoin 	= _maxCoin;
+					_minutesOn 	= 0;
+					_secondsOn  = 5;
+					break;
+				case Constant.STORY_SCREEN_5:
+					result = new Array("0/0", "1/1", "01:30");
+					_maxCoin	= 0;
+					_maxLife 	= 1;
+					_currLife	= _maxLife;
+					_currCoin 	= _maxCoin;
+					_minutesOn 	= 1;
+					_secondsOn  = 30;
+					break;
+				default:
+					result = new Array("0/0", "1/1", "01:30");
+					break;
+			}
+			return result;
 		}
 		
 		private function onRemoveFromStage(event:Event):void
@@ -156,8 +233,11 @@ package object.inGameObject
 		private function onCloseLifeWindow(life:TextInput):void
 		{
 			PopUpManager.removePopUp( _panel, true );
-			if(life.text != null)
+			if(isDigit(life.text))
+			{
 				_maxLife = Number(life.text);
+				_currLife = _maxLife;
+			}
 			
 			_controller.getGameStat("max life", _maxLife);
 			reviewLife();
@@ -200,27 +280,31 @@ package object.inGameObject
 			}
 				
 			_panel.addChild(closeButton);
+			this._isPoppedUp = true;
 			PopUpManager.addPopUp( _panel);
 		}
 		
 		private function onCloseTimeWindow(minute:TextInput, second:TextInput):void
 		{
 			PopUpManager.removePopUp( _panel, true );
-			if(minute.text != null)
+			this._isPoppedUp = false;
+			if(isDigit(minute.text))
 				_minutesOn = Number(minute.text);
-			if(second.text != null)
+			if(isDigit(second.text))
 				_secondsOn = Number(second.text);
 			reviewTime();
 		}
 
 		public function updateCoinTracker(currentCoin:Number, maxCoin:Number):void
 		{
-			_coinText.text = currentCoin + "/" + maxCoin;
+			this._currCoin = currentCoin;
+			this._maxCoin = maxCoin;
 		}
 		
 		public function updateLifeTracker(currentLife:Number, maxLife:Number):void
 		{
-			_lifeText.text = currentLife + "/" + maxLife;
+			this._currLife = currentLife;
+			this._maxLife = maxLife;
 		}
 		
 		public function updateTimeTracker(event:EnterFrameEvent):void
@@ -228,16 +312,27 @@ package object.inGameObject
 			var timePassed	:Number 	= getTimer() - _markTime;
 			var seconds		:int 		= _secondsOn - (timePassed / 1000) % 60;
 			var minutes		:int 		= _minutesOn - (timePassed / (1000 * 60)) % 60;
-			
-			if(_state == ChapterOneConstant.PLAYING_STATE)
+			if(!_isOutOfTime)
 			{
-				if(_startPlaying)
+				if(_state == ChapterOneConstant.PLAYING_STATE)
 				{
-					_markTime = getTimer();
-					_startPlaying = false;
+					if(_startPlaying)
+					{
+						_markTime = getTimer();
+						_startPlaying = false;
+					}
+					_timeText.text = formatLeadingZero(minutes) + " : " + formatLeadingZero(minutes);
+					var timeArray	:Array = new Array(formatLeadingZero(minutes), formatLeadingZero(minutes));
+					if(timeArray[0] == END_TIME[0] && timeArray[1] == END_TIME[1])
+						endGame();
 				}
-				_timeText.text = formatLeadingZero(minutes) + " : " + formatLeadingZero(seconds);
 			}
+		}
+		
+		private function endGame():void
+		{
+			//Display Game Over
+			this._isOutOfTime = true;
 		}
 		
 		private function reviewTime():void
@@ -259,5 +354,23 @@ package object.inGameObject
 		{
 			_state = currentState;
 		}	
+		
+		// Determines if a string is digit 
+		private function isDigit(value : String) : Boolean {
+			return isValidCode(value, 48, 57);
+		}
+		
+		// The meat of the functions which checks the values 
+		private function isValidCode(value : String, minCode : Number, maxCode : Number) : Boolean {
+			if ((value == null) || (StringUtil.trim(value).length < 1))
+				return false;
+			
+			for (var i : int=value.length-1;i >= 0; i--) {
+				var code : Number = value.charCodeAt(i);
+				if ((code < minCode) || (code > maxCode))
+					return false;
+			}
+			return true;
+		}
 	}
 }

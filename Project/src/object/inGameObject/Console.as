@@ -97,12 +97,12 @@ package object.inGameObject
 			
 			_console 	= new TextInput();
 			_console.width   = ChapterOneConstant.TEXTFIELD_WIDTH;
-			_console.height  = ChapterOneConstant.TEXTFIELD_HEIGTH;
+			_console.height  = ChapterOneConstant.TEXTFIELD_HEIGTH + 30;
 			
 			
 			_console.textEditorFactory               = function():ITextEditor{
 				var format:TextFieldTextEditor = new TextFieldTextEditor();
-				format.textFormat = new TextFormat(ChapterOneConstant.GROBOLD_FONT, 15);
+				format.textFormat = new TextFormat(ChapterOneConstant.GROBOLD_FONT, 15, 0xffff);
 				format.embedFonts = true;
 				return format;
 			};
