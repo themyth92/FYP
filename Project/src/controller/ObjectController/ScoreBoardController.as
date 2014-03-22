@@ -25,5 +25,15 @@ package controller.ObjectController
 		{
 			this._scoreBoard.changeState(currentState);
 		}
+		
+		public function enableLifeEdit(value:Boolean):void
+		{
+			this._scoreBoard.isLifeEnabled = value;
+		}
+		
+		public function enableTimeEdit(value:Boolean):void
+		{
+			this._scoreBoard.isTimeEnabled = value;
+		}
 	}
 }

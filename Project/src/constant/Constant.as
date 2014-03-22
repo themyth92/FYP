@@ -23,6 +23,7 @@ package constant
 		public static const STORY_SCREEN_3				:String	= 'storyStage3';
 		public static const STORY_SCREEN_4				:String	= 'storyStage4';
 		public static const STORY_SCREEN_5				:String	= 'storyStage5';
+		public static const GAME_OVER_SCREEN			:String	= 'gameOver';
 		
 		/**====================================================================
 		 * |	                  SPRITESHEET NAME   			              | *
@@ -123,5 +124,11 @@ package constant
 		
 		public static const FOLLOW_TYPE	:String = "followEnemy";
 		public static const PATROL_TYPE	:String = "patrolEnemy";
+		
+		/**====================================================================
+		 * |  		                  QUESTION TYPE   			              | *
+		 * ====================================================================**/
+		public static const SHORT_QUESTION	:String	= "shortQns";
+		public static const MCQ_QUESTION 	:String = "mcqQns";
 	}
 }

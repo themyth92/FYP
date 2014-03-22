@@ -7,6 +7,8 @@ package object.inGameObject
 	
 	import controller.ObjectController.Controller;
 	
+	import flash.geom.Point;
+	
 	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.MovieClip;
@@ -30,28 +32,95 @@ package object.inGameObject
 		private var _type			:String;
 		private var _state			:String;
 		
+		//For Follow Enemy
+		private var _currPt			:Point;
+		private var _targetPt		:Point;
+		private var _isReachedTarget:Boolean = true;
+		
+		// For Partrol Enemy
+		private var _endPoints		:Vector.<Point>;
+		private var _currEndPt		:Number = 1;
+		private var _currStartPt	:Number = 0;
+		
 		public function Enemies(controller: Controller, x:Number, y:Number, type:String, speed:Number, imageNo:Number, id:Number)
 		{
-			this._controller  = controller;
-			this._initialX = x;
-			this._initialY = y;
-			this._x = x;
-			this._y = y;
-			this._type = type;
-			this._imageNo = imageNo;
-			this._id = id;
-			this._moveX 	= 0;
-			this._moveY 	= 0;
-			
-			this._speed = speed;
+			this._controller  	= controller;
+			this._initialX 		= x;
+			this._initialY 		= y;
+			this._x 			= x;
+			this._y 			= y;
+			this._type 			= type;
+			this._imageNo 		= imageNo;
+			this._id 			= id;
+			this._moveX 		= 0;
+			this._moveY 		= 0;
+			this._speed 		= speed;
+			if(this._type == Constant.PATROL_TYPE)
+				this._endPoints = new Vector.<Point>();
+			if(this._type == Constant.FOLLOW_TYPE)
+				this._currPt = new Point(x,y);
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
+		
+		public function get isReachedTarget():Boolean
+		{
+			return _isReachedTarget;
+		}
+
+		public function set isReachedTarget(value:Boolean):void
+		{
+			_isReachedTarget = value;
+		}
+
+		public function get endPoints():Vector.<Point>
+		{
+			return _endPoints;
+		}
+
+		public function setEndPoints(value:Point):void
+		{
+			_endPoints.push(value);
+		}
+		
+		public function set targetPt(value:Point):void
+		{
+			_targetPt = value;
+		}
+
+		public function setNextEnd():void
+		{
+			this._currEndPt ++;
+			this._currStartPt ++;
+			if(this._endPoints != null)
+			{
+				if(this._currEndPt == this._endPoints.length)
+					this._currEndPt = 0;
+				
+				if(this._currStartPt == this._endPoints.length)
+					this._currStartPt = 0;
+			}
+		}
+		
+		public function get currEndPt():Number
+		{
+			return _currEndPt;
+		}
+		
+		public function get currStartPt():Number
+		{
+			return _currStartPt;
+		}
 		/**====================================================================
 		 * |                       GET - SET FUNCTIONS                        | *
 		 * ====================================================================**/
+		public function get image():Image
+		{
+			return _image;
+		}
+		
 		public function get speed():Number
 		{
 			return _speed;
@@ -97,13 +166,23 @@ package object.inGameObject
 			return _y;
 		}
 		
+		public function set enemyX(value:Number):void
+		{
+			_x = value;
+		}
+		
+		public function set enemyY(value:Number):void
+		{
+			_y = value;
+		}
+		
 		/**====================================================================
 		 * |	                     EVENT HANDLERS			                  | *
 		 * ====================================================================**/
 		private function onAddedToStage(event:Event):void
 		{
 			
-			this._image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy_' + _imageNo.toString()));
+			this._image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_' + _imageNo.toString()));
 		
 			this.addChild(this._image);
 			
@@ -118,17 +197,68 @@ package object.inGameObject
 		
 		private function onEnterFrame(event:Event):void
 		{
-//			var moveArr:Array = _controller.checkAgro(this);
-//			if(moveArr.length == 2)
-//			{
-//				this._moveX = moveArr[0];
-//				this._moveY = moveArr[1];
-//				this._image.x += this._moveX;
-//				this._image.y += this._moveY;
-//				
-//				this._x = this._initialX + this._image.x;
-//				this._y = this._initialY + this._image.y;
-//			}
+			if(this._type == Constant.FOLLOW_TYPE && this._targetPt != null) 
+				moveToTarget();
+			
+			this._image.x += this._moveX;
+			this._image.y += this._moveY;
+			this._x = this._initialX + this._image.x;
+			this._y = this._initialY + this._image.y;
+		}
+		
+		private function moveToTarget():void
+		{
+			var distance	:Number;
+			if(this._x == this._targetPt.x && this._y == this._targetPt.y)
+			{
+				this._moveX = 0;
+				this._moveY = 0;
+				this._isReachedTarget = true;
+				this._currPt = this._targetPt;
+				return;
+			}
+			
+			if(this._x != this._targetPt.x && this._y == this._targetPt.y)
+			{
+				this._moveY = 0;
+				distance = this._currPt.x - this._targetPt.x;
+				if(distance > 0)
+				{
+					if(this._x > this._targetPt.x)
+						this._moveX = -(this._x - this._targetPt.x);
+					else
+						this._moveX = distance * this._speed;						
+				}
+				else if (distance < 0)
+				{
+					if(this._x < this._targetPt.x)
+						this._moveX = -(this._x - this._targetPt.x);
+					else
+						this._moveX = distance * this._speed;	
+				}
+				return;
+			}
+			
+			if(this._x == this._targetPt.x && this._y != this._targetPt.y)
+			{
+				this._moveX = 0;
+				distance = this._currPt.y - this._targetPt.y;
+				if(distance > 0)
+				{
+					if(this._y > this._targetPt.y)
+						this._moveY = -(this._y - this._targetPt.y);
+					else
+						this._moveY = distance * this._speed;						
+				}
+				else if (distance < 0)
+				{
+					if(this._y < this._targetPt.y)
+						this._moveY = -(this._y - this._targetPt.y);
+					else
+						this._moveY = distance * this._speed;	
+				}
+				return;
+			}
 		}
 		
 		/**====================================================================**/

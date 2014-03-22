@@ -39,6 +39,7 @@ package screen
 			super();
 			
 			this._controller 	= new Controller ();
+			
 			this._console		= new Console(this._controller);
 			this._dialogue		= new Dialogue(this._controller);
 			this._indexBoard	= new IndexBoard(this._controller);
@@ -147,17 +148,19 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon())
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_3}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_4}, true));
+			if(isLost())
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
 		}
 		
 		private function isWon():Boolean
 		{
-			return _controller.isWon;
+			return this._controller.isWon;
 		}
 		
-		private function displayConsoleState():Boolean
+		private function isLost():Boolean
 		{
-			return _controller.stage2Info()[1];
+			return this._controller.isLost;
 		}
 	}
 }

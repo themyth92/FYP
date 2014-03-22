@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:c2611fe447719f9ee127c83888a13421:1/1$ -->
+<!-- $TexturePacker:SmartUpdate:04df4e689dd71bf2cb46174770037f9e:1/1$ -->
 <TextureAtlas imagePath="Obstacles.png">
     <SubTexture name="Box" x="2" y="2" width="40" height="40"/>
     <SubTexture name="Goal" x="44" y="2" width="40" height="40"/>
@@ -22,6 +22,11 @@
     <SubTexture name="pattern_01" x="212" y="86" width="40" height="40"/>
     <SubTexture name="pattern_02" x="2" y="128" width="40" height="40"/>
     <SubTexture name="pattern_03" x="44" y="128" width="40" height="40"/>
-    <SubTexture name="red_trees" x="86" y="128" width="40" height="40"/>
-    <SubTexture name="teleport" x="128" y="128" width="40" height="40"/>
+    <SubTexture name="pattern_04" x="86" y="128" width="40" height="40"/>
+    <SubTexture name="pattern_05" x="128" y="128" width="40" height="40"/>
+    <SubTexture name="pattern_06" x="170" y="128" width="40" height="40"/>
+    <SubTexture name="pattern_07" x="212" y="128" width="40" height="40"/>
+    <SubTexture name="pattern_08" x="2" y="170" width="40" height="40"/>
+    <SubTexture name="red_trees" x="44" y="170" width="40" height="40"/>
+    <SubTexture name="teleport" x="86" y="170" width="40" height="40"/>
 </TextureAtlas>

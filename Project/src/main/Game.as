@@ -4,8 +4,11 @@ package main
 	
 	import events.NavigationEvent;
 	
+	import gameData.GameData;
+	
 	import screen.ChapterOneScreen;
 	import screen.CreateScreen;
+	import screen.GameOverScreen;
 	import screen.LoadingScreen;
 	import screen.MainScreen;
 	import screen.StoryStage1;
@@ -15,7 +18,6 @@ package main
 	import screen.StoryStage5;
 	
 	import serverCom.ServerClientCom;
-	import gameData.GameData;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -33,6 +35,8 @@ package main
 		private var _storyStage3		:StoryStage3;
 		private var _storyStage4		:StoryStage4;
 		private var _storyStage5		:StoryStage5;
+		
+		private var _gameOver			:GameOverScreen;
 
 		private var _com   :ServerClientCom
 		
@@ -47,6 +51,7 @@ package main
 			_storyStage3		= new StoryStage3();
 			_storyStage4		= new StoryStage4();
 			_storyStage5		= new StoryStage5();
+			_gameOver			= new GameOverScreen();
 
 			_com                = new ServerClientCom();	
 			
@@ -61,6 +66,20 @@ package main
 		
 		private function onChangeScreen(e:NavigationEvent):void{
 			
+//			if(e.screenID.needSaveState != undefined){
+//				if(GameData.getGameState() == 2){
+//					
+//					this.removeChild(_mainScreen);
+//					this.addChild(_storyStage2);
+//				}
+//				
+//				if(GameData.getGameState() == 1){
+//					
+//					this.removeChild(_mainScreen);
+//					this.addChild(_storyStage1);
+//				}
+//			}
+//			else{
 		/*	if(e.screenID.needSaveState != undefined){
 				if(GameData.getGameState() == 2){
 					
@@ -118,18 +137,34 @@ package main
 						case Constant.STORY_SCREEN_4:
 							this.removeChild(_mainScreen);
 							this.removeChild(_storyStage3);
+							_storyStage3 = null;
 							this.addChild(_storyStage4);
 							break;
 						case Constant.STORY_SCREEN_5:
 							this.removeChild(_mainScreen);
 							this.removeChild(_storyStage4);
+							_storyStage4 = null;
 							this.addChild(_storyStage5);
 							break;
+						case Constant.GAME_OVER_SCREEN:
+							this.removeChild(_storyStage1);
+							this.removeChild(_storyStage2);
+							this.removeChild(_storyStage3);
+							this.removeChild(_storyStage3);
+							this.removeChild(_storyStage4);
+							this.removeChild(_storyStage5);
+							_storyStage1 = null;
+							_storyStage2 = null;
+							_storyStage3 = null;
+							_storyStage4 = null;
+							_storyStage5 = null;
+							this.addChild(_gameOver);
 							
 						default:
 							break;
 					}
 				}
+//			}
 			//}
 		}
 	}

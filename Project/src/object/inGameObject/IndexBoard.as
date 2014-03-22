@@ -53,15 +53,17 @@ package object.inGameObject
 		private var _isTriggered	   :Boolean;
 		
 		//INDEXBOARD VARIABLES
-		private var _patternCollection : Vector.<Image>;
-		private var _patternType	   : Vector.<String>;
-		private var _patternIndex      : Vector.<uint>;
-		private var _maxCoin		   : Number = 0;
+		private var _patternCollection  :Vector.<Image>;
+		private var _patternType	    :Vector.<String>;
+		private var _patternIndex       :Vector.<uint>;
+		private var _maxCoin		 	:Number = 0;
 		private var _screen				:String;
+		private var _gameArea			:Rectangle;
 		
 		//HERO VARARIABLES
 		private var _enemy1		   : Enemies;
 		private var _enemy2		   : Enemies;
+		private var _enemyList		:Vector.<Enemies>;
 		private var _gotFollow		:Boolean = false;
 		private var _gotPatrol		:Boolean = false;
 		private var _hero	       : Hero;
@@ -76,15 +78,18 @@ package object.inGameObject
 		private var _path	: Vector.<Point>;
 		private var _startPoint1 : Point;
 		private var _startPoint2 : Point;
-		private var _endPoint	: Point;
-		private var _endPoint2	: Vector.<Point>;
+		private var _endPoint1	: Point;
+		private var _endPointPatrol1	: Vector.<Point>;
+		private var _endPointPatrol2	: Vector.<Point>;
 		private var _currPoint1	: Point;
 		private var _currPoint2	: Point;
 		private var _timer		: Number = 0;
 		private var _enemyGo	: Boolean = false;
 		private var _enemy1Found : Boolean = false;
-		private var _currEnd : Number = 0;
-		private var _distanceToEnd : Number;
+		private var _currEnd1 : Number = 0;
+		private var _currEnd2 : Number = 0;
+		private var _distanceToEnd1 : Number;
+		private var _distanceToEnd2 : Number;
 		
 		/** Constructor **/
 		public function IndexBoard(controller:Controller)
@@ -98,6 +103,11 @@ package object.inGameObject
 		}
 		
 		/** Get Set **/
+		public function get enemyList():Vector.<Enemies>
+		{
+			return _enemyList;
+		}
+		
 		public function get maxCoin():Number
 		{
 			return _maxCoin;
@@ -139,7 +149,8 @@ package object.inGameObject
 		 * ====================================================================**/
 		/** ADDED_TO_STAGE **/
 		private function onAddedToStage(e:Event):void{
-			
+			_gameArea = new Rectangle(0,0, 440, 360);
+
 			this._touchArea.x 		= 0;
 			this._touchArea.y 		= 0;
 			this._touchArea.alpha 	= 0;
@@ -161,40 +172,51 @@ package object.inGameObject
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
+		public function stage2MonsterOn():void
+		{
+			var enemyIMG :Image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_4'));
+			var enemyPos :Point	= indexToPoint(StoryConstant.STAGE2_ENEMY_POS);
+			enemyIMG.x = enemyPos.x;
+			enemyIMG.y = enemyPos.y;
+			this.addChild(enemyIMG);
+		}
+		
 		/** ENTER_FRAME **/
 		private function onEnterFrame(event:Event):void
 		{
-			if(_screen == Constant.STORY_SCREEN_2)
-			{
-				if(_controller.stage2Info()[0])
-				{
-					var enemyIMG :Image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_4'));
-					var enemyPos :Point	= indexToPoint(StoryConstant.STAGE2_ENEMY_POS);
-					enemyIMG.x = enemyPos.x;
-					enemyIMG.y = enemyPos.y;
-					this.addChild(enemyIMG);
-				}
-			}
-			
 			if(_state == constant.ChapterOneConstant.PLAYING_STATE)
 			{
 				_timer ++;
 				updateHeroPosition();
 				if(_gotFollow)
 				{
-					if(_enemy1.type == Constant.FOLLOW_TYPE)
-						enemyGo(_enemy1);
-					if(_enemy2.type == Constant.FOLLOW_TYPE)
-						enemyGo(_enemy2);
+					if(_enemy1 != null &&_enemy1.type == Constant.FOLLOW_TYPE)
+						enemyFollow(_enemy1);
+					if(_enemy2 != null && _enemy2.type == Constant.FOLLOW_TYPE)
+						enemyFollow(_enemy2);
 				}
+				
 				if(_gotPatrol)
 				{
-					if(_enemy2.type == Constant.PATROL_TYPE)
-						enemyPatrol(_enemy2);
-					if(_enemy2.type == Constant.PATROL_TYPE)
+					if(_enemy1 != null && _enemy1.type == Constant.PATROL_TYPE)
+						enemyPatrol(_enemy1);
+					if(_enemy2 != null && _enemy2.type == Constant.PATROL_TYPE)
 						enemyPatrol(_enemy2);
 				}
 			}
+		}
+		
+		private function checkPlayerOutOfArea():void
+		{
+			if(this._hero.playerX + 40 > _gameArea.right)
+				this._hero.speedX = _gameArea.right - (this._hero.playerX + 40);
+			else if(this._hero.playerX < _gameArea.left)
+				this._hero.speedX = this._hero.playerX - _gameArea.left;
+			
+			if(this._hero.playerY + 40 > _gameArea.bottom)
+				this._hero.speedY = _gameArea.bottom - (this._hero.playerY + 40);
+			else if(this._hero.playerY < _gameArea.top)
+				this._hero.speedX = this._hero.playerY - _gameArea.top;
 		}
 		
 		private function setupPattern():void
@@ -219,7 +241,79 @@ package object.inGameObject
 					pos			= StoryConstant.STAGE2_PLAYER_POS;
 					patternToStage(collection,index,type,pos);
 					break;
+				case Constant.STORY_SCREEN_3:
+					collection 	= StoryConstant.STAGE3_COLLECTION;
+					index		= StoryConstant.STAGE3_INDEX;
+					type		= StoryConstant.STAGE3_TYPE;
+					pos			= StoryConstant.STAGE3_PLAYER_POS;
+					patternToStage(collection,index,type,pos);
+					setupStage3Enemies();
+					break;
+				case Constant.STORY_SCREEN_4:
+					collection 	= StoryConstant.STAGE4_COLLECTION;
+					index		= StoryConstant.STAGE4_INDEX;
+					type		= StoryConstant.STAGE4_TYPE;
+					pos			= StoryConstant.STAGE4_PLAYER_POS;
+					patternToStage(collection,index,type,pos);
+					setupStage4Enemies();
+					break;
+				case Constant.STORY_SCREEN_5:
+					collection 	= StoryConstant.STAGE5_COLLECTION;
+					index		= StoryConstant.STAGE5_INDEX;
+					type		= StoryConstant.STAGE5_TYPE;
+					pos			= StoryConstant.STAGE5_PLAYER_POS;
+					patternToStage(collection,index,type,pos);
+					break;
 			}
+		}
+		
+		private function setupStage3Enemies():void
+		{
+			var enemy1_pos 	:Array  = new Array(indexToPoint(StoryConstant.STAGE3_ENEMY1_POS).x, indexToPoint(StoryConstant.STAGE3_ENEMY1_POS).y)
+			var enemy2_pos	:Array  = new Array(indexToPoint(StoryConstant.STAGE3_ENEMY2_POS).x, indexToPoint(StoryConstant.STAGE3_ENEMY2_POS).y)
+			var type		:String = StoryConstant.STAGE3_ENEMY_TYPE;
+			var speed		:Number = StoryConstant.STAGE3_ENEMY_SPD;
+			var img			:Number = StoryConstant.STAGE3_ENEMY_IMG;
+			this._enemy1 = new Enemies(this._controller, enemy1_pos[0], enemy1_pos[1], type, speed, img, 1);
+			this._enemy2 = new Enemies(this._controller, enemy2_pos[0], enemy2_pos[1], type, speed, img, 2);
+			
+			this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY1_POS));
+			this._enemy2.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY2_POS));
+			this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY1_END));
+			this._enemy2.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY2_END));
+			
+			this._enemyList = new Vector.<Enemies>;
+			this._enemy1.x = enemy1_pos[0];
+			this._enemy1.y = enemy1_pos[1];
+			this._enemy2.x = enemy2_pos[0];
+			this._enemy2.y = enemy2_pos[1];
+			this._gotPatrol = true;
+			this._enemyList.push(_enemy1);
+			this._enemyList.push(_enemy2);
+			this.addChild(_enemy1);
+			this.addChild(_enemy2);
+		}
+		
+		private function setupStage4Enemies():void
+		{
+			var pos			:Array 	= new Array(indexToPoint(StoryConstant.STAGE4_ENEMY_POS).x,indexToPoint(StoryConstant.STAGE4_ENEMY_POS).y);
+			var type		:String = StoryConstant.STAGE4_ENEMY_TYPE;
+			var speed		:Number = StoryConstant.STAGE4_ENEMY_SPD;
+			var img			:Number = StoryConstant.STAGE4_ENEMY_IMG;
+			
+			this._enemyList = new Vector.<Enemies>;
+			this._enemy1 = new Enemies(this._controller, pos[0], pos[1], type, speed, img, 1);
+			this._enemy1.x = pos[0];
+			this._enemy1.y = pos[1];
+			
+			this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE4_ENEMY_POS));
+			for(var i:uint=0; i<StoryConstant.STAGE4_ENEMY_PATH.length ;i++)
+			{
+				this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE4_ENEMY_PATH[i]));
+			}
+			this._gotPatrol = true;
+			this._enemyList.push(_enemy1);
+			this.addChild(_enemy1);
 		}
 		
 		private function patternToStage(collection:Vector.<String>,index:Vector.<uint>,type:Vector.<String>,pos:uint):void
@@ -251,9 +345,9 @@ package object.inGameObject
 		private function updateHeroPosition():void
 		{
 			clearVisitedTiles();
-			
-			_endPoint.x = int(_hero.playerX / 40) * 40;
-			_endPoint.y = int(_hero.playerY / 40) * 40;
+			_enemy1Found = false;
+			_endPoint1.x = int(_hero.playerX / 40) * 40;
+			_endPoint1.y = int(_hero.playerY / 40) * 40;
 		}
 		
 		private function clearVisitedTiles():void
@@ -421,7 +515,7 @@ package object.inGameObject
 					_controller.updateUnits(null,null,_hero);
 					
 					_tileVector[columnIndex][rowIndex].end = true;
-					_endPoint  = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+					_endPoint1  = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 					_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 					
 					_enemyGo = true;
@@ -507,14 +601,14 @@ package object.inGameObject
 				y = 0;
 				for(var j:Number=0; j<9;j++)
 				{
-					_tileVector[i][j] = new Object();
+					_tileVector[i][j] 	= new Object();
 					_tileVector[i][j].x = x;
 					_tileVector[i][j].y	= y;
-					_tileVector[i][j].start1 = false;
-					_tileVector[i][j].start2 = false;
-					_tileVector[i][j].end = false;
-					_tileVector[i][j].walkable = true;
-					_tileVector[i][j].visited = false;
+					_tileVector[i][j].start1 	= false;
+					_tileVector[i][j].start2 	= false;
+					_tileVector[i][j].end 		= false;
+					_tileVector[i][j].walkable 	= true;
+					_tileVector[i][j].visited 	= false;
 					y += 40;
 				}
 				x += 40;
@@ -528,135 +622,156 @@ package object.inGameObject
 		
 		private function manhattan(p:Point):Number
 		{
-			return (Math.abs(p.x - _endPoint.x) + Math.abs(p.y - _endPoint.y));
+			return (Math.abs(p.x - _endPoint1.x) + Math.abs(p.y - _endPoint1.y));
 		}
 		
 		private function insideField(p:Point,n1:Number,n2:Number):Boolean 
 		{
 			if ((p.x + n1 > (10*40)) ||(p.x + n1 < 0)|| ((p.y + n2) > (8*40))|| ((p.y + n2) <0)) 
-			{
 				return false;
-			}
 			else
-			{
 				return true;
-			}
 		}
 		
-		private function enemyGo(enemy:Enemies):void
+		private function enemyFollow(enemy:Enemies):void
 		{
 			if(!_enemy1Found)
 			{
-				if(_timer == 60)
+				if(_timer == 30)
 				{
-					var savedPoint: Point;
-					var minF:Number = 10000;
-					
-					for (var i:Number=-40; i<=40; i+=40) {
-						for (var j:Number=-40; j<=40; j+=40) {
-							if ((i!=0 && j==0)||(i==0 && j!=0)) {
-								if(insideField(_currPoint1, i, j))
-								{
-									var o:Number = (_currPoint1.x + i) / 40;
-									var u:Number = (_currPoint1.y + j) / 40;
-									
-									if((_tileVector[o][u].walkable) && (_tileVector[o][u].visited == false))
+					if(_enemy1.isReachedTarget)
+					{
+						_enemy1.isReachedTarget = false;
+						var savedPoint: Point;
+						var minF:Number = 10000;
+						
+						for (var i:Number=-40; i<=40; i+=40) {
+							for (var j:Number=-40; j<=40; j+=40) {
+								if ((i!=0 && j==0)||(i==0 && j!=0)) {
+									if(insideField(_currPoint1, i, j))
 									{
-										var g:Number = getG(i,j);
-										var h:Number = manhattan(new Point((_currPoint1.x) + i,(_currPoint1.y) + j));
-										var f:Number = g + h;
-										if(f < minF)
+										var o:Number = (_currPoint1.x + i) / 40;
+										var u:Number = (_currPoint1.y + j) / 40;
+										
+										if((_tileVector[o][u].walkable) && (_tileVector[o][u].visited == false))
 										{
-											minF = f;
-											savedPoint = new Point((_currPoint1.x) + i,(_currPoint1.y) + j);
+											var g:Number = getG(i,j);
+											var h:Number = manhattan(new Point((_currPoint1.x) + i,(_currPoint1.y) + j));
+											var f:Number = g + h;
+											if(f < minF)
+											{
+												minF = f;
+												savedPoint = new Point((_currPoint1.x) + i,(_currPoint1.y) + j);
+											}
 										}
 									}
 								}
 							}
-						}
-					}	
-					
-					if(savedPoint)
-					{
-						if((savedPoint.x != _endPoint.x) || (savedPoint.y != _endPoint.y))
-						{
-							_enemy1.x = savedPoint.x;
-							_enemy1.y = savedPoint.y;
-							var m:Number = savedPoint.x / 40;
-							var n:Number = savedPoint.y / 40;
-							_tileVector[m][n].visited = true;	
-						}
-						_currPoint1 = savedPoint;
-						_path.push(_currPoint1);
+						}	
 						
-						if((savedPoint.x == _endPoint.x) && (savedPoint.y == _endPoint.y))
+						if(savedPoint)
 						{
-							_enemy1Found = true;
-						}
-					}
-					else
-					{
-						if(_path.length > 1)
-						{
-							_currPoint1 = _path[_path.length - 2];
-							_enemy1.x = _currPoint1.x;
-							_enemy1.y = _currPoint1.y;
-							_path.pop();
+							if((savedPoint.x != _endPoint1.x) || (savedPoint.y != _endPoint1.y))
+							{
+								_enemy1.targetPt = savedPoint;
+//								_enemy1.x = savedPoint.x;
+//								_enemy1.y = savedPoint.y;
+								var m:Number = savedPoint.x / 40;
+								var n:Number = savedPoint.y / 40;
+								_tileVector[m][n].visited = true;	
+							}
+							_currPoint1 = savedPoint;
+							_path.push(_currPoint1);
+							
+							if((savedPoint.x == _endPoint1.x) && (savedPoint.y == _endPoint1.y))
+							{
+								_enemy1Found = true;
+							}
 						}
 						else
 						{
-							trace("Can't be solved");
+							if(_path.length > 1)
+							{
+								_currPoint1 = _path[_path.length - 2];
+								_enemy1.targetPt = _currPoint1;
+//								_enemy1.x = _currPoint1.x;
+//								_enemy1.y = _currPoint1.y;
+								_path.pop();
+							}
+							else
+							{
+								trace("Can't be solved");
+							}
 						}
-					}
-					_timer = 0;
+						_timer = 0;
+					}	
 				}
 			}
 		}
 		
 		private function enemyPatrol(enemy:Enemies):void
 		{
-			if(_enemy2.x == _endPoint2[_currEnd].x && _enemy2.y == _endPoint2[_currEnd].y)
+			var moveX:Number;
+			var moveY:Number;
+			var distance:Number;
+			if(enemy.enemyX == enemy.endPoints[enemy.currEndPt].x && enemy.enemyY == enemy.endPoints[enemy.currEndPt].y)
 			{
-				_currPoint2.x = _endPoint2[_currEnd].x;
-				_currPoint2.y = _endPoint2[_currEnd].y;
-				_currEnd ++;
-				if(_currEnd == 4)
-					_currEnd = 0;
+				enemy.moveX = 0;
+				enemy.moveY = 0;
+				enemy.setNextEnd();
+				return;
 			}
 			
-			if(_enemy2.x == _endPoint2[_currEnd].x)
-			{	
-				_enemy2.y += (_endPoint2[_currEnd].y - _currPoint2.y) * _enemy2.speed;
-				if (_endPoint2[_currEnd].y - _currPoint2.y < 0)
-				{
-					if (_enemy2.y < _endPoint2[_currEnd].y)
-						_enemy2.y = _endPoint2[_currEnd].y;
-				}
-				else
-				{
-					if (_enemy2.y > _endPoint2[_currEnd].y)
-						_enemy2.y = _endPoint2[_currEnd].y;
-				}
-			}
-			else if(_enemy2.y == _endPoint2[_currEnd].y)
+			if(enemy.enemyX == enemy.endPoints[enemy.currEndPt].x && enemy.enemyY != enemy.endPoints[enemy.currEndPt].y)
 			{
-				_enemy2.x += (_endPoint2[_currEnd].x - _currPoint2.x) * _enemy2.speed;
-				if (_endPoint2[_currEnd].x - _currPoint2.x < 0)
+				distance = enemy.endPoints[enemy.currEndPt].y - enemy.endPoints[enemy.currStartPt].y;
+				moveX = 0;
+				if(distance > 0)
 				{
-					if (_enemy2.x < _endPoint2[_currEnd].x)
-						_enemy2.x = _endPoint2[_currEnd].x;
+					if(enemy.enemyY > enemy.endPoints[enemy.currEndPt].y)
+						moveY = -(enemy.enemyY - enemy.endPoints[enemy.currEndPt].y);
+					else
+						moveY = distance * enemy.speed;						
 				}
-				else
+				else if (distance < 0)
 				{
-					if (_enemy2.x > _endPoint2[_currEnd].x)
-						_enemy2.x = _endPoint2[_currEnd].x;
+					if(enemy.enemyY < enemy.endPoints[enemy.currEndPt].y)
+						moveY = -(enemy.enemyY - enemy.endPoints[enemy.currEndPt].y);
+					else
+						moveY = distance * enemy.speed;	
 				}
-			}		
+				enemy.moveX = moveX;
+				enemy.moveY = moveY;
+				return;
+			}
+			
+			if(enemy.enemyX != enemy.endPoints[enemy.currEndPt].x && enemy.enemyY == enemy.endPoints[enemy.currEndPt].y)
+			{
+				distance = enemy.endPoints[enemy.currEndPt].x - enemy.endPoints[enemy.currStartPt].x;
+				moveY = 0;
+				if(distance > 0)
+				{
+					if(enemy.enemyX > enemy.endPoints[enemy.currEndPt].x)
+						moveX = -(enemy.enemyX - enemy.endPoints[enemy.currEndPt].x);
+					else
+						moveX = distance * enemy.speed;						
+				}
+				else if (distance < 0)
+				{
+					if(enemy.enemyX < enemy.endPoints[enemy.currEndPt].x)
+						moveX = -(enemy.enemyX - enemy.endPoints[enemy.currEndPt].x);
+					else
+						moveX = distance * enemy.speed;	
+				}
+				enemy.moveX = moveX;
+				enemy.moveY = moveY;
+				return;
+			}
 		}
 		
 		public function displayQuestion():void
 		{
-			var qns: Question = new Question("MCQ");
+			var qns: Question = new Question(this._controller, Constant.MCQ_QUESTION);
 			this.addChild(qns);
 		}
 		
@@ -694,7 +809,7 @@ package object.inGameObject
 					_controller.updateUnits(null,null,_hero);
 					
 					_tileVector[columnIndex][rowIndex].end = true;					
-					_endPoint = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+					_endPoint1 = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 					_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 					
 					_enemyGo = true;
@@ -788,16 +903,16 @@ package object.inGameObject
 						{
 							_tileVector[m][n].start2  = true;
 							_tileVector[m][n].visited = false;
-							_endPoint2 = new Vector.<Point>();
+							_endPointPatrol2 = new Vector.<Point>();
 							var endPoint : Point;
 							endPoint = new Point (_enemy2.x, _enemy2.y - 80);
-							_endPoint2.push(endPoint);
+							_endPointPatrol2.push(endPoint);
 							endPoint = new Point (_enemy2.x + 80, _enemy2.y - 80);
-							_endPoint2.push(endPoint);
+							_endPointPatrol2.push(endPoint);
 							endPoint = new Point (_enemy2.x + 80, _enemy2.y);
-							_endPoint2.push(endPoint);
+							_endPointPatrol2.push(endPoint);
 							endPoint = new Point (_enemy2.x, _enemy2.y);
-							_endPoint2.push(endPoint);
+							_endPointPatrol2.push(endPoint);
 							
 							_startPoint2 = new Point(_tileVector[m][n].x, _tileVector[m][n].y);
 							_currPoint2  = new Point(_enemy2.x, _enemy2.y);

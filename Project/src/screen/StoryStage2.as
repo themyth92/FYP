@@ -166,10 +166,19 @@ package screen
 				GameData.setGameState(3);
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_3}, true));
 			}
+			else if(isLost())
+			{
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
+			}
 		}
 		private function isWon():Boolean
 		{
-			return _controller.isWon;
+			return this._controller.isWon;
+		}
+		
+		private function isLost():Boolean
+		{
+			return this._controller.isLost;
 		}
 		
 		private function displayConsoleState():Boolean

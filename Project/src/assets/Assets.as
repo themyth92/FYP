@@ -19,6 +19,12 @@ package assets
 		[Embed(source = '../media/font/GROBOLD.ttf', embedAsCFF = 'false', fontFamily = 'Grobold')]
 		private static const GroboldFont:Class;
 		
+		[Embed(source="../media/sprite/GameOver/GameOverScreen.png")]
+		private static const GameOverScreen	:Class;
+		
+		[Embed(source="../media/sprite/GameOver/GameOver.png")]
+		private static const GameOverText	:Class;
+		
 		//embed the loading page sprite sheet
 		[Embed(source = '../media/sprite/loadingPage/preLoader.png')]
 		private static const AtlasTextureLoadingPage:Class;

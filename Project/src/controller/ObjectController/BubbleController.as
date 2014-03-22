@@ -80,10 +80,25 @@ package controller.ObjectController
 		
 		public function errorNotify(error:uint):void
 		{
-			if(error == 1)
-				_dialogBubble.changeDialogTextField(StoryConstant.STAGE2_ERROR_GUIDER1);
-			else
-				_dialogBubble.changeDialogTextField(StoryConstant.STAGE2_ERROR_GUIDER2);
+			switch(error){
+				case 1:
+					_dialogBubble.changeDialogTextField(StoryConstant.STAGE2_ERROR_GUIDER1);
+					break;
+				case 2:
+					_dialogBubble.changeDialogTextField(StoryConstant.STAGE2_ERROR_GUIDER2);
+					break;
+				case 3:
+					_dialogBubble.changeDialogTextField(StoryConstant.STAGE3_ERROR_SMALL);
+					break;
+				case 4:
+					_dialogBubble.changeDialogTextField(StoryConstant.STAGE3_ERROR_LARGE);
+					break;
+				case 5:
+					_dialogBubble.changeDialogTextField(StoryConstant.STAGE4_ERROR);
+					break;
+				default:
+					break;
+			}
 		}
 			
 		public function changeObjectState(currentState:String):void

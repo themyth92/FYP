@@ -67,6 +67,7 @@ package controller.ObjectController
 		private var _currentLife			 : Number;
 		private var _maxLife				 : Number = 0;
 		private var _isWon					:Boolean = false;
+		private var _isLost					:Boolean = false;
 		private var _screen					:String;
 		private var _currDialogPos			:uint = 0;
 		
@@ -76,10 +77,37 @@ package controller.ObjectController
 		private var _stage2Console		:Boolean;
 		private var _consoleChecking	:Boolean;
 		
+		/* Stage 3 */
+		private var _stage3CheckLife	:Boolean = false;
+		
+		/* Stage 4 */
+		private var _stage4CheckTime	:Boolean = false;
+		
+		//Control input variables
+		private var _isCorrect			:Boolean;
+		private var _gotPopUp			:Boolean;
+		private var _state				:String;
+		
 		public function Controller(){
 			
 		}
-
+		
+		public function updateAnswerStatus(isCorrect:Boolean):void{
+			this._isCorrect = isCorrect;
+			if(this._screen == Constant.STORY_SCREEN_5 && this._isCorrect)
+				this.notifyIndexBoardController("stage5RemoveLock");
+		}
+		
+		public function set gotPopUp(value:Boolean):void
+		{
+			this._gotPopUp = value;
+		}
+		
+		public function get gotPopUp():Boolean
+		{
+			return _gotPopUp;
+		}
+			
 		public function assignScreen(screen:String):void
 		{
 			_screen = screen;
@@ -106,6 +134,16 @@ package controller.ObjectController
 			return _isWon;
 		}
 		
+		public function set isLost(value:Boolean):void
+		{
+			_isLost = value;
+		}
+		
+		public function get isLost():Boolean
+		{
+			return _isLost;
+		}
+		
 		public function assignObjectController(console: Console, dialogBubble: Dialogue, instrArrow: InstrArrow, indexBoard: IndexBoard, button: Button, patternList: ObstaclesBoard, scoreBoard: ScoreBoard):void
 		{
 			_console 		   	= console;
@@ -124,20 +162,88 @@ package controller.ObjectController
 			_patternListController  = new ObstaclesBoardController	(_patternList);
 			_scoreBoardController 	= new ScoreBoardController	(_scoreBoard);
 		}
-		
-		public function updateStage2Info(monsterOn:Boolean, consoleOn:Boolean, consoleCheck:Boolean):void{
-			if(monsterOn)
-				_stage2Monster	= true;
-			if(consoleOn)
-				_stage2Console	= true;
-			if(consoleCheck)
-				_consoleChecking = true;
-		}
-		
+				
 		public function stage2Info():Array
 		{
 			var result:Array = new Array(_stage2Monster, _stage2Console, _consoleChecking);
 			return result;	
+		}
+		
+		public function stageInfo(stage:Number):Array
+		{
+			var info :Array;
+			switch(stage){
+				case 2:
+					info = new Array(_stage2Monster, _stage2Console, _consoleChecking);
+					break;
+				case 3:
+					info = new Array(_stage3CheckLife);
+					break;
+				case 4:
+					info = new Array(_stage4CheckTime);
+					break;
+				case 5:
+					break;
+				default:
+					break;
+			}
+			
+			return info;
+		}
+		
+		public function updateStageInfo(stage:Number,value:Array):void
+		{
+			switch(stage)
+			{
+				case 2:
+					if(value[0])
+					{
+						_stage2Monster	= true;
+						_indexBoard.stage2MonsterOn();
+					}
+					if(value[1])
+						_stage2Console	= true;
+					if(value[2])
+						_consoleChecking = true;
+					break;
+				case 3:
+					this._stage3CheckLife = value[0];
+					if(value[0])
+						notifyScoreBoardController("enableLifeEdit");
+					else
+						notifyDialogueController(ChapterOneConstant.DIALOG_CHANGE,null);
+					break;
+				case 4:
+					this._stage4CheckTime = value[0];
+					if(value[0])
+						notifyScoreBoardController("enableTimeEdit");
+					else
+						notifyDialogueController(ChapterOneConstant.DIALOG_CHANGE,null);
+					break;
+				default:
+					break;
+			}
+		}
+
+		public function showIncorrectDialouge(type:String):void
+		{
+			if(_screen == Constant.STORY_SCREEN_3)
+			{
+				if(type == "<")
+					notifyDialogueController(StoryConstant.STAGE3_ERROR_SMALL, null);
+				else if(type == ">")
+					notifyDialogueController(StoryConstant.STAGE3_ERROR_LARGE, null);
+			}
+			else if(_screen == Constant.STORY_SCREEN_3)
+			{
+				if(type == "time")
+					notifyDialogueController(StoryConstant.STAGE4_ERROR, null);
+			}
+		}
+		
+		public function updateStage4Info():void
+		{
+			this._stage4CheckTime = true;
 		}
 		
 		public function startGame(player:Array, enemy1:Array, enemy2:Array):String
@@ -204,6 +310,11 @@ package controller.ObjectController
 			_heroX = x;
 			_heroY = y;
 			return _indexBoardController.collisionDetect(x,y);
+		}
+		
+		public function checkCollision():void
+		{
+			_indexBoardController.checkPlayerCollideEnemy();
 		}
 		
 		public function notifyCollectCoin(index:uint):void
@@ -307,7 +418,7 @@ package controller.ObjectController
 			}
 			
 			if(_maxLife == 0)
-				_maxLife = 5;
+				_maxLife = 1;
 			_currentLife 	= _maxLife;
 			_coinCollected 	= 0;
 			_indexBoardController.updateLifeOnGameStart(_maxLife);
@@ -500,6 +611,15 @@ package controller.ObjectController
 				case ChapterOneConstant.ERROR_NOTIFY2:
 					_dialogBubbleController.errorNotify(2);
 					break;
+				case StoryConstant.STAGE3_ERROR_SMALL:
+					_dialogBubbleController.errorNotify(3);
+					break;
+				case StoryConstant.STAGE3_ERROR_LARGE:
+					_dialogBubbleController.errorNotify(4);
+					break;
+				case StoryConstant.STAGE4_ERROR:
+					_dialogBubbleController.errorNotify(5);
+					break;
 				default:
 					break;
 			}
@@ -527,6 +647,9 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
+				case "stage5RemoveLock":
+					this._indexBoardController.removeLockOnCorrect(StoryConstant.STAGE5_QUESTION_POS);
+					break;
 				default:
 					break;
 			}	
@@ -557,6 +680,12 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
+				case "enableLifeEdit":
+					this._scoreBoardController.enableLifeEdit(true);
+					break;
+				case "enableTimeEdit":
+					this._scoreBoardController.enableTimeEdit(true);
+					break;
 				default:
 					break;
 			}
