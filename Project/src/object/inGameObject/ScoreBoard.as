@@ -4,6 +4,7 @@ package object.inGameObject
 	
 	import constant.ChapterOneConstant;
 	import constant.Constant;
+	import constant.StoryConstant;
 	
 	import controller.ObjectController.Controller;
 	
@@ -73,33 +74,44 @@ package object.inGameObject
 		/* Time variable */
 		private var _markTime		: int = 0;
 		private var _minutesOn		: int = 1;
-		private var _secondsOn		: int = 30;
+		private var _secondsOn		: int = 5;
 		
 		private var _startPlaying	: Boolean = true;
 		private var _isPoppedUp		: Boolean;
 		private var _isOutOfTime	: Boolean = false;
 		private var _screen			: String;
+		private var _isLifeEnabled	: Boolean = false;
+		private var _isTimeEnabled	: Boolean = false;
 		
 		public function ScoreBoard(controller:Controller)
 		{
 			this._controller    = controller;
-			this._screen	 	= _controller.screen;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE	  		, onAddedToStage);
 			this.addEventListener(Event.ENTER_FRAME				, onEnterFrame);
 			this.addEventListener(Event.REMOVED_FROM_STAGE 		, onRemoveFromStage);
-			this.addEventListener(EnterFrameEvent.ENTER_FRAME	, updateTimeTracker);
+		}
+		
+		public function set isLifeEnabled(value:Boolean):void
+		{
+			this._isLifeEnabled = value;
+		}
+		
+		public function set isTimeEnabled(value:Boolean):void
+		{
+			this._isTimeEnabled = value;
 		}
 		
 		private function onEnterFrame(event:Event):void
 		{
 			_coinText.text = this._currCoin + "/" + this._maxCoin;
 			_lifeText.text = this._currLife + "/" + this._maxLife;
+			updateTimeTracker();
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
-
+			this._screen = this._controller.screen;
 			new MetalWorksMobileTheme();
 			var displayText :Array = setupScoreBoardText();
 
@@ -148,7 +160,7 @@ package object.inGameObject
 			var result :Array;
 			switch(this._screen){
 				case Constant.STORY_SCREEN_1:
-					result = new Array("0/0", "1/1", "01:30");
+					result = new Array("0/0", "1/1", "01 : 30");
 					_maxCoin	= 0;
 					_maxLife 	= 1;
 					_currLife	= _maxLife;
@@ -157,7 +169,7 @@ package object.inGameObject
 					_secondsOn  = 30;
 					break;
 				case Constant.STORY_SCREEN_2:
-					result = new Array("0/0", "1/1", "01:30");
+					result = new Array("0/0", "1/1", "01 : 30");
 					_maxCoin	= 0;
 					_maxLife 	= 1;
 					_currLife	= _maxLife;
@@ -166,7 +178,7 @@ package object.inGameObject
 					_secondsOn  = 30;
 					break;
 				case Constant.STORY_SCREEN_3:
-					result = new Array("0/0", "1/1", "01:30");
+					result = new Array("0/0", "1/1", "01 : 30");
 					_maxCoin	= 0;
 					_maxLife 	= 1;
 					_currLife	= _maxLife;
@@ -175,7 +187,7 @@ package object.inGameObject
 					_secondsOn  = 30;
 					break;
 				case Constant.STORY_SCREEN_4:
-					result = new Array("0/0", "1/1", "00:05");
+					result = new Array("0/0", "1/1", "00 : 05");
 					_maxCoin	= 0;
 					_maxLife 	= 1;
 					_currLife	= _maxLife;
@@ -184,7 +196,7 @@ package object.inGameObject
 					_secondsOn  = 5;
 					break;
 				case Constant.STORY_SCREEN_5:
-					result = new Array("0/0", "1/1", "01:30");
+					result = new Array("0/0", "1/1", "01 : 30");
 					_maxCoin	= 0;
 					_maxLife 	= 1;
 					_currLife	= _maxLife;
@@ -193,7 +205,7 @@ package object.inGameObject
 					_secondsOn  = 30;
 					break;
 				default:
-					result = new Array("0/0", "1/1", "01:30");
+					result = new Array("0/0", "1/1", "01 : 30");
 					break;
 			}
 			return result;
@@ -206,96 +218,154 @@ package object.inGameObject
 		
 		private function onLifeClicked(event:Event):void
 		{
-			_panel = new Panel();
-			_panel.width = 250;
-			
-			var lifeEdit:TextInput = new TextInput();
-			lifeEdit.x = 70;
-			lifeEdit.width = 80;
-			
-			lifeEdit.prompt = formatLeadingZero(_maxLife);
-			_panel.addChild(lifeEdit);
-			
-			var closeButton :feathers.controls.Button = new feathers.controls.Button();
-			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseLifeWindow(lifeEdit)});
-			closeButton.x = 75;
-			closeButton.y = 75;
-			closeButton.label = "Ok";
-			
-			_panel.headerFactory = function():Header
+			if(this._isLifeEnabled)
 			{
-				var header:Header = new Header();
-				header.title = "Life";
-				return header;
+				_panel = new Panel();
+				_panel.width = 250;
+				
+				var lifeEdit:TextInput = new TextInput();
+				lifeEdit.x = 70;
+				lifeEdit.width = 80;
+				
+				lifeEdit.prompt = formatLeadingZero(_maxLife);
+				_panel.addChild(lifeEdit);
+				
+				var closeButton :feathers.controls.Button = new feathers.controls.Button();
+				closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseLifeWindow(lifeEdit)});
+				closeButton.x = 75;
+				closeButton.y = 75;
+				closeButton.label = "Ok";
+				
+				_panel.headerFactory = function():Header
+				{
+					var header:Header = new Header();
+					header.title = "Life";
+					return header;
+				}
+				
+				_panel.addChild(closeButton);
+				this._controller.gotPopUp = true;
+				PopUpManager.addPopUp( _panel);
 			}
-			
-			_panel.addChild(closeButton);
-			PopUpManager.addPopUp( _panel);
 		}
 		
 		private function onCloseLifeWindow(life:TextInput):void
 		{
-			PopUpManager.removePopUp( _panel, true );
 			if(isDigit(life.text))
 			{
 				_maxLife = Number(life.text);
 				_currLife = _maxLife;
+				if(this._screen == Constant.STORY_SCREEN_3)
+				{
+					checkStage3Condition(life.text);
+				}
+				this._controller.gotPopUp = false;
+				PopUpManager.removePopUp( _panel, true );
+				
+				_controller.getGameStat("max life", _maxLife);
+				reviewLife();
 			}
-			
-			_controller.getGameStat("max life", _maxLife);
-			reviewLife();
+			else
+			{
+				var errorMsg :TextField = new TextField(120, 30, "Invalid input.", "Grobold", 24, 0xfa0000, false);
+				_panel.addChild(errorMsg);
+			}
+		}
+		
+		private function checkStage3Condition(life:String):void
+		{
+			if(isDigit(life))
+			{
+				if(Number(life) < StoryConstant.STAGE3_LIFE_MIN)
+					this._controller.showIncorrectDialouge("<");
+				else if(Number(life) > StoryConstant.STAGE3_LIFE_MAX)
+					this._controller.showIncorrectDialouge(">");
+				else
+				{
+					var info	:Array = new Array(false);
+					this._controller.updateStageInfo(3,info);
+				}
+			}
 		}
 		
 		private function onTimeClicked(event:Event):void
 		{
-			_panel = new Panel();
-			_panel.width = 250;
-						
-			var colonText :TextField = new TextField(100, 30, ":",'Verdana', 24, 0xffffff, false);
-			colonText.x = 65;
-			colonText.y = 10;
-			var minuteText:TextInput = new TextInput();
-			minuteText.x = 30;
-			minuteText.textEditorProperties.fontSize = 20;
-			minuteText.width = 75;
-			var secondText:TextInput = new TextInput();
-			secondText.x = 125;
-			secondText.textEditorProperties.fontSize = 20;
-			secondText.width = 75;
-
-			minuteText.prompt = formatLeadingZero(_minutesOn);
-			secondText.prompt = "00";
-			_panel.addChild(colonText);
-			_panel.addChild(minuteText);
-			_panel.addChild(secondText);
-			
-			var closeButton :feathers.controls.Button = new feathers.controls.Button();
-			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseTimeWindow(minuteText, secondText)});
-			closeButton.x = 75;
-			closeButton.y = 75;
-			closeButton.label = "Ok";
-			
-			_panel.headerFactory = function():Header
+			if(this._isTimeEnabled)
 			{
-				var header:Header = new Header();
-				header.title = "Time";
-				return header;
-			}
+				_panel = new Panel();
+				_panel.width = 250;
+							
+				var colonText :TextField = new TextField(100, 30, ":",'Verdana', 24, 0xffffff, false);
+				colonText.x = 65;
+				colonText.y = 10;
+				var minuteText:TextInput = new TextInput();
+				minuteText.x = 30;
+				minuteText.textEditorProperties.fontSize = 20;
+				minuteText.width = 75;
+				var secondText:TextInput = new TextInput();
+				secondText.x = 125;
+				secondText.textEditorProperties.fontSize = 20;
+				secondText.width = 75;
+	
+				minuteText.prompt = formatLeadingZero(_minutesOn);
+				secondText.prompt = "00";
+				_panel.addChild(colonText);
+				_panel.addChild(minuteText);
+				_panel.addChild(secondText);
 				
-			_panel.addChild(closeButton);
-			this._isPoppedUp = true;
-			PopUpManager.addPopUp( _panel);
-		}
+				var closeButton :feathers.controls.Button = new feathers.controls.Button();
+				closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseTimeWindow(minuteText, secondText)});
+				closeButton.x = 75;
+				closeButton.y = 75;
+				closeButton.label = "Ok";
+				
+				_panel.headerFactory = function():Header
+				{
+					var header:Header = new Header();
+					header.title = "Time";
+					return header;
+				}
+					
+				_panel.addChild(closeButton);
+				this._controller.gotPopUp = true;
+				PopUpManager.addPopUp( _panel);
+			}
+		}	
 		
 		private function onCloseTimeWindow(minute:TextInput, second:TextInput):void
-		{
-			PopUpManager.removePopUp( _panel, true );
-			this._isPoppedUp = false;
-			if(isDigit(minute.text))
+		{	
+			if(isDigit(minute.text) && isDigit(second.text))
+			{
 				_minutesOn = Number(minute.text);
-			if(isDigit(second.text))
 				_secondsOn = Number(second.text);
-			reviewTime();
+				reviewTime();
+				if(this._screen == Constant.STORY_SCREEN_4)
+				{
+					checkStage4Condition(minute.text, second.text);
+				}
+				this._controller.gotPopUp = false;
+				this._isPoppedUp = false;
+				PopUpManager.removePopUp( _panel, true );
+			}
+			else
+			{
+				var errorMsg :TextField = new TextField(70, 30, "Invalid input.", "Grobold", 24, 0xfa0000, false);
+				_panel.addChild(errorMsg);
+			}
+		}
+		
+		private function checkStage4Condition(minute:String, second:String):void
+		{
+			if(isDigit(minute))
+			{
+				if(Number(minute) != StoryConstant.STAGE4_TIME_MIN && Number(second) != StoryConstant.STAGE4_TIME_SEC)
+					this._controller.showIncorrectDialouge("time");
+				else
+				{
+					var info	:Array = new Array(false);
+					this._controller.updateStageInfo(4,info);
+				}
+			}
 		}
 
 		public function updateCoinTracker(currentCoin:Number, maxCoin:Number):void
@@ -310,32 +380,41 @@ package object.inGameObject
 			this._maxLife = maxLife;
 		}
 		
-		public function updateTimeTracker(event:EnterFrameEvent):void
+		private function updateTimeTracker():void
 		{
 			var timePassed	:Number 	= getTimer() - _markTime;
-			var seconds		:int 		= _secondsOn - (timePassed / 1000) % 60;
-			var minutes		:int 		= _minutesOn - (timePassed / (1000 * 60)) % 60;
-			if(!_isOutOfTime)
+			var seconds		:int 		= _secondsOn - int((timePassed / 1000) % 60);
+			var minutes		:int 		= _minutesOn - int((timePassed / (1000 * 60)) % 60);
+			
+			if(_state == ChapterOneConstant.PLAYING_STATE)
 			{
-				if(_state == ChapterOneConstant.PLAYING_STATE)
+				if(_startPlaying)
 				{
-					if(_startPlaying)
-					{
-						_markTime = getTimer();
-						_startPlaying = false;
-					}
-					_timeText.text = formatLeadingZero(minutes) + " : " + formatLeadingZero(minutes);
-					var timeArray	:Array = new Array(formatLeadingZero(minutes), formatLeadingZero(minutes));
-					if(timeArray[0] == END_TIME[0] && timeArray[1] == END_TIME[1])
-						endGame();
+					this._timeIMG.removeEventListener(Event.TRIGGERED, onTimeClicked);
+					this._lifeIMG.removeEventListener(Event.TRIGGERED, onLifeClicked);
+					_markTime = getTimer();
+					_startPlaying = false;
 				}
+				if(!checkLostCondition())
+				{
+					if(seconds < 0)
+					{
+						minutes = minutes - 1;
+						seconds = seconds + 60;
+					}
+					_timeText.text = formatLeadingZero(minutes) + " : " + formatLeadingZero(seconds);
+				}
+				else
+					this._controller.isLost = true;
 			}
 		}
 		
-		private function endGame():void
+		private function checkLostCondition():Boolean
 		{
-			//Display Game Over
-			this._isOutOfTime = true;
+			if(_timeText.text == "00 : 00")
+				return true;
+			else
+				return false;
 		}
 		
 		private function reviewTime():void
@@ -350,7 +429,7 @@ package object.inGameObject
 		
 		private function formatLeadingZero(value:Number):String
 		{
-			return (value < 10) ? "0" + value.toFixed() : value.toFixed();
+			return (value < 10) ? "0" + value.toString() : value.toString();
 		}
 	
 		public function changeState(currentState:String):void

@@ -92,14 +92,15 @@ package object.inGameObject
 
 		public function setNextEnd():void
 		{
-			_currEndPt ++;
-			_currStartPt ++;
-			if(_endPoints != null)
+			this._currEndPt ++;
+			this._currStartPt ++;
+			if(this._endPoints != null)
 			{
-				if(_currEndPt == _endPoints.length)
-					_currEndPt = 0;
-				if(_currStartPt == _endPoints.length)
-					_currStartPt = 0;
+				if(this._currEndPt == this._endPoints.length)
+					this._currEndPt = 0;
+				
+				if(this._currStartPt == this._endPoints.length)
+					this._currStartPt = 0;
 			}
 		}
 		

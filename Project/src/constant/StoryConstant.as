@@ -114,6 +114,12 @@ package constant
 		public static const STAGE3_ENEMY_TYPE	:String   = 'patrolEnemy';
 		public static const STAGE3_ENEMY_SPD	:Number = 0.05;
 		public static const STAGE3_ENEMY_IMG	:Number = 1;
+		
+		public static const STAGE3_LIFE_CHECK	:Number = 9;
+		public static const STAGE3_LIFE_MIN		:Number = 3;
+		public static const STAGE3_LIFE_MAX		:Number = 4;
+		public static const STAGE3_ERROR_SMALL	:String = "That is not enough, we need more in order to pass the guard";
+		public static const STAGE3_ERROR_LARGE	:String = "We do not need that many lives. 3 or 4 should be enough";
 
 		/**====================================================================
 		 * |	                     	STAGE 4		                      | *
@@ -148,8 +154,14 @@ package constant
 		public static const STAGE4_PLAYER_POS	:uint	= 46;
 		public static const STAGE4_ENEMY_POS	:uint	= 12;
 		public static const STAGE4_ENEMY_TYPE	:String = 'patrolEnemy';
-		public static const STAGE4_ENEMY_SPD	:Number = 0.5;
+		public static const STAGE4_ENEMY_SPD	:Number = 0.05;
 		public static const STAGE4_ENEMY_IMG	:Number = 3;
+		public static const STAGE4_ENEMY_PATH   :Array =  new Array (13,24,35,46,57,58,59,70,81,82,83,72,61,50,39,40,41,42,43,44,55,66,77,76,87,98);
+		
+		public static const STAGE4_TIME_CHECK	:Number = 5;
+		public static const STAGE4_TIME_MIN		:Number = 1;
+		public static const STAGE4_TIME_SEC		:Number = 30;
+		public static const STAGE4_ERROR		:String = "Please put the time to 1:30. Fast.";
 		
 		/**====================================================================
 		 * |	                     	STAGE 5 		                      | *

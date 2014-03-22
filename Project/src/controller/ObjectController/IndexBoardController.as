@@ -303,7 +303,6 @@ package controller.ObjectController
 				
 				var heroX : Number = _hero.x + x;
 				var heroY : Number = _hero.y + y;
-				
 				var vx 	  : Number;
 				var vy	  : Number;
 				
@@ -431,32 +430,31 @@ package controller.ObjectController
 		{
 			var isCollided	:Boolean;
 			var collisionRe	:Array;
-			
-			if(_indexBoard.enemyList.length == 0)
+			if(_indexBoard.enemyList != null)
 			{
-				isCollided = false;
-				collisionRe = new Array(isCollided);
-			}
-			else
-			{
-				var enemyList	:Vector.<Enemies> = _indexBoard.enemyList;
-				var playerX		:Number = this._indexBoard.hero.playerX;
-				var playerY		:Number = this._indexBoard.hero.playerY;
-				var vx			:Number;
-				var vy			:Number;
-					
-				for(var i:uint = 0; i<enemyList.length; i++)
+				if(_indexBoard.enemyList.length == 0)
 				{
-					trace(enemyList[i].enemyX, enemyList[i].image.width/2);
-					vx = (playerX + (_hero.width/2)) - (enemyList[i].enemyX + (enemyList[i].image.width/2));
-					vx = (playerY + (_hero.height/2)) - (enemyList[i].enemyY + (enemyList[i].image.height/2));
-					
-					if(Math.abs(vx) < _hero.width/2 + enemyList[i].image.width/2)
+					isCollided = false;
+					collisionRe = new Array(isCollided);
+				}
+				else
+				{
+					var enemyList	:Vector.<Enemies> = _indexBoard.enemyList;
+					var playerX		:Number = this._indexBoard.hero.playerX;
+					var playerY		:Number = this._indexBoard.hero.playerY;
+					var vx			:Number;
+					var vy			:Number;
+					for(var i:uint = 0; i<enemyList.length; i++)
 					{
-						if(Math.abs(vy) < _hero.height/2 + enemyList[i].image.height/2)
-						{	
-							trace("hitEnemy");
-							takeDamage();
+						vx = (playerX + (_hero.width/2)) - (enemyList[i].enemyX + (enemyList[i].image.width/2));
+						vy = (playerY + (_hero.height/2)) - (enemyList[i].enemyY + (enemyList[i].image.height/2));
+						
+						if(Math.abs(vx) < _hero.width/2 + enemyList[i].image.width/2)
+						{
+							if(Math.abs(vy) < _hero.height/2 + enemyList[i].image.height/2)
+							{	
+								takeDamage();
+							}
 						}
 					}
 				}

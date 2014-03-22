@@ -56,14 +56,39 @@ package object.inGameObject
 		public function changeDialogTextField(text:String):void
 		{
 			_dialogue.text = text;
+			var info	:Array;
 			if(_screen == Constant.STORY_SCREEN_2)
 			{
 				if(text == StoryConstant.STAGE2_INSTRUCTION[StoryConstant.STAGE2_INSTR_SHOW_MONSTER])
-					_controller.updateStage2Info(true,false,false);
+				{
+					info = new Array(true,false,false);
+					_controller.updateStageInfo(2,info);
+				}
 				else if(text == StoryConstant.STAGE2_INSTRUCTION[StoryConstant.STAGE2_INSTR_SHOW_CONSOLE])
-					_controller.updateStage2Info(false,true,false);
+				{
+					info = new Array(false,true,false);
+					_controller.updateStageInfo(2,info);
+				}
 				else if(text == StoryConstant.STAGE2_INSTRUCTION[StoryConstant.STAGE2_INSTR_CONSOLE_CHECK])
-					_controller.updateStage2Info(false,false,true);
+				{
+					info = new Array(false,false,true);
+					_controller.updateStageInfo(2,info);
+				}	
+			}else if(_screen == Constant.STORY_SCREEN_3)
+			{
+				if(text == StoryConstant.STAGE3_INSTRUCTION[StoryConstant.STAGE3_LIFE_CHECK])
+				{
+					info = new Array(true);
+					_controller.updateStageInfo(3,info);
+				}
+			}
+			else if(_screen == Constant.STORY_SCREEN_4)
+			{
+				if(text == StoryConstant.STAGE4_INSTRUCTION[StoryConstant.STAGE4_TIME_CHECK])
+				{
+					info = new Array(true);
+					_controller.updateStageInfo(4,info);
+				}
 			}
 					
 			if(text == null)
@@ -103,7 +128,8 @@ package object.inGameObject
 		
 		private function onKeyPress(event:Event):void
 		{
-			_controller.receiveFromDialogue(ChapterOneConstant.DIALOG_CHANGE, null, {event:ChapterOneConstant.TRIGGER, arg:_dialogCurPos, target:ChapterOneConstant.DIALOG_NEXT_ARROW});
+			if(!this._controller.gotPopUp)
+				_controller.receiveFromDialogue(ChapterOneConstant.DIALOG_CHANGE, null, {event:ChapterOneConstant.TRIGGER, arg:_dialogCurPos, target:ChapterOneConstant.DIALOG_NEXT_ARROW});
 		}
 		
 		private function onRemoveFromStage(e:Event):void
@@ -124,9 +150,13 @@ package object.inGameObject
 			{
 				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			}
-			else if(_screen == Constant.STORY_SCREEN_2 && !_controller.stage2Info()[2])
+			else if(_screen == Constant.STORY_SCREEN_3 && _controller.stageInfo(3)[0])
 			{
-				this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+			}
+			else if(_screen == Constant.STORY_SCREEN_4 && _controller.stageInfo(4)[0])
+			{
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			}
 			else
 			{

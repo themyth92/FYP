@@ -219,8 +219,6 @@ package object.inGameObject
 			this._heroEnable = true;
 		}
 		
-		
-	
 		public function changeState(currentState:String):void
 		{
 			_state = currentState;
@@ -265,25 +263,30 @@ package object.inGameObject
 			//trace(_state);
 			if(_state == ChapterOneConstant.PLAYING_STATE)
 			{
-				this._controller.checkCollision();
-				this._hero.x += _speedX;
-				this._hero.y += _speedY;
-				
-				var heroPos : Array = _controller.notifyForCollisionChecking(_hero.x, _hero.y);
-				
-				if(heroPos.length == 1)
+				if(!checkLostCondition())
 				{
-					//trace("do nothing");
+					this._controller.checkCollision();
+					this._hero.x += _speedX;
+					this._hero.y += _speedY;
+					
+					var heroPos : Array = _controller.notifyForCollisionChecking(_hero.x, _hero.y);
+					
+					if(heroPos.length == 1)
+					{
+						//trace("do nothing");
+					}
+					else if(heroPos.length  == 2)
+					{
+						_controller.notifyCollectCoin(heroPos[1]);
+					}
+					else if (heroPos.length == 3)
+					{
+						this._hero.x = heroPos[1];
+						this._hero.y = heroPos[2];
+					}
 				}
-				else if(heroPos.length  == 2)
-				{
-					_controller.notifyCollectCoin(heroPos[1]);
-				}
-				else if (heroPos.length == 3)
-				{
-					this._hero.x = heroPos[1];
-					this._hero.y = heroPos[2];
-				}
+				else
+					this._controller.isLost = true;
 			}
 			
 			this._playerX = this._initialX + this._hero.x;
@@ -291,6 +294,14 @@ package object.inGameObject
 			
 			if(_isHit)
 				_counter++;
+		}
+		
+		private function checkLostCondition():Boolean
+		{
+			if(this._currentLife == 0)
+				return true;
+			else 
+				return false;
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void{

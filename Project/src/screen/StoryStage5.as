@@ -39,6 +39,7 @@ package screen
 			super();
 			
 			this._controller 	= new Controller ();
+
 			this._console		= new Console(this._controller);
 			this._dialogue		= new Dialogue(this._controller);
 			this._indexBoard	= new IndexBoard(this._controller);
@@ -148,11 +149,18 @@ package screen
 		{
 			if(isWon())
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_5}, true));
+			if(isLost())
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
 		}
 		
 		private function isWon():Boolean
 		{
 			return _controller.isWon;
+		}
+		
+		private function isLost():Boolean
+		{
+			return _controller.isLost;
 		}
 	}
 }

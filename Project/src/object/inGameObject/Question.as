@@ -210,7 +210,7 @@ package object.inGameObject
 				if(_type == Constant.SHORT_QUESTION)
 					correction.text = "Sorry. The correct answer is '" + SHORT_ANSWER + "'.";
 				else
-					correction.text = "Sorry. The correct option is 'Option " + MCQ_ANSWER + "'.";
+					correction.text = "Sorry. The correct option is 'Option " + (MCQ_ANSWER + 1) + "'.";
 			}
 			_questionArea.addChild(correction);
 			var closeButton :feathers.controls.Button = new feathers.controls.Button();

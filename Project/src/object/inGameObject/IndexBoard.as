@@ -53,11 +53,12 @@ package object.inGameObject
 		private var _isTriggered	   :Boolean;
 		
 		//INDEXBOARD VARIABLES
-		private var _patternCollection : Vector.<Image>;
-		private var _patternType	   : Vector.<String>;
-		private var _patternIndex      : Vector.<uint>;
-		private var _maxCoin		   : Number = 0;
+		private var _patternCollection  :Vector.<Image>;
+		private var _patternType	    :Vector.<String>;
+		private var _patternIndex       :Vector.<uint>;
+		private var _maxCoin		 	:Number = 0;
 		private var _screen				:String;
+		private var _gameArea			:Rectangle;
 		
 		//HERO VARARIABLES
 		private var _enemy1		   : Enemies;
@@ -148,7 +149,8 @@ package object.inGameObject
 		 * ====================================================================**/
 		/** ADDED_TO_STAGE **/
 		private function onAddedToStage(e:Event):void{
-			
+			_gameArea = new Rectangle(0,0, 440, 360);
+
 			this._touchArea.x 		= 0;
 			this._touchArea.y 		= 0;
 			this._touchArea.alpha 	= 0;
@@ -202,6 +204,19 @@ package object.inGameObject
 						enemyPatrol(_enemy2);
 				}
 			}
+		}
+		
+		private function checkPlayerOutOfArea():void
+		{
+			if(this._hero.playerX + 40 > _gameArea.right)
+				this._hero.speedX = _gameArea.right - (this._hero.playerX + 40);
+			else if(this._hero.playerX < _gameArea.left)
+				this._hero.speedX = this._hero.playerX - _gameArea.left;
+			
+			if(this._hero.playerY + 40 > _gameArea.bottom)
+				this._hero.speedY = _gameArea.bottom - (this._hero.playerY + 40);
+			else if(this._hero.playerY < _gameArea.top)
+				this._hero.speedX = this._hero.playerY - _gameArea.top;
 		}
 		
 		private function setupPattern():void
@@ -290,25 +305,13 @@ package object.inGameObject
 			this._enemy1 = new Enemies(this._controller, pos[0], pos[1], type, speed, img, 1);
 			this._enemy1.x = pos[0];
 			this._enemy1.y = pos[1];
-			this._gotPatrol = true;
 			
-			_controller.updateUnits(_enemy1, null, null);
-			
-			for(var i:Number=0; i<11; i++)
+			this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE4_ENEMY_POS));
+			for(var i:uint=0; i<StoryConstant.STAGE4_ENEMY_PATH.length ;i++)
 			{
-				for(var j:Number=0; j<9; j++)
-				{
-					if((_tileVector[i][j].x == _enemy1.x) && (_tileVector[i][j].y == _enemy1.y))
-					{
-						_tileVector[i][j].start1  = true;
-						_tileVector[i][j].visited1 = true;
-						_startPoint1 = new Point(_tileVector[i][j].x, _tileVector[i][j].y);
-						_path        = new Vector.<Point>();
-						_currPoint1  = new Point(_startPoint1.x, _startPoint1.y);
-						break;
-					}
-				}
+				this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE4_ENEMY_PATH[i]));
 			}
+			this._gotPatrol = true;
 			this._enemyList.push(_enemy1);
 			this.addChild(_enemy1);
 		}
@@ -713,6 +716,8 @@ package object.inGameObject
 			var distance:Number;
 			if(enemy.enemyX == enemy.endPoints[enemy.currEndPt].x && enemy.enemyY == enemy.endPoints[enemy.currEndPt].y)
 			{
+				enemy.moveX = 0;
+				enemy.moveY = 0;
 				enemy.setNextEnd();
 				return;
 			}

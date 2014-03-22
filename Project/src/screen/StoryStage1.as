@@ -34,6 +34,7 @@ package screen
 		private var _guiderIMG		:Image;
 		private var _lifeIMG		:Image;
 		private var _escButton		:Button;
+		private var _gotPopUp		:Boolean;
 		private var _com           :ServerClientCom;
 				
 		private var _controller	:Controller;
@@ -155,7 +156,9 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			var isWon :Boolean;
+			var isLost:Boolean;
 			isWon = _controller.isWon;
+			isLost = _controller.isLost;
 			if(isWon){
 				
 				//save the state to server with the state number 1
@@ -167,6 +170,18 @@ package screen
 				
 				//dispatch event to change screen
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_2}, true));
+			}
+			if(isLost)
+			{
+				//save the state to server with the state number 1
+				//which means user has passed the first state
+				_com.saveUserIngameState(1);
+				
+				//save the state of the user in game
+				GameData.setGameState(2);
+				
+				//dispatch event to change screen
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
 			}
 		}
 	}
