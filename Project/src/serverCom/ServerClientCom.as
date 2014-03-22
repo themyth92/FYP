@@ -21,5 +21,10 @@ package serverCom
 			
 			ExternalInterface.call('saveUserIngameState', userIngameState);
 		}
+		
+		public function saveUserGameCreation(returnData: Object):void{
+			
+			ExternalInterface.call('saveGameCreation', returnData);
+		}
 	}
 }

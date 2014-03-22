@@ -26,6 +26,9 @@ package object.CreateGameObject
 	
 	public class ObstaclePanel extends ScrollContainer implements IDragSource
 	{
+		//the pre-defined obstacle pattern
+		private static const PATTERN_PREFIX:String  = 'pattern_'; 
+		
 		private var _dragFormat      : String;
 		private var _touchID         : int = -1;
 		private var _draggedObject   : DisplayObject;
@@ -74,15 +77,15 @@ package object.CreateGameObject
 			
 			for(var i:uint = 0 ; i < 4 ; i++){
 				
-				var obj:ObstacleObj = new ObstacleObj();
-				
-				obj.setObstacleTexture(null, '0' + i);
-				obj.setObstaclePos(0, i*50);
+				var obj:ObstacleObj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + '0' + i), false, i);
+				obj.x 			 	= 0;
+				obj.y 			 	= i*50;
+				obj.obstacleType 	= 0; 
 				
 				this._obstacleObjects.push(obj);
 				obj = null;
 				
-				this.addChild(this._obstacleObjects[i].getObstacleTexture());
+				this.addChild(this._obstacleObjects[i]);
 			}
 		}
 		

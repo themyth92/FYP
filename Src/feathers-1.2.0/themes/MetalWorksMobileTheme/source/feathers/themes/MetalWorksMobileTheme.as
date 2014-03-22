@@ -1169,7 +1169,6 @@ package feathers.themes
 			};
 			input.stateToSkinFunction = skinSelector.updateValue;
 
-			input.minWidth = input.minHeight = 60 * this.scale;
 			input.minTouchWidth = input.minTouchHeight = 88 * this.scale;
 			input.gap = 12 * this.scale;
 			input.paddingTop = 12 * this.scale;

@@ -8,39 +8,65 @@ package object.CreateGameObject
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	
-	public class ObstacleObj
+	public class ObstacleObj extends Image
 	{
-		private static const PATTERN_PREFIX:String  = 'pattern_'; 
+		//keep track of the obstacle type 
+		// 0 : obstacle
+		// 1 : prize
+		// 3 : ...
+		private var _obstacleType 	: Number;
 		
-		private var _obstacleImage : Image;
+		//boolean varaible to check whethere this
+		//texture is user defined or available in the system
+		private var _isUserDefText	: Boolean;
 		
-		public function ObstacleObj()
+		//variable to store the texture index in both user defined
+		//obstacle and texture available in the system
+		private var _textureIndex 	: Number;
+		
+		//useful for publishing the game 
+		private var _textureAddress:String;
+		
+		public function ObstacleObj(texture: Texture, isUserDef: Boolean, index:Number):void
 		{
-
-		}	
-
-		public function getObstacleTexture():Image
-		{
-			return this._obstacleImage;
-		}
-		
-		public function setObstacleTexture(texture:Texture, name:String):void
-		{
-			if(name != null){	
-				this._obstacleImage = new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + name));
-			}
-			else
-				if(texture != null){
-					this._obstacleImage = new Image(texture);
-				}
-				else
-					return;
-		}
-		
-		public function setObstaclePos(x:Number, y:Number):void{
+			super(texture);
 			
-			this._obstacleImage.x = x;
-			this._obstacleImage.y = y;
+			//assign the texture to new class
+			this.texture  			= texture;
+			
+			//assign to dectect user defined or available texture
+			this._isUserDefText 	= isUserDef;
+			this._textureIndex		= index;
+		}	
+		
+		public function get textureIndex():Number
+		{
+			return _textureIndex;
+		}
+
+		public function set textureIndex(value:Number):void
+		{
+			_textureIndex = value;
+		}
+
+		public function get isUserDefText():Boolean
+		{
+			return _isUserDefText;
+		}
+
+		public function set isUserDefText(value:Boolean):void
+		{
+			_isUserDefText = value;
+		}
+
+		public function get obstacleType():Number
+		{
+			return _obstacleType;
+		}
+
+		public function set obstacleType(value:Number):void
+		{
+			_obstacleType = value;
 		}
 	}
 }
