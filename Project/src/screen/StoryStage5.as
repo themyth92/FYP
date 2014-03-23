@@ -38,8 +38,13 @@ package screen
 		{
 			super();
 			
+			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		private function onAddedToStage(event:Event):void
+		{
 			this._controller 	= new Controller ();
-
+			
 			this._console		= new Console(this._controller);
 			this._dialogue		= new Dialogue(this._controller);
 			this._indexBoard	= new IndexBoard(this._controller);
@@ -47,18 +52,13 @@ package screen
 			
 			this._controller.assignObjectController(this._console, this._dialogue, null, this._indexBoard, null, null, this._scoreBoard);
 			this._controller.assignScreen(Constant.STORY_SCREEN_5);
-			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		}
-		
-		private function onAddedToStage(event:Event):void
-		{
+			
 			this.placeImageOnScreen();
 			this.setupGameObject();
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClicked);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function placeImageOnScreen():void
@@ -137,12 +137,20 @@ package screen
 			this.removeChild(this._console);
 			this.removeChild(this._indexBoard);
 			this.removeChild(this._scoreBoard);
-			this._console.dispose();
-			this._dialogue.dispose();
-			this._indexBoard.dispose();
-			this._scoreBoard.dispose();
 			
-			this.removeEventListener(Event.ADDED_TO_STAGE, this.onRemoveFromStage);
+			this._background	= null;
+			this._frameIMG		= null;
+			this._dialogueIMG	= null;
+			this._screen		= null;
+			this._guiderIMG		= null;
+			this._escButton		= null;
+			this._dialogue		= null;
+			this._console		= null;
+			this._indexBoard	= null;
+			this._scoreBoard	= null;
+			
+			this.removeEventListener(Event.TRIGGERED, onButtonClicked);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
 		private function onEnterFrame(event:Event):void

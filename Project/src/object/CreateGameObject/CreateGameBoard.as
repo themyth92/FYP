@@ -50,7 +50,7 @@ package object.CreateGameObject
 		public function CreateGameBoard(serverData:Object = null)	
 		{
 			if(serverData){
-					
+				//if got the server data then decode it into grids here		
 			}
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);

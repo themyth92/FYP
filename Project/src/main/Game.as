@@ -65,35 +65,40 @@ package main
 		}
 		
 		private function onChangeScreen(e:NavigationEvent):void{
-			
-//			if(e.screenID.needSaveState != undefined){
-//				if(GameData.getGameState() == 2){
-//					
-//					this.removeChild(_mainScreen);
-//					this.addChild(_storyStage2);
-//				}
-//				
-//				if(GameData.getGameState() == 1){
-//					
-//					this.removeChild(_mainScreen);
-//					this.addChild(_storyStage1);
-//				}
-//			}
-//			else{
-		/*	if(e.screenID.needSaveState != undefined){
-				if(GameData.getGameState() == 2){
-					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage2);
-				}
+		
+			if(e.screenID.needSaveState != undefined){
 				
 				if(GameData.getGameState() == 1){
 					
 					this.removeChild(_mainScreen);
 					this.addChild(_storyStage1);
 				}
+				
+				if(GameData.getGameState() == 2){
+					
+					this.removeChild(_mainScreen);
+					this.addChild(_storyStage2);
+				}
+				
+				if(GameData.getGameState() == 3){
+					
+					this.removeChild(_mainScreen);
+					this.addChild(_storyStage3);
+				}
+				
+				if(GameData.getGameState() == 4){
+					
+					this.removeChild(_mainScreen);
+					this.addChild(_storyStage4);
+				}
+				
+				if(GameData.getGameState() == 5){
+					
+					this.removeChild(_mainScreen);
+					this.addChild(_storyStage5);
+				}
 			}
-			else{*/
+			else{
 				if(e.screenID.id != undefined){
 					switch(e.screenID.id){
 						case Constant.LOADING_SCREEN:
@@ -117,33 +122,25 @@ package main
 							break;
 						
 						case Constant.STORY_SCREEN_1:
-							this.removeChild(_mainScreen);
 							this.addChild(_storyStage1);
 							break;
 							
 						case Constant.STORY_SCREEN_2:
-							this.removeChild(_mainScreen);
 							this.removeChild(_storyStage1);
 							this.addChild(_storyStage2);
 							break;
 							
 						case Constant.STORY_SCREEN_3:
-							this.removeChild(_mainScreen);
 							this.removeChild(_storyStage2);
-							_storyStage2 = null;
 							this.addChild(_storyStage3);
 							break;
 							
 						case Constant.STORY_SCREEN_4:
-							this.removeChild(_mainScreen);
 							this.removeChild(_storyStage3);
-							_storyStage3 = null;
 							this.addChild(_storyStage4);
 							break;
 						case Constant.STORY_SCREEN_5:
-							this.removeChild(_mainScreen);
 							this.removeChild(_storyStage4);
-							_storyStage4 = null;
 							this.addChild(_storyStage5);
 							break;
 						case Constant.GAME_OVER_SCREEN:
@@ -153,19 +150,13 @@ package main
 							this.removeChild(_storyStage3);
 							this.removeChild(_storyStage4);
 							this.removeChild(_storyStage5);
-							_storyStage1 = null;
-							_storyStage2 = null;
-							_storyStage3 = null;
-							_storyStage4 = null;
-							_storyStage5 = null;
 							this.addChild(_gameOver);
 							
 						default:
 							break;
 					}
 				}
-//			}
-			//}
+			}
 		}
 	}
 }

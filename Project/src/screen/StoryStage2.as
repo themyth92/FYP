@@ -154,6 +154,7 @@ package screen
 			_escButton   = null;
 			_controller  = null;
 			
+			this.removeEventListener(Event.TRIGGERED, onButtonClicked);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
@@ -162,7 +163,7 @@ package screen
 			if(displayConsoleState())
 				this.addChild(_console);
 			if(isWon()){
-				_com.saveUserIngameState(2);
+				this._com.saveUserIngameState(2);
 				GameData.setGameState(3);
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_3}, true));
 			}

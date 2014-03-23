@@ -58,7 +58,7 @@ package screen
 			var buttonClicked : Button = event.target as Button;
 			if(buttonClicked == _createButton)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.CREATE_GAME_SCREEN, needSaveState : true}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.CREATE_GAME_SCREEN}, true));
 				this.removeEventListener(Event.TRIGGERED, onMainClick);
 			}
 			else if(buttonClicked == _playButton)
