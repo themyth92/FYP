@@ -246,6 +246,11 @@ package controller.ObjectController
 			this._stage4CheckTime = true;
 		}
 		
+		public function checkOutOfGameArea():Array
+		{
+			return this._indexBoard.checkPlayerOutOfArea();
+		}
+		
 		public function startGame(player:Array, enemy1:Array, enemy2:Array):String
 		{
 			var enemyType :Array = new Array(enemy1[0], enemy2[0]);

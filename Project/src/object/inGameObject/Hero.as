@@ -284,6 +284,18 @@ package object.inGameObject
 						this._hero.x = heroPos[1];
 						this._hero.y = heroPos[2];
 					}
+					
+					var isOutOfArea	:Array = _controller.checkOutOfGameArea();
+					if(isOutOfArea[0] == "Vertical")
+					{
+						this._hero.x = isOutOfArea[1] - this._initialX;
+						this._hero.y = isOutOfArea[2] - this._initialY;
+					}
+					else if(isOutOfArea[0] == "Horizontal")
+					{
+						this._hero.x = isOutOfArea[1] - this._initialX;
+						this._hero.y = isOutOfArea[2] - this._initialY;						
+					}
 				}
 				else
 					this._controller.isLost = true;

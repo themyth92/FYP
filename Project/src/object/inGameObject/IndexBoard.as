@@ -206,17 +206,39 @@ package object.inGameObject
 			}
 		}
 		
-		private function checkPlayerOutOfArea():void
+		public function checkPlayerOutOfArea():Array
 		{
-			if(this._hero.playerX + 40 > _gameArea.right)
-				this._hero.speedX = _gameArea.right - (this._hero.playerX + 40);
-			else if(this._hero.playerX < _gameArea.left)
-				this._hero.speedX = this._hero.playerX - _gameArea.left;
+			var outOfArea	:String;
+			var playerX		:uint;
+			var playerY		:uint;
+			var result		:Array;
 			
-			if(this._hero.playerY + 40 > _gameArea.bottom)
-				this._hero.speedY = _gameArea.bottom - (this._hero.playerY + 40);
-			else if(this._hero.playerY < _gameArea.top)
-				this._hero.speedX = this._hero.playerY - _gameArea.top;
+			if(this._hero.playerX + 40 > _gameArea.right)
+			{
+				playerX = _gameArea.right - 40;
+				playerY = this._hero.playerY;
+				outOfArea = "Horizontal";
+			}
+			else if(this._hero.playerX < _gameArea.x)
+			{
+				playerX = 0;
+				playerY = this._hero.playerY;
+				outOfArea = "Horizontal";
+			}
+			else if(this._hero.playerY + 40 > _gameArea.bottom)
+			{
+				outOfArea = "Vertical";
+				playerY = _gameArea.bottom - 40;
+				playerX = this._hero.playerX;
+			}
+			else if(this._hero.playerY < _gameArea.y)
+			{
+				outOfArea = "Vertical";
+				playerY = 0;
+				playerX = this._hero.playerX;
+			}	
+			result = new Array(outOfArea, playerX, playerY);
+			return result;
 		}
 		
 		private function setupPattern():void

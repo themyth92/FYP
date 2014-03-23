@@ -38,6 +38,7 @@ package object.inGameObject
 		|	     Bubble state        |
 		-----------------------------*/
 		private var _state					 :String = ChapterOneConstant.INSTRUCTING_STATE;
+		private var _isKeyUp:Boolean;
 		
 		public function Dialogue(controller:Controller)
 		{	
@@ -126,10 +127,21 @@ package object.inGameObject
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
-		private function onKeyPress(event:Event):void
+		private function onKeyDown(event:Event):void
 		{
 			if(!this._controller.gotPopUp)
-				_controller.receiveFromDialogue(ChapterOneConstant.DIALOG_CHANGE, null, {event:ChapterOneConstant.TRIGGER, arg:_dialogCurPos, target:ChapterOneConstant.DIALOG_NEXT_ARROW});
+			{
+				if(_isKeyUp)
+				{
+					_controller.receiveFromDialogue(ChapterOneConstant.DIALOG_CHANGE, null, {event:ChapterOneConstant.TRIGGER, arg:_dialogCurPos, target:ChapterOneConstant.DIALOG_NEXT_ARROW});
+					_isKeyUp = false;
+				}
+			}
+		}
+		
+		private function onKeyUp(event:Event):void
+		{
+			_isKeyUp = true;
 		}
 		
 		private function onRemoveFromStage(e:Event):void
@@ -144,23 +156,28 @@ package object.inGameObject
 			if(_state != ChapterOneConstant.INSTRUCTING_STATE)
 			{
 				this._dialogue.visible 	 = false;
-				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				this.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			else if(_screen == Constant.STORY_SCREEN_2 && _controller.stage2Info()[2])
 			{
-				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				this.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			else if(_screen == Constant.STORY_SCREEN_3 && _controller.stageInfo(3)[0])
 			{
-				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				this.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			else if(_screen == Constant.STORY_SCREEN_4 && _controller.stageInfo(4)[0])
 			{
-				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				this.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 			else
 			{
-				this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+				this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+				this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			}
 		}		
 	}
