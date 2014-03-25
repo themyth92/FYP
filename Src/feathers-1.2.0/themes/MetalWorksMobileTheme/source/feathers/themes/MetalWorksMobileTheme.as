@@ -621,10 +621,10 @@ package feathers.themes
 			button.selectedDisabledLabelProperties.embedFonts = true;
 
 			button.paddingTop = button.paddingBottom = 8 * this.scale;
-			button.paddingLeft = button.paddingRight = 16 * this.scale;
+			button.paddingLeft = button.paddingRight = 10 * this.scale;
 			button.gap = 12 * this.scale;
-			button.minWidth = button.minHeight = 60 * this.scale;
-			button.minTouchWidth = button.minTouchHeight = 88 * this.scale;
+			button.minWidth = button.minHeight = 10 * this.scale;
+			button.minTouchWidth = button.minTouchHeight = 60 * this.scale;
 		}
 
 		protected function buttonInitializer(button:Button):void
@@ -1163,19 +1163,19 @@ package feathers.themes
 			skinSelector.setValueForState(this.backgroundFocusedSkinTextures, TextInput.STATE_FOCUSED);
 			skinSelector.displayObjectProperties =
 			{
-				width: 264 * this.scale,
-				height: 60 * this.scale,
+				width: 20 * this.scale,
+				height: 20 * this.scale,
 				textureScale: this.scale
 			};
 			input.stateToSkinFunction = skinSelector.updateValue;
 
 			input.minTouchWidth = input.minTouchHeight = 88 * this.scale;
 			input.gap = 12 * this.scale;
-			input.paddingTop = 12 * this.scale;
-			input.paddingBottom = 10 * this.scale;
-			input.paddingLeft = input.paddingRight = 14 * this.scale;
+			input.paddingTop = 6 * this.scale;
+			input.paddingBottom = 6 * this.scale;
+			input.paddingLeft = input.paddingRight = 7 * this.scale;
 			input.textEditorProperties.fontFamily = "Helvetica";
-			input.textEditorProperties.fontSize = 24 * this.scale;
+			input.textEditorProperties.fontSize = 12 * this.scale;
 			input.textEditorProperties.color = LIGHT_TEXT_COLOR;
 
 			input.promptProperties.textFormat = this.lightTextFormat;

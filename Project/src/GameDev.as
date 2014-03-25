@@ -30,7 +30,7 @@ package
 			_myGame.antiAliasing = 1;
 			_myGame.start();
 
-			this.addChild(_stats);			
+			//this.addChild(_stats);			
 		}
 	}
 }

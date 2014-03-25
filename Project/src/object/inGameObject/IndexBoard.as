@@ -793,7 +793,7 @@ package object.inGameObject
 		
 		public function displayQuestion():void
 		{
-			var qns: Question = new Question(this._controller, Constant.MCQ_QUESTION);
+			var qns: Question = new Question(this._controller, Constant.SHORT_QUESTION);
 			this.addChild(qns);
 		}
 		

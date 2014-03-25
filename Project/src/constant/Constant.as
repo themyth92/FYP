@@ -54,6 +54,8 @@ package constant
 																			'pattern/pattern_03','teacher',
 															   				'volumeDecBtn', 'volumeBar',
 															   				'volumeIncBtn', 'volumeSlider');
+		
+		public static const ENEMY_SPRITE_TEXTURE:Array			= new Array('Enemy/Enemy_1', 'Enemy/Enemy_2', 'Enemy/Enemy_3', 'Enemy/Enemy_4', 'Enemy/Enemy_5', 'Enemy/Enemy_6');
 		//font
 		public static const GROBOLD_FONT: String              = 'Grobold';
 		
@@ -66,12 +68,12 @@ package constant
 		public static const CONSOLE_PLAY_POS	:Point		= new Point(640, 70);
 		public static const GRID_CREATE_POS		:Point		= new Point(41 , 57);
 		public static const GRID_STORY_POS		:Point		= new Point(171 , 57);
-		public static const INFOBOARD_POS		:Point		= new Point(500, 30);
+		public static const INFOBOARD_POS		:Point		= new Point(545, 0);
 		public static const PREVIEWB_POS		:Point		= new Point(30 , 450);
 		public static const STARTB_POS			:Point		= new Point(190, 450);
 		public static const PUBLISHB_POS		:Point		= new Point(360, 450);
 		public static const DIALOGUE_POS		:Point		= new Point(60 , 450);
-		public static const OBSBOARD_POS		:Point		= new Point(15, 85);
+		public static const OBSBOARD_POS		:Point		= new Point(15, 145);
 		public static const GUIDER_POS			:Point		= new Point(10, 470);
 		public static const ESCB_POS			:Point		= new Point(749,1);
 		
@@ -79,10 +81,7 @@ package constant
 		 * |                  OBJECT NAME IN SPRITESHEET   			          | *
 		 * ====================================================================**/
 		/* Common Assets SpriteSheet */
-		public static const CONSOLE_IMG		:String		= "Console";
 		public static const DIALOGUE_IMG	:String		= "Dialogue";
-		public static const RADIOYES_IMG	:String		= "Radio (tick)";
-		public static const RADIONO_IMG		:String		= "Radio (untick)";
 		public static const FRAME_IMG		:String		= "mainFrame";
 		public static const GUIDER_IMG		:String		= "GameGuider";
 		public static const CLOCK_IMG		:String		= "Clock";
@@ -90,6 +89,7 @@ package constant
 		public static const ESCB_IMG		:String		= "escButton";
 		public static const HELPB_IMG		:String		= "helpButton";
 		public static const COIN_IMG		:String		= "Coin";
+		public static const INFO_BOARD		:String		= "InformationBoard";
 		
 		/* Create SpriteSheet */
 		public static const GRID_IMG		:String		= "Grid";
@@ -122,8 +122,8 @@ package constant
 		public static const CONSOLE_WIDTH	:uint 		= 190;
 		public static const CONSOLE_HEIGTH	:uint		= 33;
 		
-		public static const FOLLOW_TYPE	:String = "followEnemy";
-		public static const PATROL_TYPE	:String = "patrolEnemy";
+		public static const FOLLOW_TYPE	:String = "Follow Enemy";
+		public static const PATROL_TYPE	:String = "Patrol Enemy";
 		
 		/**====================================================================
 		 * |  		                  QUESTION TYPE   			              | *

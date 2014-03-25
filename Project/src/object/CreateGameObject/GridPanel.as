@@ -226,5 +226,15 @@ package object.CreateGameObject
 			//question from user
 			this._curGridObjSelect.selectedIndex = event.data.index;
 		}
+		
+		private function setPatrolEnemyPoints():void
+		{
+			//Check if there is any 'patrol' enemy
+			//If not return
+			//else take in the position (x,y)
+			//Check if x==enemy.x or y==enemy.y
+			//if not return
+			//else check if any object in between (check walkable)
+		}
 	}
 }

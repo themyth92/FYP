@@ -11,8 +11,9 @@ package screen
 	import feathers.dragDrop.IDragSource;
 	import feathers.dragDrop.IDropTarget;
 	
-	import object.inGameObject.Console;
 	import object.CreateGameObject.CreateGameBoard;
+	import object.CreateGameObject.CreateGameScoreBoard;
+	import object.inGameObject.Console;
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.IndexBoard;
 	import object.inGameObject.ObstaclesBoard;
@@ -32,7 +33,7 @@ package screen
 		private var _dialogue		:Dialogue;
 		private var _indexBoard		:IndexBoard;
 		private var _obstaclesBoard	:ObstaclesBoard;
-		private var _scoreBoard		:ScoreBoard;
+		private var _scoreBoard		:CreateGameScoreBoard;
 		
 		//Display Texture
 		private var _background		:Image;
@@ -87,6 +88,8 @@ package screen
 			_scoreBoard			= new ScoreBoard	(_controller);
 			
 			_controller.assignObjectController(_console, _dialogue, null, _indexBoard, null, _obstaclesBoard, _scoreBoard);*/
+			
+		
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		

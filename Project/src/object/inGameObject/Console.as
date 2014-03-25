@@ -107,7 +107,6 @@ package object.inGameObject
 				return format;
 			};
 			_console.maxChars         = 50;
-			_console.backgroundSkin   = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.CONSOLE_IMG));
 			
 			_errorSign.x              = WARNING_SIGN_POSX;
 			_errorSign.y              = WARNING_SIGN_POSY;

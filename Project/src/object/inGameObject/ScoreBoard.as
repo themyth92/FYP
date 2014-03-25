@@ -222,6 +222,7 @@ package object.inGameObject
 			{
 				_panel = new Panel();
 				_panel.width = 250;
+				_panel.height = 300;
 				
 				var lifeEdit:TextInput = new TextInput();
 				lifeEdit.x = 70;
@@ -233,7 +234,7 @@ package object.inGameObject
 				var closeButton :feathers.controls.Button = new feathers.controls.Button();
 				closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseLifeWindow(lifeEdit)});
 				closeButton.x = 75;
-				closeButton.y = 75;
+				closeButton.y = 150;
 				closeButton.label = "Ok";
 				
 				_panel.headerFactory = function():Header
@@ -267,7 +268,9 @@ package object.inGameObject
 			}
 			else
 			{
-				var errorMsg :TextField = new TextField(120, 30, "Invalid input.", "Grobold", 24, 0xfa0000, false);
+				var errorMsg :TextField = new TextField(200, 100, "Invalid input.", "Grobold", 24, 0xfa0000, false);
+				errorMsg.y = 75;
+				errorMsg.x = 15;
 				_panel.addChild(errorMsg);
 			}
 		}
@@ -294,6 +297,7 @@ package object.inGameObject
 			{
 				_panel = new Panel();
 				_panel.width = 250;
+				_panel.height = 300;
 							
 				var colonText :TextField = new TextField(100, 30, ":",'Verdana', 24, 0xffffff, false);
 				colonText.x = 65;
@@ -316,7 +320,7 @@ package object.inGameObject
 				var closeButton :feathers.controls.Button = new feathers.controls.Button();
 				closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseTimeWindow(minuteText, secondText)});
 				closeButton.x = 75;
-				closeButton.y = 75;
+				closeButton.y = 150;
 				closeButton.label = "Ok";
 				
 				_panel.headerFactory = function():Header
@@ -349,7 +353,9 @@ package object.inGameObject
 			}
 			else
 			{
-				var errorMsg :TextField = new TextField(70, 30, "Invalid input.", "Grobold", 24, 0xfa0000, false);
+				var errorMsg :TextField = new TextField(200, 100, "Invalid input.", "Grobold", 24, 0xfa0000, false);
+				errorMsg.y = 75;
+				errorMsg.x = 15;
 				_panel.addChild(errorMsg);
 			}
 		}

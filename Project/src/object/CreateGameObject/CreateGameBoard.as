@@ -16,6 +16,7 @@ package object.CreateGameObject
 	import flash.utils.ByteArray;
 	
 	import object.CreateGameObject.ComponentPanel;
+	import object.CreateGameObject.CreateGameScoreBoard;
 	import object.CreateGameObject.GridPanel;
 	import object.CreateGameObject.ObstacleObj;
 	import object.CreateGameObject.ObstaclePanel;
@@ -38,12 +39,16 @@ package object.CreateGameObject
 		private var _obstaclePanel  :ObstaclePanel;
 		private var _gridPanel      :GridPanel;
 		private var _componentPanel :ComponentPanel;
-		private var _com				:ServerClientCom;
+		private var _scoreBoard		:CreateGameScoreBoard;
+		private var _com			:ServerClientCom;
+		
+		private var _data		:Object;
 		
 		//button
 		private var _saveBtn 		 :Button;
 		private var _previewBtn     :Button;
 		private var _publishBtn     :Button;
+		
 		
 		//need to pass in here the user 
 		//defined image and question list
@@ -62,11 +67,13 @@ package object.CreateGameObject
 			
 			this._com					= new ServerClientCom();
 			
+			this._scoreBoard			= new CreateGameScoreBoard();
+			
 			//obstacle panel
 			this._obstaclePanel        	= new ObstaclePanel(DRAG_FORMAT);
 			this._obstaclePanel.width  	= 255;
-			this._obstaclePanel.height 	= 420;
-			this._obstaclePanel.x      	= Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x; 
+			this._obstaclePanel.height 	= 190;
+			this._obstaclePanel.x      	= Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x + 10; 
 			this._obstaclePanel.y      	= Constant.INFOBOARD_POS.y + Constant.OBSBOARD_POS.y;
 			
 			//index grid panel
@@ -80,18 +87,18 @@ package object.CreateGameObject
 			this._componentPanel      	= new ComponentPanel();
 			this._componentPanel.width 	= 440;
 			this._componentPanel.height	= 600;
-			this._componentPanel.x 		= 500;
-			this._componentPanel.y		= 30;
+			this._componentPanel.x 		= Constant.INFOBOARD_POS.x;
+			this._componentPanel.y		= 0;
 	
 			//background
 			var background:Image 		= new Image(Assets.getAtlas(Constant.LOADING_SCREEN).getTexture('background'));
 			var gridFrame :Image      	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.FRAME_IMG));	
-			var rightBox  :Image      	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.INFOBOARD_IMG));
+			var rightBox  :Image      	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.INFO_BOARD));
 			
 			gridFrame.x                 = Constant.FRAME_CREATE_POS.x;
 			gridFrame.y 				= Constant.FRAME_CREATE_POS.y;
 			rightBox.x   				= Constant.INFOBOARD_POS.x;
-			rightBox.y 					= Constant.INFOBOARD_POS.y;
+			rightBox.y 					= 0;
 			
 			//button
 			this._saveBtn   		    = new Button();
@@ -115,8 +122,8 @@ package object.CreateGameObject
 			this._publishBtn.width		= 130;
 			this._publishBtn.label		= 'Publish';
 			
-			
 			this.addChild(background);
+			this.addChild(_scoreBoard);
 			this.addChild(gridFrame);
 			this.addChild(rightBox);
 			this.addChild(this._saveBtn);
@@ -127,6 +134,8 @@ package object.CreateGameObject
 			this.addChild(this._gridPanel);
 			
 			_saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
+			_previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
+			_publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
  		}
 		
 		private function onSaveBtnTrigger(event:Event):void
@@ -161,6 +170,25 @@ package object.CreateGameObject
 			//send to server this information whenever the 
 			//save game button is clicked, all the information will be stored on server
 			this._com.saveUserGameCreation(dataReturn);
+		}
+		
+		private function onPreviewBtnTrigger(event:Event):void
+		{
+			var scoreBoard		:Array;
+			var player			:Array;
+			var enemy			:Array;
+			
+			var maxCoin 		:int = _scoreBoard.maxCoin;
+			var maxLife			:int = _scoreBoard.maxLife;
+			var minStart		:int = _scoreBoard.minStart;
+			var secStart		:int = _scoreBoard.secStart;
+			
+			scoreBoard = new Array(maxCoin, maxLife, minStart, secStart);
+		}
+		
+		private function onPublishBtnTrigger(event:Event):void
+		{
+			
 		}
 		
 		//change the xindex and yindex inside the 2D array
