@@ -47,8 +47,8 @@ package screen
 			this.addChild(_textureLoader);
 			
 			var qsImgList:Object = _serCliObj.retrieveQuestionAndImageListFromServer();
-			
-			_textureLoader.loadUserTexture(getImgList(qsImgList));	
+		
+			_textureLoader.loadUserTexture(this.getImgList(qsImgList), this.getQsList(qsImgList));	
 		}
 		
 		private function onRemoveFromStage(e:Event):void{
@@ -60,12 +60,14 @@ package screen
 		
 		//process to return the image list from data from server
 		private function getImgList(qsImgList : Object):Array{
-			
-			
-		/*	if(qsImgList != {}){
+
+			if(qsImgList != {}){
 				
-	
-			}*/
+				if(qsImgList.image){
+					
+					return qsImgList.image;
+				}
+			}
 			
 			return new Array();
 		}

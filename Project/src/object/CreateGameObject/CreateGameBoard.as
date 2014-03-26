@@ -40,7 +40,7 @@ package object.CreateGameObject
 		private var _gridPanel      :GridPanel;
 		private var _componentPanel :ComponentPanel;
 		private var _scoreBoard		:CreateGameScoreBoard;
-		private var _com			:ServerClientCom;
+		private var _com				:ServerClientCom;
 		
 		private var _data		:Object;
 		
@@ -71,7 +71,7 @@ package object.CreateGameObject
 			
 			//obstacle panel
 			this._obstaclePanel        	= new ObstaclePanel(DRAG_FORMAT);
-			this._obstaclePanel.width  	= 255;
+			this._obstaclePanel.width  	= 216;
 			this._obstaclePanel.height 	= 190;
 			this._obstaclePanel.x      	= Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x + 10; 
 			this._obstaclePanel.y      	= Constant.INFOBOARD_POS.y + Constant.OBSBOARD_POS.y;

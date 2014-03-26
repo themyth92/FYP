@@ -28,19 +28,31 @@ package controller.TextureController
 		private var _fileIndex    : uint;
 		private var _numberOfFile : uint;
 		private var _imgList      : Array;
+		private var _questionList : Array;
+		
+		//keep track of the index of the image loaded
+		//to be either screen or obstacle
+		private var _screenTexIndex	:uint = 0;
+		private var _obstaclesTexIndex : uint = 0;
 		
 		public function TextureLoaderControl()
 		{
 			_fileIndex    = 0;
 			_numberOfFile = 0;
 			_imgList      = new Array();
+			_questionList = new Array();
 		}
 		
 		//the image list will be passed here
 		//retrieve from the question and img list from server
-		public function loadUserTexture(imgList:Array):void{
+		public function loadUserTexture(imgList:Array, questionList:Array):void{
 			
-			_imgList = imgList;
+			_imgList 		= imgList;
+			_questionList 	= questionList; 
+			
+			if(_questionList != null && _questionList.length > 0){
+				this.loadAllQuestion();	
+			}
 			
 			if(_imgList != null && _imgList.length > 0){
 				
@@ -61,7 +73,7 @@ package controller.TextureController
 					
 					_loader  				 = new Loader();
 					
-					_loader.load(new URLRequest('http://ec2-54-254-145-192.ap-southeast-1.compute.amazonaws.com:3000/uploads/' + _imgList[_fileIndex].address));
+					_loader.load(new URLRequest('http://themyth92.com:3000/uploads/' + _imgList[_fileIndex].address));
 								
 					_loader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onLoadProgress);
 					_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
@@ -88,14 +100,31 @@ package controller.TextureController
 			var texture: Texture = Texture.fromBitmap(bitmap);
 			
 			try{
-				var type  : String = _imgList[_fileIndex].title;
-				var title : String = _imgList[_fileIndex].type;
+				var title  		: String = _imgList[_fileIndex].title;
+				var type 		: Number;
+				var address 	: String = _imgList[_fileIndex].address;
+				
+				if(_imgList[_fileIndex].type == 'Obstacles'){
+					Assets.storeUserTexture(texture, title, 0, address, this._obstaclesTexIndex);
+					this._obstaclesTexIndex ++;
+				}
+				else{
+					if(_imgList[_fileIndex].type == 'Rewards'){
+						Assets.storeUserTexture(texture, title, 1, address, this._obstaclesTexIndex);
+						this._obstaclesTexIndex ++;
+					}	
+					else
+						if(_imgList[_fileIndex].type == 'Screen'){
+							Assets.storeUserScreenTexture(texture, 2, title, address, this._screenTexIndex);
+							this._screenTexIndex ++;
+						}
+				}		
 			}
 			catch(error:Error){
 				throw(error);
 			}
 			
-			Assets.storeUserTexture(texture, title, type);
+			
 			
 			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
 			_loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
@@ -108,6 +137,25 @@ package controller.TextureController
 			else{
 				//dispatch event here to change the screen
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.MAIN_SCREEN}, true));	
+			}
+		}
+		
+		//load all user defined question 
+		//and save it into assets class
+		private function loadAllQuestion():void{
+			
+			for(var i :uint = 0 ; i < this._questionList.length ; i++){
+				
+				if(	this._questionList[i].title && 
+				   	this._questionList[i].select && 
+					this._questionList[i].hint && 
+					this._questionList[i].answers){
+					
+					Assets.storeUserQuestion(this._questionList[i].title, 
+											 this._questionList[i].select, 
+											 this._questionList[i].answers, 
+											 this._questionList[i].hint, i); 
+				}
 			}
 		}
 	}

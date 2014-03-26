@@ -16,7 +16,7 @@ package object.CreateGameObject
 		private var _start2        	:Boolean;
 		private var _end           	:Boolean;
 		private var _walkable      	:Boolean;
-		private var _visited      	:Boolean;
+		private var _visited      		:Boolean;
 		
 		//check whether the grid has object or not
 		private var _state         	:Number;

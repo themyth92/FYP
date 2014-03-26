@@ -27,7 +27,11 @@ package object.CreateGameObject
 		//useful for publishing the game 
 		private var _textureAddress:String;
 		
-		public function ObstacleObj(texture: Texture, isUserDef: Boolean, index:Number):void
+		public function ObstacleObj(texture: Texture, 
+									  isUserDef: Boolean, 
+									  index:Number, 
+									  textureAddres:String = null,
+									  obstacleType:Number = 0):void
 		{
 			super(texture);
 			
@@ -36,9 +40,24 @@ package object.CreateGameObject
 			
 			//assign to dectect user defined or available texture
 			this._isUserDefText 	= isUserDef;
+			
 			this._textureIndex		= index;
+			
+			//the address of texture
+			//will be used for user defined texture
+			this._textureAddress	= textureAddres;
 		}	
 		
+		public function get textureAddress():String
+		{
+			return _textureAddress;
+		}
+
+		public function set textureAddress(value:String):void
+		{
+			_textureAddress = value;
+		}
+
 		public function get textureIndex():Number
 		{
 			return _textureIndex;

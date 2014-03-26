@@ -88,7 +88,9 @@ package assets
 		//all the texture that loaded from server will be store in this variable
 		private static var _userTexture       :Array      = new Array();
 		//used to store all the user data return from server
-		private static var _userData          :Object     = {};
+		private static var _userQuestion      :Array	    = new Array();
+		//used to store all the user screen image
+		private static var _userScreenTexture	:Array		= new Array();
 		
 		/**======================================
 			@ get texture from a single string
@@ -299,16 +301,18 @@ package assets
 		   all the data from server will be stored and save here
 		*/
 		//store the texture of user defined from server with this function
-		public static function storeUserTexture(texture:Texture, title : String, type : String):void{
+		public static function storeUserTexture(texture:Texture, title : String, type : Number, address : String, textureIndex : Number):void{
 			
 			//check if texture != null
-			if(texture != null && title != null && type != null){
+			if(texture != null && title != null){
 				try{
 					var obj : Object = {};
 					
-					obj.title = title;
-					obj.type  = type;
-					obj.img   = texture;
+					obj.title 			= title;
+					obj.type  			= type;
+					obj.texture   		= texture;
+					obj.address 		= address;
+					obj.textureIndex	= textureIndex;
 					
 					_userTexture.push(obj);
 				}
@@ -324,7 +328,7 @@ package assets
 		}
 		
 		//store the user question
-		public static function storeUserQuestion(title : String, select : String, answers : Array):void{
+		public static function storeUserQuestion(title : String, select : String, answers : Array, hint:String, id:Number):void{
 			
 			if(title != null && select != null && answers != null){
 				
@@ -334,9 +338,10 @@ package assets
 					obj.title   = title;
 					obj.select  = select;
 					obj.answers = answers;
+					obj.hint    = hint;
+					obj.id 		= id;
 					
-					_userData.question = new Array();
-					_userData.question.push(obj);
+					_userQuestion.push(obj);
 				}
 				catch(error:Error){
 					throw(error);
@@ -345,7 +350,33 @@ package assets
 		}
 		
 		public static function getUserQuestion():Array{
-			return _userData.question;
+			return _userQuestion;
+		}
+		
+		public static function storeUserScreenTexture(texture: Texture, type : Number ,title : String, address: String, textureIndex : Number):void
+		{
+			
+			if(title != null && texture != null && address != null){
+				
+				try{
+					var obj : Object = {};
+					
+					obj.title 			= title;
+					obj.type  			= type;
+					obj.texture   		= texture;
+					obj.address 		= address;
+					obj.textureIndex	= textureIndex;
+					
+					_userScreenTexture.push(obj);
+				}
+				catch(error: Error){
+					throw(error);
+				}
+			}
+		}
+		
+		public static function getUserScreenTexture():Array{
+			return _userScreenTexture;
 		}
 	}
 }

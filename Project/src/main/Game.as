@@ -37,8 +37,6 @@ package main
 		private var _storyStage5		:StoryStage5;
 		
 		private var _gameOver			:GameOverScreen;
-
-		private var _com   :ServerClientCom
 		
 		public function Game()
 		{
@@ -52,8 +50,6 @@ package main
 			_storyStage4		= new StoryStage4();
 			_storyStage5		= new StoryStage5();
 			_gameOver			= new GameOverScreen();
-
-			_com                = new ServerClientCom();	
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}

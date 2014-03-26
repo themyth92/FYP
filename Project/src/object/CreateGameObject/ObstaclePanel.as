@@ -5,6 +5,7 @@
 package object.CreateGameObject
 {
 	import assets.Assets;
+	
 	import constant.Constant;
 	
 	import feathers.controls.ScrollContainer;
@@ -18,11 +19,11 @@ package object.CreateGameObject
 	
 	import starling.display.DisplayObject;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.display.Quad;
 	
 	public class ObstaclePanel extends ScrollContainer implements IDragSource
 	{
@@ -52,12 +53,8 @@ package object.CreateGameObject
 			//layout default value from feathers
 			const layout:TiledRowsLayout  		= new TiledRowsLayout();
 			layout.paging                		= TiledRowsLayout.PAGING_NONE;
-			layout.horizontalGap            	= 2;
-			layout.verticalGap              	= 2;
-			layout.paddingTop               	= 0;
-			layout.paddingBottom            	= 0;
-			layout.paddingLeft              	= 0;
-			layout.paddingRight            	 	= 0;
+			layout.gap							= 20;
+			layout.padding						= 20;
 			layout.horizontalAlign         	 	= TiledRowsLayout.HORIZONTAL_ALIGN_LEFT;
 			layout.verticalAlign            	= TiledRowsLayout.VERTICAL_ALIGN_TOP;
 			layout.tileHorizontalAlign  	    = TiledRowsLayout.TILE_HORIZONTAL_ALIGN_LEFT;
@@ -78,14 +75,23 @@ package object.CreateGameObject
 			for(var i:uint = 0 ; i < 4 ; i++){
 				
 				var obj:ObstacleObj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + '0' + i), false, i);
-				obj.x 			 	= 0;
-				obj.y 			 	= i*50;
-				obj.obstacleType 	= 0; 
 				
 				this._obstacleObjects.push(obj);
 				obj = null;
-				
 				this.addChild(this._obstacleObjects[i]);
+			}
+			
+			for(var j:uint = 0 ; j < Assets.getUserTexture().length ; j++){
+				
+				obj					= new ObstacleObj(Assets.getUserTexture()[j].texture, true, 
+													   Assets.getUserTexture()[j].textureIndex, 
+													   Assets.getUserTexture()[j].address, 
+													   Assets.getUserTexture()[j].type);
+
+				this._obstacleObjects.push(obj);
+				obj 				= null;
+				this.addChild(this._obstacleObjects[i]);
+				i++;
 			}
 		}
 		
