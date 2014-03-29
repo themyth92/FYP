@@ -6,11 +6,12 @@ package main
 	
 	import gameData.GameData;
 	
-	import screen.ChapterOneScreen;
 	import screen.CreateScreen;
 	import screen.GameOverScreen;
 	import screen.LoadingScreen;
 	import screen.MainScreen;
+	import screen.PreviewLoader;
+	import screen.PreviewScreen;
 	import screen.StoryStage1;
 	import screen.StoryStage2;
 	import screen.StoryStage3;
@@ -25,17 +26,25 @@ package main
 	
 	public class Game extends Sprite
 	{
-		private var _loadingScreen     :LoadingScreen;
-		private var _chapterOneScreen  :screen.ChapterOneScreen;
-		private var _mainScreen		:MainScreen;
+		//Different screens in the game
+		private var _loadingScreen     	:LoadingScreen;
+		
+		//Selection screens
+		private var _mainScreen			:MainScreen;
+		
+		//Create game screen
 		private var _createScreen	    :CreateScreen;
+		private var _previewLoader		:PreviewLoader;
+		private var _previewScreen		:PreviewScreen;
+		
+		//Story mode screens
 		private var _storyStage1		:StoryStage1;
-
 		private var _storyStage2		:StoryStage2;
 		private var _storyStage3		:StoryStage3;
 		private var _storyStage4		:StoryStage4;
 		private var _storyStage5		:StoryStage5;
 		
+		//Gameover screen
 		private var _gameOver			:GameOverScreen;
 		
 		public function Game()
@@ -50,6 +59,8 @@ package main
 			_storyStage4		= new StoryStage4();
 			_storyStage5		= new StoryStage5();
 			_gameOver			= new GameOverScreen();
+			_previewLoader		= new PreviewLoader();
+			_previewScreen		= new PreviewScreen();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
@@ -147,7 +158,13 @@ package main
 							this.removeChild(_storyStage4);
 							this.removeChild(_storyStage5);
 							this.addChild(_gameOver);
-							
+						case Constant.PREVIEW_LOADER:
+							this.removeChild(_createScreen);
+							this.addChild(_previewLoader);
+							break;
+						case Constant.PREVIEW_SCREEN:
+							this.removeChild(_previewLoader);
+							this.addChild(_previewScreen);
 						default:
 							break;
 					}

@@ -4,7 +4,7 @@ package screen
 	
 	import constant.Constant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import feathers.controls.List;
 	import feathers.controls.TextInput;
@@ -16,7 +16,6 @@ package screen
 	import object.inGameObject.Console;
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.IndexBoard;
-	import object.inGameObject.ObstaclesBoard;
 	import object.inGameObject.ScoreBoard;
 	
 	import starling.display.Button;
@@ -32,7 +31,6 @@ package screen
 		private var _console		:Console;
 		private var _dialogue		:Dialogue;
 		private var _indexBoard		:IndexBoard;
-		private var _obstaclesBoard	:ObstaclesBoard;
 		private var _scoreBoard		:CreateGameScoreBoard;
 		
 		//Display Texture
@@ -53,7 +51,7 @@ package screen
 		private var _isFirstTime	:Boolean = true;
 		
 		//Controller
-		private var _controller		:Controller;
+		private var _controller		:MainController;
 		
 		//Player characters info
 		private var _playerPosInput		:TextInput;
@@ -254,13 +252,9 @@ package screen
 			_scoreBoard.x	= 0;
 			_scoreBoard.y	= 0;
 			
-			_obstaclesBoard.x = Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x;
-			_obstaclesBoard.y = Constant.INFOBOARD_POS.y + Constant.OBSBOARD_POS.y;
-			
 			this.addChild(_console);
 			this.addChild(_dialogue);
 			this.addChild(_indexBoard);
-			this.addChild(_obstaclesBoard);
 			this.addChild(_scoreBoard);
 		}
 		

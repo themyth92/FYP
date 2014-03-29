@@ -43,8 +43,8 @@ package constant
 		public static const STAGE2_INSTR_SHOW_CONSOLE	:Number = 3;
 		public static const STAGE2_INSTR_SHOW_MONSTER	:Number = 2;
 		public static const STAGE2_CORRECT_CONSOLE		:String	= "create(brick,57)";
-		public static const STAGE2_ERROR_GUIDER1			:String	= "Don't mess around. We don't have time. Type in 'Create(brick,57)' quickly.";
-		public static const STAGE2_ERROR_GUIDER2			:String	= "Almost there, check again. You may make a mistake.";
+		public static const STAGE2_ERROR_GUIDER1		:String	= "Don't mess around. We don't have time. Type in 'Create(brick,57)' quickly.";
+		public static const STAGE2_ERROR_GUIDER2		:String	= "Almost there, check again. You may make a mistake.";
 		public static const STAGE2_ENEMY_POS			:uint = 68;
 		public static const STAGE2_INSTR_ARROW_POS		:Point = new Point();
 		public static const STAGE2_SHOW_ARROW_INDEX		:Number = 3;
@@ -111,7 +111,7 @@ package constant
 		public static const STAGE3_ENEMY1_END	:uint   = 40;
 		public static const STAGE3_ENEMY2_POS	:uint 	= 62;
 		public static const STAGE3_ENEMY2_END	:uint   = 60;
-		public static const STAGE3_ENEMY_TYPE	:String   = 'patrolEnemy';
+		public static const STAGE3_ENEMY_TYPE	:String   = 'Patrol Enemy';
 		public static const STAGE3_ENEMY_SPD	:Number = 0.05;
 		public static const STAGE3_ENEMY_IMG	:Number = 1;
 		
@@ -153,7 +153,7 @@ package constant
 		
 		public static const STAGE4_PLAYER_POS	:uint	= 46;
 		public static const STAGE4_ENEMY_POS	:uint	= 12;
-		public static const STAGE4_ENEMY_TYPE	:String = 'patrolEnemy';
+		public static const STAGE4_ENEMY_TYPE	:String = 'Patrol Enemy';
 		public static const STAGE4_ENEMY_SPD	:Number = 0.05;
 		public static const STAGE4_ENEMY_IMG	:Number = 3;
 		public static const STAGE4_ENEMY_PATH   :Array =  new Array (13,24,35,46,57,58,59,70,81,82,83,72,61,50,39,40,41,42,43,44,55,66,77,76,87,98);

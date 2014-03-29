@@ -7,12 +7,13 @@
 package object.inGameObject
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.ChapterOneConstant;
 	import constant.Constant;
 	import constant.StoryConstant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import feathers.controls.Button;
 	import feathers.controls.Callout;
@@ -66,8 +67,8 @@ package object.inGameObject
 		private var _enemyList		:Vector.<Enemies>;
 		private var _gotFollow		:Boolean = false;
 		private var _gotPatrol		:Boolean = false;
-		private var _hero	       : Hero;
-		private var _controller	   : Controller;
+		private var _hero	       : Player;
+		private var _controller	   : MainController;
 		private var _heroIndex	   : uint;
 		private var _dragType      : String;
 		private var _testImg       : Image;
@@ -92,14 +93,13 @@ package object.inGameObject
 		private var _distanceToEnd2 : Number;
 		
 		/** Constructor **/
-		public function IndexBoard(controller:Controller)
+		public function IndexBoard(controller:MainController)
 		{
 			this._controller   = controller;
-			this._hero         = new Hero(_controller);
+			this._hero         = new Player(_controller);
 	
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
-			this._touchArea.addEventListener(TouchEvent.TOUCH, onTouch);
 		}
 		
 		/** Get Set **/
@@ -128,7 +128,7 @@ package object.inGameObject
 			return _patternIndex;
 		}
 		
-		public function get hero():Hero
+		public function get hero():Player
 		{
 			return _hero;
 		}
@@ -142,8 +142,11 @@ package object.inGameObject
 		{
 			return _enemy2;
 		}
-
 		
+		public function set screen(value:String):void{
+			this._screen = value;
+		}
+
 		/**====================================================================
 		 * |	                     EVENT HANDLERS			                  | *
 		 * ====================================================================**/
@@ -286,6 +289,14 @@ package object.inGameObject
 					pos			= StoryConstant.STAGE5_PLAYER_POS;
 					patternToStage(collection,index,type,pos);
 					break;
+				case Constant.PREVIEW_SCREEN:
+					collection = PreviewGameInfo._obsCollection;
+					index = PreviewGameInfo._obsIndex;
+					type = PreviewGameInfo._obsType;
+					pos = PreviewGameInfo._playerPos;
+					patternToStage(collection,index,type,pos);
+					break;
+					
 			}
 		}
 		
@@ -391,7 +402,6 @@ package object.inGameObject
 		private function onRemoveFromStage	(e:Event):void
 		{
 			this.dispose();
-			this._touchArea.removeEventListener(TouchEvent.TOUCH, onTouch);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}

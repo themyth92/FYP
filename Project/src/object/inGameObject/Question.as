@@ -5,7 +5,7 @@ package object.inGameObject
 	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import feathers.controls.Button;
 	import feathers.controls.Header;
@@ -47,9 +47,9 @@ package object.inGameObject
 		private var _isPoppedUp		:Boolean = false;
 		private var _isCorrect		:Boolean;
 		private var _mcqLayout		:VerticalLayout;
-		private var _controller		:Controller;
+		private var _controller		:MainController;
 		
-		public function Question(controller:Controller, type:String)
+		public function Question(controller:MainController, type:String)
 		{
 			this._controller = controller;
 			this._type = type;

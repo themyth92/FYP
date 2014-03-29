@@ -12,7 +12,7 @@ package object.inGameObject
 	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import flash.ui.Keyboard;
 	
@@ -25,12 +25,12 @@ package object.inGameObject
 	import starling.filters.BlurFilter;
 	import starling.filters.ColorMatrixFilter;
 
-	public class Hero extends Sprite
+	public class Player extends Sprite
 	{	
 		/*----------------------------
 		|	      Hero constant      |
 		-----------------------------*/
-		private var _controller  :Controller;
+		private var _controller  :MainController;
 		private var _normalStand   :Array;
 		private var _normalRun     :Array;
 		private var _hitStand	 :Array;
@@ -59,7 +59,7 @@ package object.inGameObject
 		-----------------------------*/
 		private var _state					 :String = ChapterOneConstant.INSTRUCTING_STATE;
 		
-		public function Hero(controller:Controller)
+		public function Player(controller:MainController)
 		{	
 			this._controller  = controller;
 			this._normalStand   = new Array();
@@ -230,7 +230,7 @@ package object.inGameObject
 			{
 				_isHit = true;
 				if(_currentLife > 0)
-					if(_counter >= 60)
+					if(_counter >= 30)
 					{
 						_currentLife --;
 						_counter    = 0;
