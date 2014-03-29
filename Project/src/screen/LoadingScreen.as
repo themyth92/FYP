@@ -61,7 +61,7 @@ package screen
 		//process to return the image list from data from server
 		private function getImgList(qsImgList : Object):Array{
 
-			if(qsImgList != {}){
+			if(qsImgList != {} && qsImgList != null){
 				
 				if(qsImgList.image){
 					
@@ -75,7 +75,7 @@ package screen
 		//process to return the question list from data from server
 		private function getQsList(qsImgList : Object):Array{
 			
-			if(qsImgList != {}){
+			if(qsImgList != {} && qsImgList != null){
 				
 				if(qsImgList.question){
 					

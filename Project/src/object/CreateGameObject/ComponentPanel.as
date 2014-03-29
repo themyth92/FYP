@@ -8,6 +8,7 @@ package object.CreateGameObject
 	import feathers.controls.Button;
 	import feathers.controls.Callout;
 	import feathers.controls.Label;
+	import feathers.controls.List;
 	import feathers.controls.PickerList;
 	import feathers.controls.ScrollText;
 	import feathers.controls.TextInput;
@@ -57,6 +58,9 @@ package object.CreateGameObject
 		private var _enemy2InputSpeed	:TextInput;
 		private var _enemy2InputImage	:PickerList;
 		private var _message:Label;		
+		
+		//screen choose box
+		private var _screenSelect 		:PickerList;
 		
 		public function ComponentPanel()
 		{
@@ -247,6 +251,42 @@ package object.CreateGameObject
 			this._enemy2InputPos.maxChars 	= 2;
 			this._enemy2InputSpeed.maxChars = 5;
 			
+			//screen select choice
+			this._screenSelect				= new PickerList();
+			this._screenSelect.prompt		= 'Screen Select';
+			this._screenSelect.typicalItem	= 'Screen Select';
+			//list all the user defined screen
+			//and add in title
+			
+			
+			var screenList:ListCollection	= new ListCollection();
+			for(i = 0 ; i < Assets.getUserScreenTexture().length ;i++){
+				screenList.push({text : Assets.getUserScreenTexture()[i].title});
+			}
+			
+			this._screenSelect.dataProvider 	= screenList;
+			this._screenSelect.selectedIndex 	= -1;
+			
+			this._screenSelect.typicalItem 		= { text: "Screen Select" };
+			this._screenSelect.labelField 		= "text";
+			
+			this._screenSelect.listFactory = function():List
+			{
+				var list:List = new List();
+				
+				list.typicalItem = { text: "Screen Select" };
+				list.itemRendererFactory = function():IListItemRenderer
+				{
+					var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
+					renderer.labelField = "text";
+					return renderer;
+				};
+				return list;
+			};
+			
+			this._screenSelect.y				= 50;
+			
+			
 			/* Add Information Box to display */
 			this.addChild(this._titleInput);
 			this.addChild(this._playerPosInput);
@@ -259,6 +299,7 @@ package object.CreateGameObject
 			this.addChild(this._enemy2InputPos);
 			this.addChild(this._enemy2InputSpeed);
 			this.addChild(this._enemy2InputImage);
+			this.addChild(this._screenSelect);
 		}
 		
 		private function onEnemy2SpeedFocus(event:Event):void
