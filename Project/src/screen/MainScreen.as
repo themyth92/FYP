@@ -63,7 +63,7 @@ package screen
 			}
 			else if(buttonClicked == _playButton)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_1, needSaveState : true}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_5, needSaveState : true}, true));
 				this.removeEventListener(Event.TRIGGERED, onMainClick);
 			}
 			else if(buttonClicked == _aboutButton)

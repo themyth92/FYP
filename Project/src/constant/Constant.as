@@ -24,6 +24,8 @@ package constant
 		public static const STORY_SCREEN_4				:String	= 'storyStage4';
 		public static const STORY_SCREEN_5				:String	= 'storyStage5';
 		public static const GAME_OVER_SCREEN			:String	= 'gameOver';
+		public static const PREVIEW_SCREEN				:String = 'previewScreen';
+		public static const PREVIEW_LOADER				:String = 'previewLoader';
 		
 		/**====================================================================
 		 * |	                  SPRITESHEET NAME   			              | *
@@ -130,5 +132,23 @@ package constant
 		 * ====================================================================**/
 		public static const SHORT_QUESTION	:String	= "shortQns";
 		public static const MCQ_QUESTION 	:String = "mcqQns";
+		
+		/**====================================================================
+		 * |  		                  	STATES   			             	  | *
+		 * ====================================================================**/
+		public static const INSTRUCTING_STATE		:String					= 'INSTRUCTING';
+		public static const EDITTING_STATE  		:String					= 'EDITTING';
+		public static const PLAYING_STATE			:String					= 'PLAYING';
+		public static const ENDING_STATE			:String					= 'ENDING';
+		
+		/**====================================================================
+		 * |  		                  	SIGNALS   			             	  | *
+		 * ====================================================================**/
+		public static const DIALOG_CHANGE	: String = "nextDialog";
+		public static const BUTTON_PRESS	: String = "buttonPressed";
+		public static const CONSOLE_ENTER	: String = "consoleEnterPressed";
+		public static const STATE_CHANGE	: String = "stateChange";
+		public static const	ERROR_NOTIFY1	: String = "errorNotify1";
+		public static const	ERROR_NOTIFY2	: String = "errorNotify2";
 	}
 }

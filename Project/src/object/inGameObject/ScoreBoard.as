@@ -1,3 +1,9 @@
+/*****************************************************
+ * ================================================= *
+ *                 SCOREBOARD OBJECT                 *
+ * ================================================= * 
+ *****************************************************/
+
 package object.inGameObject
 {
 	import assets.Assets;
@@ -6,7 +12,7 @@ package object.inGameObject
 	import constant.Constant;
 	import constant.StoryConstant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import feathers.controls.Alert;
 	import feathers.controls.Button;
@@ -25,65 +31,58 @@ package object.inGameObject
 	
 	import mx.utils.StringUtil;
 	
-	import screen.StoryStage1;
-	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
-	import starling.events.EnterFrameEvent;
 	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	
 	public class ScoreBoard extends Sprite
 	{ 
+		/* CONSTANT */
 		private static const COIN_BOARD_POS : Point = new Point(60, 10);
 		private static const COIN_IMG_POS	: Point	= new Point(40, 8);
 		private static const LIFE_BOARD_POS : Point	= new Point(185,10);
 		private static const LIFE_IMG_POS	: Point	= new Point(150, 8);
 		private static const TIME_BOARD_POS : Point = new Point(300,10);
 		private static const TIME_IMG_POS	: Point	= new Point(265, 8);
-		private static const END_TIME		: Array = new Array("00","00");
-		//STATES VARIABLE
-		private var _state				  :String = ChapterOneConstant.INSTRUCTING_STATE;
+		private static const END_TIME		: String= "00 : 00";
 		
-		private var board : TextInput = new TextInput();
-
-		private var _comfirmQuad : Quad;
+		/* CONTROL VARIBALES */
+		private var _state				  	: String = ChapterOneConstant.INSTRUCTING_STATE;
+		private var _panel					: Panel;
+		private var _controller	    		: MainController;
+		private var _startPlaying			: Boolean = true;
+		private var _isPoppedUp				: Boolean;
+		private var _isOutOfTime			: Boolean = false;
+		private var _screen					: String;
+		private var _isLifeEnabled			: Boolean = false;
+		private var _isTimeEnabled			: Boolean = false;
 		
 		/* Information Text */
-		private var _coinText	: TextField;
-		private var _lifeText	: TextField;
-		private var _timeText	: TextField;
+		private var _coinText				: TextField;
+		private var _lifeText				: TextField;
+		private var _timeText				: TextField;
 		
 		/* Image */
-		private var _coinIMG	: Image;
-		private var _lifeIMG	: starling.display.Button;
-		private var _timeIMG	: starling.display.Button;
+		private var _coinIMG				: Image;
+		private var _lifeIMG				: starling.display.Button;
+		private var _timeIMG				: starling.display.Button;
 		
-		private var _maxLife 	:Number = 1;
-		private var _maxCoin	:Number = 0;
-		private var _currLife	:Number = 1;
-		private var _currCoin	:Number = 0;
-		private var _panel		:Panel;
-		private var _controller	    : Controller;
+		/* Stats */
+		private var _maxLife 				: Number = 1;
+		private var _maxCoin				: Number = 0;
+		private var _currLife				: Number = 1;
+		private var _currCoin				: Number = 0;
 		
 		/* Time variable */
-		private var _markTime		: int = 0;
-		private var _minutesOn		: int = 1;
-		private var _secondsOn		: int = 5;
+		private var _markTime				: int = 0;
+		private var _minutesOn				: int;
+		private var _secondsOn				: int;
 		
-		private var _startPlaying	: Boolean = true;
-		private var _isPoppedUp		: Boolean;
-		private var _isOutOfTime	: Boolean = false;
-		private var _screen			: String;
-		private var _isLifeEnabled	: Boolean = false;
-		private var _isTimeEnabled	: Boolean = false;
-		
-		public function ScoreBoard(controller:Controller)
+
+		public function ScoreBoard(controller:MainController)
 		{
 			this._controller    = controller;
 			
@@ -92,31 +91,48 @@ package object.inGameObject
 			this.addEventListener(Event.REMOVED_FROM_STAGE 		, onRemoveFromStage);
 		}
 		
-		public function set isLifeEnabled(value:Boolean):void
-		{
+		/**====================================================================
+		 * |	                     GET-SET FUNCTIONS		                  | *
+		 * ====================================================================**/
+		public function set isLifeEnabled(value:Boolean):void{
 			this._isLifeEnabled = value;
 		}
 		
-		public function set isTimeEnabled(value:Boolean):void
-		{
+		public function set isTimeEnabled(value:Boolean):void{
 			this._isTimeEnabled = value;
 		}
 		
-		private function onEnterFrame(event:Event):void
-		{
-			_coinText.text = this._currCoin + "/" + this._maxCoin;
-			_lifeText.text = this._currLife + "/" + this._maxLife;
-			updateTimeTracker();
+		public function set currCoin(value:Number):void{
+			this._currCoin = value;
 		}
 		
+		public function set maxCoin(value:Number):void{
+			this._maxCoin = value;
+		}
+		
+		public function set state(value:String):void{
+			this._state = value;
+		}
+		
+		public function set currLife(value:Number):void{
+			this._currLife = value;
+		}
+		
+		public function get maxLife():Number{
+			return this._maxLife;	
+		}
+		
+		public function set screen(value:String):void{
+			this._screen = value;
+		}
+		
+		/**====================================================================
+		 * |	                     EVENT HANDLERS			                  | *
+		 * ====================================================================**/
 		private function onAddedToStage(event:Event):void
 		{
-			this._screen = this._controller.screen;
-			new MetalWorksMobileTheme();
 			var displayText :Array = setupScoreBoardText();
-
-			//new MetalWorksMobileTheme();
-
+			
 			this._coinText 	 = new TextField(100, 30, displayText[0], "Grobold", 24, 0xffffff, false);
 			this._coinText.x = COIN_BOARD_POS.x;
 			this._coinText.y = COIN_BOARD_POS.y;			
@@ -128,9 +144,7 @@ package object.inGameObject
 			this._timeText 	 = new TextField(100, 30, displayText[2], "Grobold", 24, 0xffffff, false);
 			this._timeText.x = TIME_BOARD_POS.x;
 			this._timeText.y = TIME_BOARD_POS.y;
-			
-			setupScoreBoardText();
-			
+					
 			this._coinIMG 	 = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.COIN_IMG));
 			this._coinIMG.x  = COIN_IMG_POS.x;
 			this._coinIMG.y  = COIN_IMG_POS.y;
@@ -150,42 +164,20 @@ package object.inGameObject
 			this.addChild(this._timeIMG);
 			this.addChild(this._lifeIMG);
 				
-			this._timeIMG.addEventListener(Event.TRIGGERED, onTimeClicked);
-			this._lifeIMG.addEventListener(Event.TRIGGERED, onLifeClicked);
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this._timeIMG.addEventListener	(Event.TRIGGERED, 		onTimeClicked);
+			this._lifeIMG.addEventListener	(Event.TRIGGERED, 		onLifeClicked);
+			this.removeEventListener		(Event.ADDED_TO_STAGE, 	onAddedToStage);
 		}
 		
+		private function onEnterFrame(event:Event):void{
+			updateTimeText();
+		}
+		
+		//Setup starting text for scoreboard display
 		private function setupScoreBoardText():Array
 		{
 			var result :Array;
 			switch(this._screen){
-				case Constant.STORY_SCREEN_1:
-					result = new Array("0/0", "1/1", "01 : 30");
-					_maxCoin	= 0;
-					_maxLife 	= 1;
-					_currLife	= _maxLife;
-					_currCoin 	= _maxCoin;
-					_minutesOn 	= 1;
-					_secondsOn  = 30;
-					break;
-				case Constant.STORY_SCREEN_2:
-					result = new Array("0/0", "1/1", "01 : 30");
-					_maxCoin	= 0;
-					_maxLife 	= 1;
-					_currLife	= _maxLife;
-					_currCoin 	= _maxCoin;
-					_minutesOn 	= 1;
-					_secondsOn  = 30;
-					break;
-				case Constant.STORY_SCREEN_3:
-					result = new Array("0/0", "1/1", "01 : 30");
-					_maxCoin	= 0;
-					_maxLife 	= 1;
-					_currLife	= _maxLife;
-					_currCoin 	= _maxCoin;
-					_minutesOn 	= 1;
-					_secondsOn  = 30;
-					break;
 				case Constant.STORY_SCREEN_4:
 					result = new Array("0/0", "1/1", "00 : 05");
 					_maxCoin	= 0;
@@ -195,7 +187,7 @@ package object.inGameObject
 					_minutesOn 	= 0;
 					_secondsOn  = 5;
 					break;
-				case Constant.STORY_SCREEN_5:
+				default:
 					result = new Array("0/0", "1/1", "01 : 30");
 					_maxCoin	= 0;
 					_maxLife 	= 1;
@@ -204,16 +196,8 @@ package object.inGameObject
 					_minutesOn 	= 1;
 					_secondsOn  = 30;
 					break;
-				default:
-					result = new Array("0/0", "1/1", "01 : 30");
-					break;
 			}
 			return result;
-		}
-		
-		private function onRemoveFromStage(event:Event):void
-		{
-			
 		}
 		
 		private function onLifeClicked(event:Event):void
@@ -264,7 +248,7 @@ package object.inGameObject
 				PopUpManager.removePopUp( _panel, true );
 				
 				_controller.getGameStat("max life", _maxLife);
-				reviewLife();
+				updateLifeText();
 			}
 			else
 			{
@@ -285,8 +269,8 @@ package object.inGameObject
 					this._controller.showIncorrectDialouge(">");
 				else
 				{
-					var info	:Array = new Array(false);
-					this._controller.updateStageInfo(3,info);
+					this._isLifeEnabled = false;
+					this._controller.enableLifeEdit(false);
 				}
 			}
 		}
@@ -311,8 +295,8 @@ package object.inGameObject
 				secondText.textEditorProperties.fontSize = 20;
 				secondText.width = 75;
 	
-				minuteText.prompt = formatLeadingZero(_minutesOn);
-				secondText.prompt = "00";
+				minuteText.text = formatLeadingZero(_minutesOn);
+				secondText.text = formatLeadingZero(_secondsOn);
 				_panel.addChild(colonText);
 				_panel.addChild(minuteText);
 				_panel.addChild(secondText);
@@ -362,38 +346,35 @@ package object.inGameObject
 		
 		private function checkStage4Condition(minute:String, second:String):void
 		{
-			if(isDigit(minute))
+			if(Number(minute) != StoryConstant.STAGE4_TIME_MIN && Number(second) != StoryConstant.STAGE4_TIME_SEC)
+				this._controller.showIncorrectDialouge("time");
+			else
 			{
-				if(Number(minute) != StoryConstant.STAGE4_TIME_MIN && Number(second) != StoryConstant.STAGE4_TIME_SEC)
-					this._controller.showIncorrectDialouge("time");
-				else
-				{
-					var info	:Array = new Array(false);
-					this._controller.updateStageInfo(4,info);
-				}
+				this._isTimeEnabled = false;
+				this._controller.enableTimeEdit(false);
 			}
 		}
-
-		public function updateCoinTracker(currentCoin:Number, maxCoin:Number):void
+		
+		private function onRemoveFromStage(event:Event):void
 		{
-			this._currCoin = currentCoin;
-			this._maxCoin = maxCoin;
+			this.removeChildren();
+			this._controller = null;
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
-		public function updateLifeTracker(currentLife:Number, maxLife:Number):void
-		{
-			this._currLife = currentLife;
-			this._maxLife = maxLife;
-		}
-		
-		private function updateTimeTracker():void
+		/**====================================================================
+		 * |	                     	FUNCTIONS			                  | *
+		 * ====================================================================**/
+		// Update the time text on scoreboard
+		private function updateTimeText():void
 		{
 			var timePassed	:Number 	= getTimer() - _markTime;
 			var seconds		:int 		= _secondsOn - int((timePassed / 1000) % 60);
 			var minutes		:int 		= _minutesOn - int((timePassed / (1000 * 60)) % 60);
 			
-			if(_state == ChapterOneConstant.PLAYING_STATE)
+			if(_state == Constant.PLAYING_STATE)
 			{
+				//Get the time at the start of playing only
 				if(_startPlaying)
 				{
 					this._timeIMG.removeEventListener(Event.TRIGGERED, onTimeClicked);
@@ -415,33 +396,34 @@ package object.inGameObject
 			}
 		}
 		
-		private function checkLostCondition():Boolean
-		{
-			if(_timeText.text == "00 : 00")
+		// Check whether the time reach 00:00, if yes => lost
+		private function checkLostCondition():Boolean{
+			if(_timeText.text == END_TIME)
 				return true;
 			else
 				return false;
 		}
 		
-		private function reviewTime():void
-		{
-			_timeText.text = formatLeadingZero(_minutesOn) + " : " + formatLeadingZero(_secondsOn);
+		// Review time upon editting
+		private function reviewTime():void{
+			this._timeText.text = formatLeadingZero(_minutesOn) + " : " + formatLeadingZero(_secondsOn);
 		}
 		
-		private function reviewLife():void
-		{
-			_lifeText.text = _maxLife + "/" + _maxLife;
+		// Review coin upon change
+		public function updateCoinText():void{
+			this._coinText.text = this._currCoin + "/" + this._maxCoin;
 		}
 		
-		private function formatLeadingZero(value:Number):String
-		{
+		// Review the life upon change
+		public function updateLifeText():void{
+			this._lifeText.text = this._currLife + "/" + this._maxLife;
+		}
+		
+		// Add in the 0 in front of the number for those are smaller than 10
+		// Use for displaying clock
+		private function formatLeadingZero(value:Number):String{
 			return (value < 10) ? "0" + value.toString() : value.toString();
 		}
-	
-		public function changeState(currentState:String):void
-		{
-			_state = currentState;
-		}	
 		
 		// Determines if a string is digit 
 		private function isDigit(value : String) : Boolean {

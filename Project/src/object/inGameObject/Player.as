@@ -12,7 +12,7 @@ package object.inGameObject
 	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import flash.ui.Keyboard;
 	
@@ -25,12 +25,12 @@ package object.inGameObject
 	import starling.filters.BlurFilter;
 	import starling.filters.ColorMatrixFilter;
 
-	public class Hero extends Sprite
+	public class Player extends Sprite
 	{	
 		/*----------------------------
 		|	      Hero constant      |
 		-----------------------------*/
-		private var _controller  :Controller;
+		private var _controller  :MainController;
 		private var _normalStand   :Array;
 		private var _normalRun     :Array;
 		private var _hitStand	 :Array;
@@ -44,9 +44,6 @@ package object.inGameObject
 		private var _heroStatus  :String;
 		private var _heroEnable  :Boolean;
 		private var _hero        :Sprite;
-		
-		//indicate hero is male or female
-		private var _heroChoice  :Number;
 		
 		/*----------------------------
 		|	      Hero variables     |
@@ -62,7 +59,7 @@ package object.inGameObject
 		-----------------------------*/
 		private var _state					 :String = ChapterOneConstant.INSTRUCTING_STATE;
 		
-		public function Hero(controller:Controller, heroChoice : Number = 0)
+		public function Player(controller:MainController)
 		{	
 			this._controller  = controller;
 			this._normalStand   = new Array();
@@ -74,7 +71,6 @@ package object.inGameObject
 			this._heroStatus  = null;
 			this._heroEnable  = false;
 			this._hero        = new Sprite();  
-			this._heroChoice	= heroChoice;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
@@ -195,41 +191,21 @@ package object.inGameObject
 			var movie:MovieClip;
 			
 			var blur:BlurFilter = new BlurFilter();
-			if(this._heroChoice == 0){
-				for(var index:uint = 0 ; index < ChapterOneConstant.HERO_MALE_STAND.length ; index++){
-					
-					image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
-					movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
-					
-					_normalStand.push(image);
-					_normalRun.push(movie);
-					
-	//				image.alpha = 0.7;
-	//				image.filter = blur;
-	//				movie.alpha = 0.7;
-	//				movie.filter = blur;
-	//				_hitStand.push(image);
-	//				_hitRun.push(movie);
-					
-				}
-			}
-			else{
-				for(index = 0 ; index < ChapterOneConstant.HERO_FEMALE_STAND.length ; index++){
-					
-					image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
-					movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
-					
-					_normalStand.push(image);
-					_normalRun.push(movie);
-					
-					//				image.alpha = 0.7;
-					//				image.filter = blur;
-					//				movie.alpha = 0.7;
-					//				movie.filter = blur;
-					//				_hitStand.push(image);
-					//				_hitRun.push(movie);
-					
-				}
+			for(var index:uint = 0 ; index < ChapterOneConstant.HERO_MALE_STAND.length ; index++){
+				
+				image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
+				movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
+				
+				_normalStand.push(image);
+				_normalRun.push(movie);
+				
+//				image.alpha = 0.7;
+//				image.filter = blur;
+//				movie.alpha = 0.7;
+//				movie.filter = blur;
+//				_hitStand.push(image);
+//				_hitRun.push(movie);
+				
 			}
 			
 			for(index = 0; index < _normalStand.length; index++){
@@ -254,7 +230,7 @@ package object.inGameObject
 			{
 				_isHit = true;
 				if(_currentLife > 0)
-					if(_counter >= 60)
+					if(_counter >= 30)
 					{
 						_currentLife --;
 						_counter    = 0;

@@ -327,29 +327,29 @@ package feathers.themes
 
 			this.headerTextFormat = new TextFormat(semiboldFontNames, Math.round(36 * this.scale), LIGHT_TEXT_COLOR, true);
 
-			this.darkUITextFormat = new TextFormat(semiboldFontNames, 24 * this.scale, DARK_TEXT_COLOR, true);
-			this.lightUITextFormat = new TextFormat(semiboldFontNames, 24 * this.scale, LIGHT_TEXT_COLOR, true);
-			this.selectedUITextFormat = new TextFormat(semiboldFontNames, 24 * this.scale, SELECTED_TEXT_COLOR, true);
-			this.lightUIDisabledTextFormat = new TextFormat(semiboldFontNames, 24 * this.scale, DISABLED_TEXT_COLOR, true);
-			this.darkUIDisabledTextFormat = new TextFormat(semiboldFontNames, 24 * this.scale, DARK_DISABLED_TEXT_COLOR, true);
-			this.lightCenteredUITextFormat = new TextFormat(semiboldFontNames, 24 * this.scale, LIGHT_TEXT_COLOR, true, null, null, null, null, TextFormatAlign.CENTER);
+			this.darkUITextFormat = new TextFormat(semiboldFontNames, 15 * this.scale, DARK_TEXT_COLOR, true);
+			this.lightUITextFormat = new TextFormat(semiboldFontNames, 15 * this.scale, LIGHT_TEXT_COLOR, true);
+			this.selectedUITextFormat = new TextFormat(semiboldFontNames, 15 * this.scale, SELECTED_TEXT_COLOR, true);
+			this.lightUIDisabledTextFormat = new TextFormat(semiboldFontNames, 15 * this.scale, DISABLED_TEXT_COLOR, true);
+			this.darkUIDisabledTextFormat = new TextFormat(semiboldFontNames, 15 * this.scale, DARK_DISABLED_TEXT_COLOR, true);
+			this.lightCenteredUITextFormat = new TextFormat(semiboldFontNames, 15 * this.scale, LIGHT_TEXT_COLOR, true, null, null, null, null, TextFormatAlign.CENTER);
 
-			this.largeUIDarkTextFormat = new TextFormat(semiboldFontNames, 28 * this.scale, DARK_TEXT_COLOR, true);
-			this.largeUILightTextFormat = new TextFormat(semiboldFontNames, 28 * this.scale, LIGHT_TEXT_COLOR, true);
-			this.largeUISelectedTextFormat = new TextFormat(semiboldFontNames, 28 * this.scale, SELECTED_TEXT_COLOR, true);
-			this.largeUIDisabledTextFormat = new TextFormat(semiboldFontNames, 28 * this.scale, DISABLED_TEXT_COLOR, true);
+			this.largeUIDarkTextFormat = new TextFormat(semiboldFontNames, 19 * this.scale, DARK_TEXT_COLOR, true);
+			this.largeUILightTextFormat = new TextFormat(semiboldFontNames, 19 * this.scale, LIGHT_TEXT_COLOR, true);
+			this.largeUISelectedTextFormat = new TextFormat(semiboldFontNames, 19 * this.scale, SELECTED_TEXT_COLOR, true);
+			this.largeUIDisabledTextFormat = new TextFormat(semiboldFontNames, 19 * this.scale, DISABLED_TEXT_COLOR, true);
 
-			this.darkTextFormat = new TextFormat(regularFontNames, 24 * this.scale, DARK_TEXT_COLOR);
-			this.lightTextFormat = new TextFormat(regularFontNames, 24 * this.scale, LIGHT_TEXT_COLOR);
-			this.disabledTextFormat = new TextFormat(regularFontNames, 24 * this.scale, DISABLED_TEXT_COLOR);
-			this.lightCenteredTextFormat = new TextFormat(regularFontNames, 24 * this.scale, LIGHT_TEXT_COLOR, null, null, null, null, null, TextFormatAlign.CENTER);
+			this.darkTextFormat = new TextFormat(regularFontNames, 15 * this.scale, DARK_TEXT_COLOR);
+			this.lightTextFormat = new TextFormat(regularFontNames, 15 * this.scale, LIGHT_TEXT_COLOR);
+			this.disabledTextFormat = new TextFormat(regularFontNames, 15 * this.scale, DISABLED_TEXT_COLOR);
+			this.lightCenteredTextFormat = new TextFormat(regularFontNames, 15 * this.scale, LIGHT_TEXT_COLOR, null, null, null, null, null, TextFormatAlign.CENTER);
 
-			this.smallLightTextFormat = new TextFormat(regularFontNames, 18 * this.scale, LIGHT_TEXT_COLOR);
-			this.smallDisabledTextFormat = new TextFormat(regularFontNames, 18 * this.scale, DISABLED_TEXT_COLOR);
+			this.smallLightTextFormat = new TextFormat(regularFontNames, 19 * this.scale, LIGHT_TEXT_COLOR);
+			this.smallDisabledTextFormat = new TextFormat(regularFontNames, 19 * this.scale, DISABLED_TEXT_COLOR);
 
-			this.largeDarkTextFormat = new TextFormat(regularFontNames, 28 * this.scale, DARK_TEXT_COLOR);
-			this.largeLightTextFormat = new TextFormat(regularFontNames, 28 * this.scale, LIGHT_TEXT_COLOR);
-			this.largeDisabledTextFormat = new TextFormat(regularFontNames, 28 * this.scale, DISABLED_TEXT_COLOR);
+			this.largeDarkTextFormat = new TextFormat(regularFontNames, 19 * this.scale, DARK_TEXT_COLOR);
+			this.largeLightTextFormat = new TextFormat(regularFontNames, 19 * this.scale, LIGHT_TEXT_COLOR);
+			this.largeDisabledTextFormat = new TextFormat(regularFontNames, 19 * this.scale, DISABLED_TEXT_COLOR);
 
 			PopUpManager.overlayFactory = popUpOverlayFactory;
 			Callout.stagePaddingTop = Callout.stagePaddingRight = Callout.stagePaddingBottom =
@@ -565,8 +565,8 @@ package feathers.themes
 			};
 			button.stateToSkinFunction = skinSelector.updateValue;
 
-			button.minWidth = button.minHeight = 60 * this.scale;
-			button.minTouchWidth = button.minTouchHeight = 88 * this.scale;
+			button.minWidth = button.minHeight = 10 * this.scale;
+			button.minTouchWidth = button.minTouchHeight = 10 * this.scale;
 		}
 
 		protected function labelInitializer(label:Label):void
@@ -624,7 +624,7 @@ package feathers.themes
 			button.paddingLeft = button.paddingRight = 10 * this.scale;
 			button.gap = 12 * this.scale;
 			button.minWidth = button.minHeight = 10 * this.scale;
-			button.minTouchWidth = button.minTouchHeight = 60 * this.scale;
+			button.minTouchWidth = button.minTouchHeight = 10 * this.scale;
 		}
 
 		protected function buttonInitializer(button:Button):void
@@ -774,7 +774,6 @@ package feathers.themes
 			button.defaultIcon = defaultIcon;
 
 			button.gap = Number.POSITIVE_INFINITY;
-			button.iconPosition = Button.ICON_POSITION_RIGHT;
 		}
 
 		protected function toggleSwitchTrackInitializer(track:Button):void
@@ -1171,8 +1170,8 @@ package feathers.themes
 
 			input.minTouchWidth = input.minTouchHeight = 88 * this.scale;
 			input.gap = 12 * this.scale;
-			input.paddingTop = 6 * this.scale;
-			input.paddingBottom = 6 * this.scale;
+			input.paddingTop = 2 * this.scale;
+			input.paddingBottom = 2 * this.scale;
 			input.paddingLeft = input.paddingRight = 7 * this.scale;
 			input.textEditorProperties.fontFamily = "Helvetica";
 			input.textEditorProperties.fontSize = 12 * this.scale;

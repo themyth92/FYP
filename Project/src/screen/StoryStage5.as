@@ -4,7 +4,7 @@ package screen
 	
 	import constant.Constant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import events.NavigationEvent;
 	
@@ -32,7 +32,7 @@ package screen
 		private var _guiderIMG		:Image;
 		private var _escButton		:Button;
 		
-		private var _controller		:Controller;
+		private var _controller		:MainController;
 		
 		public function StoryStage5()
 		{
@@ -43,14 +43,14 @@ package screen
 		
 		private function onAddedToStage(event:Event):void
 		{
-			this._controller 	= new Controller ();
+			this._controller 	= new MainController ();
 			
 			this._console		= new Console(this._controller);
 			this._dialogue		= new Dialogue(this._controller);
 			this._indexBoard	= new IndexBoard(this._controller);
 			this._scoreBoard	= new ScoreBoard(this._controller);
 			
-			this._controller.assignObjectController(this._console, this._dialogue, null, this._indexBoard, null, null, this._scoreBoard);
+			this._controller.assignObjectController(this._console, this._dialogue, this._indexBoard, this._scoreBoard);
 			this._controller.assignScreen(Constant.STORY_SCREEN_5);
 			
 			this.placeImageOnScreen();

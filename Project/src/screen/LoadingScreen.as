@@ -46,7 +46,7 @@ package screen
 			this.addChild(_loaderObject);
 			this.addChild(_textureLoader);
 			
-			var qsImgList:Object = _serCliObj.retrieveQuestionAndImageListFromServer();
+			var qsImgList:Object 				= _serCliObj.retrieveQuestionAndImageListFromServer();
 		
 			_textureLoader.loadUserTexture(this.getImgList(qsImgList), this.getQsList(qsImgList));	
 		}

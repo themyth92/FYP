@@ -4,7 +4,7 @@ package screen
 	
 	import constant.Constant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import events.NavigationEvent;
 	
@@ -35,7 +35,7 @@ package screen
 		private var _lifeIMG		:Image;
 		private var _escButton		:Button;
 		private var _com           :ServerClientCom;	
-		private var _controller	:Controller;
+		private var _controller	:MainController;
 		
 		public function StoryStage2()
 		{
@@ -48,14 +48,14 @@ package screen
 		private function onAddedToStage(event:Event):void
 		{
 			
-			_controller 	= new Controller ();
+			_controller 	= new MainController ();
 			_console		= new Console(_controller);
 			_dialogue		= new Dialogue(_controller);
 			_indexBoard		= new IndexBoard(_controller);
 			_scoreBoard		= new ScoreBoard(_controller);
 			_com            = new ServerClientCom();
 			
-			_controller.assignObjectController(_console, _dialogue, null, _indexBoard, null, null, _scoreBoard);
+			_controller.assignObjectController(_console, _dialogue,  _indexBoard, this._scoreBoard);
 			_controller.assignScreen(Constant.STORY_SCREEN_2);
 			
 			placeImageOnScreen();
@@ -113,7 +113,7 @@ package screen
 			_indexBoard.y 	= Constant.GRID_STORY_POS.y;
 			
 			_scoreBoard.x 	= 160;
-			
+			this.addChild(_console);
 			this.addChild(_dialogue);
 			this.addChild(_indexBoard);
 			this.addChild(_scoreBoard);
@@ -160,8 +160,6 @@ package screen
 		
 		private function onEnterFrame(event:Event):void
 		{	
-			if(displayConsoleState())
-				this.addChild(_console);
 			if(isWon()){
 				this._com.saveUserIngameState(2);
 				GameData.setGameState(3);
@@ -180,11 +178,6 @@ package screen
 		private function isLost():Boolean
 		{
 			return this._controller.isLost;
-		}
-		
-		private function displayConsoleState():Boolean
-		{
-			return _controller.stage2Info()[1];
 		}
 	}
 }

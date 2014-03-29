@@ -7,6 +7,8 @@ package object.CreateGameObject
 	
 	import constant.Constant;
 	
+	import events.NavigationEvent;
+	
 	import feathers.controls.Button;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.MetalWorksMobileTheme;
@@ -184,6 +186,7 @@ package object.CreateGameObject
 			var secStart		:int = _scoreBoard.secStart;
 			
 			scoreBoard = new Array(maxCoin, maxLife, minStart, secStart);
+			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.PREVIEW_LOADER}, true));
 		}
 		
 		private function onPublishBtnTrigger(event:Event):void

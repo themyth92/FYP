@@ -17,7 +17,7 @@ package controller.ObjectController
 	import flash.geom.Rectangle;
 	
 	import object.inGameObject.Enemies;
-	import object.inGameObject.Hero;
+	import object.inGameObject.Player;
 	import object.inGameObject.IndexBoard;
 	
 	import starling.display.Image;
@@ -50,7 +50,7 @@ package controller.ObjectController
 		private var _indexBoard 					:IndexBoard;
 		
 		//CHARACTER VARIABLE
-		private var _hero					 		:Hero;
+		private var _hero					 		:Player;
 		private var _enemy1							:Enemies;
 		private var _enemy2							:Enemies;
 		private var _isDisplayedQuiz:Boolean;
@@ -106,7 +106,7 @@ package controller.ObjectController
 					else if(_indexBoard.createHero(index))
 						return;
 					else
-						trace("more than one hero");	
+						trace("More than one hero");	
 				}
 			}
 			return;
@@ -285,7 +285,7 @@ package controller.ObjectController
 		/*----------------------------------------------------------------------
 		| @Check for collision between character and object                    |
 		------------------------------------------------------------------------*/
-		public function collisionDetect(x:Number, y:Number):Array
+		public function collideWithObstacles(x:Number, y:Number):Array
 		{
 			var positionArr : Array;
 			
@@ -345,7 +345,7 @@ package controller.ObjectController
 								}
 								if(objectType[i] == "Question")
 								{
-									popUpQuestion();
+									showQuestion();
 								}
 								if(objectType[i] == "goal")
 								{
@@ -371,7 +371,7 @@ package controller.ObjectController
 								}
 								if(objectType[i] == "Question")
 								{
-									popUpQuestion();
+									showQuestion();
 								}
 								if(objectType[i] == "goal")
 								{
@@ -397,18 +397,21 @@ package controller.ObjectController
 			this._hero.changeState(currentState);
 		}	
 		
+		//Update coin collected amount and scoreboard
 		private function coinCollect():void
 		{
 			this._hero.changeCoin();
 		}
 		
+		//Update life of player and scoreboard
 		private function takeDamage():void
 		{
 			this._hero.changeLife(true, false);
 		}
 	
-		private function popUpQuestion():void
+		private function showQuestion():void
 		{
+			//If there is no question being showed => show
 			if(!_isDisplayedQuiz)
 			{
 				_indexBoard.displayQuestion();
@@ -426,7 +429,12 @@ package controller.ObjectController
 			_indexBoard.finishStage();
 		}
 		
-		public function checkPlayerCollideEnemy():void
+		private function teleport():void
+		{
+			
+		}
+		
+		public function collideWithEnemy():void
 		{
 			var isCollided	:Boolean;
 			var collisionRe	:Array;

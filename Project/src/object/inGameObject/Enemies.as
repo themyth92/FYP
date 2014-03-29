@@ -5,7 +5,7 @@ package object.inGameObject
 	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
-	import controller.ObjectController.Controller;
+	import controller.ObjectController.MainController;
 	
 	import flash.geom.Point;
 	
@@ -17,7 +17,7 @@ package object.inGameObject
 	
 	public class Enemies extends Sprite
 	{
-		private var _controller		:Controller;
+		private var _controller		:MainController;
 		private var _enemy			:Sprite;
 		private var _id				:Number;
 		private var _image			:Image;
@@ -42,7 +42,7 @@ package object.inGameObject
 		private var _currEndPt		:Number = 1;
 		private var _currStartPt	:Number = 0;
 		
-		public function Enemies(controller: Controller, x:Number, y:Number, type:String, speed:Number, imageNo:Number, id:Number)
+		public function Enemies(controller: MainController, x:Number, y:Number, type:String, speed:Number, imageNo:Number, id:Number)
 		{
 			this._controller  	= controller;
 			this._initialX 		= x;

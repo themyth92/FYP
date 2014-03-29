@@ -8,8 +8,10 @@ package object.CreateGameObject
 	import feathers.controls.Button;
 	import feathers.controls.Callout;
 	import feathers.controls.Label;
-	import feathers.controls.List;
+	import feathers.controls.Panel;
 	import feathers.controls.PickerList;
+	import feathers.controls.Radio;
+	import feathers.controls.ScrollContainer;
 	import feathers.controls.ScrollText;
 	import feathers.controls.TextInput;
 	import feathers.controls.ToggleSwitch;
@@ -18,22 +20,29 @@ package object.CreateGameObject
 	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.controls.text.StageTextTextEditor;
 	import feathers.core.ITextEditor;
+	import feathers.core.PopUpManager;
+	import feathers.core.ToggleGroup;
 	import feathers.data.ListCollection;
 	import feathers.events.FeathersEventType;
 	import feathers.layout.AnchorLayoutData;
+	import feathers.layout.HorizontalLayout;
+	import feathers.layout.VerticalLayout;
+	
+	import flash.ui.Keyboard;
 	
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.text.TextField;
 	
 	public class ComponentPanel extends Sprite
 	{
-		private static const PLAYER_POS_GUIDE		:String = "Indicates the player position on the screen.\nCan only take in value from 1 to 99.";
-		private static const ENEMY1_POS_GUIDE		:String = "Indicates where the enemy No.1 is on the screen if its type is not 'None'.\nCan only take in value from 1 to 99.";
-		private static const ENEMY1_SPD_GUIDE		:String = "Indicates how fast enemy No.1 move.\nValue should be around '0.01' to '0.09'.";
-		private static const ENEMY2_POS_GUIDE		:String = "Indicates where the enemy No.2 is on the screen if its type is not 'None'.\nCan only take in value from 1 to 99.";
-		private static const ENEMY2_SPD_GUIDE		:String = "Indicates how fast enemy No.2 move.\nValue should be around '0.01' to '0.09'.";
+		private static const PLAYER_POS_GUIDE		:String = "Player's start position.\nCan take in value from 1 to 99.";
+		private static const ENEMY1_POS_GUIDE		:String = "Enemy No.1's start position.\nCan take in value from 1 to 99.";
+		private static const ENEMY1_SPD_GUIDE		:String = "Enemy No.1's speed.\nCan take in value from '0.01' to '0.09'.";
+		private static const ENEMY2_POS_GUIDE		:String = "Enemy No.2's start position.\nCan only take in value from 1 to 99.";
+		private static const ENEMY2_SPD_GUIDE		:String = "Enemy No.2's speed.\nCan take in value from '0.01' to '0.09'.";
 		
 		private var _titleInput			:TextInput;
 		
@@ -41,6 +50,7 @@ package object.CreateGameObject
 		//or when user has error
 		//this is used in game creation part
 		private var _notiPanel   		:ScrollText;
+		private var _endPtChoosePanel	:Panel;
 		
 		//Player characters info
 		private var _playerPosInput		:TextInput;
@@ -58,9 +68,6 @@ package object.CreateGameObject
 		private var _enemy2InputSpeed	:TextInput;
 		private var _enemy2InputImage	:PickerList;
 		private var _message:Label;		
-		
-		//screen choose box
-		private var _screenSelect 		:PickerList;
 		
 		public function ComponentPanel()
 		{
@@ -96,13 +103,13 @@ package object.CreateGameObject
 			if(_enemy1InputType.selectedIndex != 2)
 			{
 				amount ++;
-				enemy1 = new Array(_enemy1InputType.selectedItem, Number(_enemy1InputPos.text), Number(_enemy1InputSpeed.text), _enemy1InputImage.selectedItem.text);
+				enemy1 = new Array(_enemy1InputType.selectedItem, Number(_enemy1InputPos.text), Number(_enemy1InputSpeed.text), _enemy1InputImage.selectedIndex);
 			}
 			
 			if(_enemy2InputType.selectedIndex != 2)
 			{
 				amount ++;
-				enemy2 = new Array(_enemy2InputType.selectedItem, Number(_enemy2InputPos.text), Number(_enemy2InputSpeed.text), _enemy2InputImage.selectedItem.text);
+				enemy2 = new Array(_enemy2InputType.selectedItem, Number(_enemy2InputPos.text), Number(_enemy2InputSpeed.text), _enemy2InputImage.selectedIndex);
 			}
 			
 			var enemyInfo	:Array = new Array(amount, enemy1, enemy2);
@@ -118,9 +125,11 @@ package object.CreateGameObject
 				editor.fontSize = 12;
 				return editor;
 			}
+			this._titleInput.x = 10;
+			this._titleInput.y = 50;
 				
 			//change the textinput width and height
-			this._titleInput.width = 150;
+			this._titleInput.width = 220;
 			this._titleInput.height = 50;
 			
 			//debugger to notify error to user
@@ -134,6 +143,7 @@ package object.CreateGameObject
 			_genderInput		= new ToggleSwitch();
 			
 			_enemy1InputType 	= new PickerList();
+			this._enemy1InputType.addEventListener( Event.CHANGE, onEnemy1TypeChange);
 			_enemy1InputPos		= new TextInput();
 			this._enemy1InputPos.addEventListener(FeathersEventType.ENTER, onEnemy1PosEnter);
 			this._enemy1InputPos.addEventListener(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
@@ -143,6 +153,7 @@ package object.CreateGameObject
 			_enemy1InputImage	= new PickerList();
 			
 			_enemy2InputType 	= new PickerList();
+			this._enemy2InputType.addEventListener( Event.CHANGE, onEnemy2TypeChange);
 			_enemy2InputPos		= new TextInput();
 			this._enemy2InputPos.addEventListener(FeathersEventType.ENTER, onEnemy2PosEnter);
 			this._enemy2InputPos.addEventListener(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
@@ -155,20 +166,21 @@ package object.CreateGameObject
 			this._playerPosInput.x 		= 196;	this._playerPosInput.y 		= 365;
 			this._playerPosInput.width 	= 55; 	this._playerPosInput.height = 30;
 			this._playerPosInput.textEditorProperties.fontSize = 10;
-			this._genderInput.x 		= 70;	this._genderInput.y 		= 370;
+			this._genderInput.x 		= 70;	this._genderInput.y 		= 365;
 			this._genderInput.isSelected = false;
 			this._genderInput.offText = "F";
 			this._genderInput.onText = "M";
-			this._genderInput.width		= 55;	this._genderInput.height	= 30;
+			this._genderInput.setSize(60, 30);
+			this._genderInput.thumbProperties.@height = 30;
+			this._genderInput.thumbProperties.@width = 30;
 			
+
 			var enemyType	:Array = new Array(Constant.FOLLOW_TYPE, Constant.PATROL_TYPE, "None");
-			this._enemy1InputType.prompt = "Type";
 			this._enemy1InputType.dataProvider = new ListCollection(enemyType);
 			this._enemy1InputType.selectedIndex = 2;
-			this._enemy2InputType.prompt = "Type";
 			this._enemy2InputType.dataProvider = new ListCollection(enemyType);
 			this._enemy2InputType.selectedIndex = 2;
-			
+		
 			var enemyImg	:Array = [];
 			
 			for(var i:uint=0; i<Constant.ENEMY_SPRITE_TEXTURE.length; i++)
@@ -186,12 +198,12 @@ package object.CreateGameObject
 					{ text: "Enemy 5", icon: enemyImg[4] },
 					{ text: "Enemy 6", icon: enemyImg[5] },
 				]);
-			
 			this._enemy1InputImage.listProperties.itemRendererFactory = function():IListItemRenderer
 			{
 				var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
 				renderer.labelField = "text";
-				renderer.iconSourceField = "icon";
+				renderer.accessoryField = "icon";
+				renderer.layoutOrder = BaseDefaultItemRenderer.LAYOUT_ORDER_LABEL_ACCESSORY_ICON;
 				return renderer;
 			};
 			
@@ -209,7 +221,8 @@ package object.CreateGameObject
 			{
 				var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
 				renderer.labelField = "text";
-				renderer.iconSourceField = "icon";
+				renderer.accessoryField = "icon";
+				renderer.layoutOrder = BaseDefaultItemRenderer.LAYOUT_ORDER_LABEL_ACCESSORY_ICON;
 				return renderer;
 			};
 			this._enemy2InputImage.layoutData = new AnchorLayoutData(0, 0, 0, 0);
@@ -251,42 +264,6 @@ package object.CreateGameObject
 			this._enemy2InputPos.maxChars 	= 2;
 			this._enemy2InputSpeed.maxChars = 5;
 			
-			//screen select choice
-			this._screenSelect				= new PickerList();
-			this._screenSelect.prompt		= 'Screen Select';
-			this._screenSelect.typicalItem	= 'Screen Select';
-			//list all the user defined screen
-			//and add in title
-			
-			
-			var screenList:ListCollection	= new ListCollection();
-			for(i = 0 ; i < Assets.getUserScreenTexture().length ;i++){
-				screenList.push({text : Assets.getUserScreenTexture()[i].title});
-			}
-			
-			this._screenSelect.dataProvider 	= screenList;
-			this._screenSelect.selectedIndex 	= -1;
-			
-			this._screenSelect.typicalItem 		= { text: "Screen Select" };
-			this._screenSelect.labelField 		= "text";
-			
-			this._screenSelect.listFactory = function():List
-			{
-				var list:List = new List();
-				
-				list.typicalItem = { text: "Screen Select" };
-				list.itemRendererFactory = function():IListItemRenderer
-				{
-					var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
-					renderer.labelField = "text";
-					return renderer;
-				};
-				return list;
-			};
-			
-			this._screenSelect.y				= 50;
-			
-			
 			/* Add Information Box to display */
 			this.addChild(this._titleInput);
 			this.addChild(this._playerPosInput);
@@ -299,7 +276,108 @@ package object.CreateGameObject
 			this.addChild(this._enemy2InputPos);
 			this.addChild(this._enemy2InputSpeed);
 			this.addChild(this._enemy2InputImage);
-			this.addChild(this._screenSelect);
+		}
+		
+		private function onEnemy2TypeChange(event:Event):void
+		{
+				
+		}
+		
+		private function onEnemy1TypeChange(event:Event):void
+		{
+			if(this._enemy1InputType.selectedIndex == 1)
+			{
+				if(this._enemy1InputPos.text == "")
+					posFillInNotify();
+				else
+					enemyPatrolNotify();
+			}
+		}
+		
+		private function posFillInNotify():void
+		{
+			var alert	:Alert = Alert.show("Please give your Patrol Enemy a start position.", "Notification", new ListCollection(
+				[
+					{ label: "OK" }
+				]));
+			alert.addEventListener(Event.CLOSE, onPosFillNotifyClose);
+		}
+		
+		private function onPosFillNotifyClose(event:Event):void
+		{
+			this._enemy1InputPos.setFocus();	
+		}
+		
+		private function enemyPatrolNotify():void
+		{
+			_endPtChoosePanel = new Panel();
+			var panelLayout:VerticalLayout = new VerticalLayout();
+			_endPtChoosePanel.height = 400;
+			_endPtChoosePanel.width = 600;
+			panelLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_CENTER;
+			panelLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_BOTTOM;
+			panelLayout.gap = 75;
+			_endPtChoosePanel.layout = panelLayout;
+			
+			var notifyMsg	:TextField = new TextField(500, 100, "You chose enemy as Patrol type.\nThe enemy will start at the indicated position. You can choose either to have 1 or 3 more points to patrol. Please indicate your choice below.", "Grobold", 18, 0xfa0000, false);
+			_endPtChoosePanel.addChild(notifyMsg);
+			
+			var typeChoice	:ToggleGroup = new ToggleGroup(); 
+			var layout 		:HorizontalLayout = new HorizontalLayout();
+			layout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_CENTER;
+			layout.gap = 20;
+			
+			var radioContainer:ScrollContainer = new ScrollContainer();
+			radioContainer.layout = layout;
+			radioContainer.horizontalScrollPolicy = ScrollContainer.SCROLL_POLICY_OFF;
+			radioContainer.verticalScrollPolicy = ScrollContainer.SCROLL_POLICY_OFF;
+			
+			var choices1:Radio = new Radio();
+			choices1.label = "1 more end point";
+			typeChoice.addItem(choices1);
+			radioContainer.addChild(choices1);
+			
+			var choices2:Radio = new Radio();
+			choices2.label = "3 more end points";
+			typeChoice.addItem(choices2);
+			radioContainer.addChild(choices2);
+						
+			radioContainer.y = 220;
+			_endPtChoosePanel.addChild(radioContainer);
+			
+			var closeButton	:Button = new Button();
+			closeButton.label = "Ok";
+			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void{
+				EnemyPatrolEndPos(typeChoice);
+			});
+			closeButton.y = 300;
+			_endPtChoosePanel.addChild(closeButton);
+			
+			PopUpManager.addPopUp( _endPtChoosePanel);
+		}
+		
+		private function EnemyPatrolEndPos(type:ToggleGroup):void
+		{
+			var endPtAmount	:Number;
+			if(type.selectedIndex == 0)
+				endPtAmount = 1;
+			else if(type.selectedIndex == 1)
+				endPtAmount = 3;
+			
+			_endPtChoosePanel.removeChildren();
+			
+			var notifyMsg	:TextField = new TextField(500, 100, "Click on the grid to choose end points.\n They must be in the same row or column as the start position.", "Grobold", 20, 0xfa0000, false);
+			_endPtChoosePanel.addChild(notifyMsg);
+			var closeButton	:Button = new Button();
+			closeButton.label = "Ok";
+			closeButton.addEventListener(Event.TRIGGERED, onStartChoosingEndPts);
+			closeButton.y = 300;
+			_endPtChoosePanel.addChild(closeButton);
+		}
+		
+		private function onStartChoosingEndPts(event:Event):void
+		{
+			PopUpManager.removePopUp(_endPtChoosePanel);
 		}
 		
 		private function onEnemy2SpeedFocus(event:Event):void
@@ -307,7 +385,8 @@ package object.CreateGameObject
 			this._message = new Label();
 			this._message.text = ENEMY2_SPD_GUIDE;
 			const callout:Callout = Callout.show(DisplayObject(this._message), DisplayObject(this._enemy2InputSpeed), Callout.DIRECTION_UP);
-			callout.disposeContent = false;
+			callout.closeOnTouchBeganOutside = true;
+			callout.closeOnTouchEndedOutside = true;
 		}
 		
 		private function onEnemy2SpeedEnter(event:Event):void
@@ -320,7 +399,8 @@ package object.CreateGameObject
 					]));				
 				this._enemy2InputSpeed.text = "";
 			}
-			this._enemy2InputSpeed.clearFocus();
+			else
+				this._enemy2InputSpeed.clearFocus();
 		}
 		
 		private function onEnemy2PosFocus(event:Event):void
@@ -328,7 +408,8 @@ package object.CreateGameObject
 			this._message = new Label();
 			this._message.text = ENEMY2_POS_GUIDE;
 			const callout:Callout = Callout.show(DisplayObject(this._message), DisplayObject(this._enemy2InputPos), Callout.DIRECTION_UP);
-			callout.disposeContent = false;
+			callout.closeOnTouchBeganOutside = true;
+			callout.closeOnTouchEndedOutside = true;
 		}
 		
 		private function onEnemy2PosEnter(event:Event):void
@@ -340,8 +421,13 @@ package object.CreateGameObject
 						{ label: "OK" }
 					]));				
 				this._enemy2InputPos.text = "";	
-			}			
-			this._enemy2InputPos.clearFocus();
+			}
+			else
+			{
+				if(this._enemy2InputType.selectedIndex == 1)
+					enemyPatrolNotify();	
+				this._enemy2InputPos.clearFocus();
+			}
 		}
 		
 		private function onEnemy1SpeedFocus(event:Event):void
@@ -349,7 +435,8 @@ package object.CreateGameObject
 			this._message = new Label();
 			this._message.text = ENEMY1_SPD_GUIDE;
 			const callout:Callout = Callout.show(DisplayObject(this._message), DisplayObject(this._enemy1InputSpeed), Callout.DIRECTION_UP);
-			callout.disposeContent = false;	
+			callout.closeOnTouchBeganOutside = true;
+			callout.closeOnTouchEndedOutside = true;
 		}
 		
 		private function onEnemy1SpeedEnter(event:Event):void
@@ -362,7 +449,8 @@ package object.CreateGameObject
 					]));				
 				this._enemy1InputSpeed.text = "";
 			}
-			this._enemy1InputSpeed.clearFocus();
+			else
+				this._enemy1InputSpeed.clearFocus();
 		}
 		
 		private function onEnemy1PosFocus(event:Event):void
@@ -370,7 +458,8 @@ package object.CreateGameObject
 			this._message = new Label();
 			this._message.text = ENEMY1_POS_GUIDE;
 			const callout:Callout = Callout.show(DisplayObject(this._message), DisplayObject(this._enemy1InputPos), Callout.DIRECTION_UP);
-			callout.disposeContent = false;	
+			callout.closeOnTouchBeganOutside = true;
+			callout.closeOnTouchEndedOutside = true;
 		}
 		
 		private function onEnemy1PosEnter(event:Event):void
@@ -383,7 +472,12 @@ package object.CreateGameObject
 					]));				
 				this._enemy1InputPos.text = "";		
 			}
-			this._enemy1InputPos.clearFocus();
+			else
+			{
+				if(this._enemy1InputType.selectedIndex == 1)
+					enemyPatrolNotify();	
+				this._enemy1InputPos.clearFocus();
+			}
 		}
 		
 		private function onPlayerPosFocus(event:Event):void
@@ -391,7 +485,8 @@ package object.CreateGameObject
 			this._message = new Label();
 			this._message.text = PLAYER_POS_GUIDE;
 			const callout:Callout = Callout.show(DisplayObject(this._message), DisplayObject(this._playerPosInput), Callout.DIRECTION_UP);
-			callout.disposeContent = false;
+			callout.closeOnTouchBeganOutside = true;
+			callout.closeOnTouchEndedOutside = true;
 		}
 		
 		private function onPlayerPosEnter(event:Event):void
@@ -404,7 +499,8 @@ package object.CreateGameObject
 					]));				
 				this._playerPosInput.text = "";	
 			}
-			this._playerPosInput.clearFocus();
+			else
+				this._playerPosInput.clearFocus();
 		}
 		
 	}

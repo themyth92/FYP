@@ -1,6 +1,7 @@
 package screen
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.Constant;
 	
@@ -20,7 +21,7 @@ package screen
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
-	public class StoryStage4 extends Sprite
+	public class PreviewScreen extends Sprite
 	{
 		private var _dialogue		:Dialogue;
 		private var _indexBoard		:IndexBoard;
@@ -36,7 +37,7 @@ package screen
 		
 		private var _controller		:MainController;
 		
-		public function StoryStage4()
+		public function PreviewScreen()
 		{
 			super();
 			
@@ -53,7 +54,7 @@ package screen
 			this._scoreBoard	= new ScoreBoard(this._controller);
 			
 			this._controller.assignObjectController(this._console, this._dialogue, this._indexBoard, this._scoreBoard);
-			this._controller.assignScreen(Constant.STORY_SCREEN_4);
+			this._controller.assignScreen(Constant.PREVIEW_SCREEN);
 			
 			this.placeImageOnScreen();
 			this.setupGameObject();
@@ -66,8 +67,8 @@ package screen
 		private function placeImageOnScreen():void
 		{
 			/* Load the image into variables */
-			this._background	= new Image(Assets.getAtlas(Constant.BACKGROUND_SPRITE).getTexture(Constant.BG_STAGE4));
-			this._screen		= new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture(Constant.STAGE4_SCREEN));
+			this._background	= new Image(Assets.getAtlas(Constant.BACKGROUND_SPRITE).getTexture(Constant.BG_STAGE2));
+			this._screen		= new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture(Constant.STAGE2_SCREEN));
 			this._frameIMG 		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.FRAME_IMG));
 			this._dialogueIMG 	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.DIALOGUE_IMG));
 			this._guiderIMG		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.GUIDER_IMG));
@@ -158,8 +159,8 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon()){
-				GameData.setGameState(5);
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_5}, true));
+//				GameData.setGameState(5);
+//				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_5}, true));
 			}
 			if(isLost())
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
