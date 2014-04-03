@@ -54,6 +54,15 @@ package object.CreateGameObject
 			this.addEventListener(Event.REMOVED_FROM_STAGE 		, onRemoveFromStage);
 		}
 		
+		public function getScoreBoardInfo():Object{
+			var scoreBoard	:Object = new Object();
+			scoreBoard.maxCoin 	= this._maxCoin;
+			scoreBoard.maxLife 	= this._maxLife;
+			scoreBoard.minStart = this._minStart;
+			scoreBoard.secStart = this._secStart;
+			return scoreBoard;
+		}
+		
 		public function get maxCoin():int{
 			return _maxCoin;
 		}

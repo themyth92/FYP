@@ -97,7 +97,7 @@ package object.inGameObject
 			try{								
 				if(this._dialogCurPos <= this._dialogueWhole.length){
 					this._dialogueLine.text = this._dialogueWhole[this._dialogCurPos];
-					if(this._screen != Constant.PREVIEW_SCREEN)
+					if(this._screen != Constant.PLAY_SCREEN)
 						checkStoryEvent();
 					this._dialogCurPos ++;
 				}

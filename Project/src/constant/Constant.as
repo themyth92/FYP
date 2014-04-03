@@ -24,7 +24,7 @@ package constant
 		public static const STORY_SCREEN_4				:String	= 'storyStage4';
 		public static const STORY_SCREEN_5				:String	= 'storyStage5';
 		public static const GAME_OVER_SCREEN			:String	= 'gameOver';
-		public static const PREVIEW_SCREEN				:String = 'previewScreen';
+		public static const PLAY_SCREEN					:String = 'playScreen';
 		public static const PREVIEW_LOADER				:String = 'previewLoader';
 		
 		/**====================================================================

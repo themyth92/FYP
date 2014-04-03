@@ -15,27 +15,7 @@ package screen
 	import starling.events.Event;
 	
 	public class PreviewLoader extends Sprite
-	{
-		//Test data
-		private var testData	 :Object = {
-			hero :{pos : 12, gender : 1},
-			enemy : [],
-			obstacles : [],
-			screen :{},
-		};
-		private static const TEST_PLAYER :Object = {pos: 99, gender: "Male"};
-		private static const TEST_ENEMY	 :Object = {amount:2, enemy1:["Patrol Enemy",30,0.03,3], enemy2:["Patrol Enemy",20, 0.01,1]};
-		private static const TEST_SCORE  :Object = {maxCoin:0, maxLife:5, minStart:3, secStart:45};
-		
-		private static const STAGE1_COLLECTION	:Vector.<String> = new <String>["pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
-			"pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","Goal","Goal"];
-		private static const STAGE1_INDEX	  	:Vector.<uint> = new <uint>[4,8,15,19,23,24,25,26,30,31,32,33,
-			67,68,69,70,74,75,76,77,81,85,92,96,6,94];
-		private static const STAGE1_TYPE		  	:Vector.<String> = new <String>["00","00","00","00","00","00","00","00",
-			"00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","00","goal","goal"];
-		
-		private var testObj	:Object; 
-		
+	{		
 		private var _data			:Array;
 		
 		private var _progress:ProgressBar;
@@ -44,7 +24,6 @@ package screen
 		public function PreviewLoader()
 		{
 			super();
-			setupTestData();
 			retrieveData();
 			setupDataForScreen();
 			
@@ -58,7 +37,7 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			if( 1 - this._progress.value < 0.02)
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.PREVIEW_SCREEN}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.PLAY_SCREEN}, true));
 		}
 		
 		private function onAddedToStage(event:Event):void
@@ -80,25 +59,13 @@ package screen
 			this._progressTween.repeatCount = int.MAX_VALUE;
 			Starling.juggler.add(this._progressTween);
 		}
-		
-		private function setupTestData():void
-		{
-			testObj = new Object();
-			testObj.collection = STAGE1_COLLECTION;
-			testObj.index = STAGE1_INDEX;
-			testObj.type = STAGE1_TYPE;
-			TEST_DATA.push(TEST_PLAYER);
-			TEST_DATA.push(TEST_ENEMY);
-			TEST_DATA.push(TEST_SCORE);
-			TEST_DATA.push(testObj);
-		}
-		
+			
 		private function retrieveData():void{
-			this._data = TEST_DATA;
+			//this._data = TEST_DATA;
 		}
 		
 		private function setupDataForScreen():void{
-			PreviewGameInfo.storeScreenInfo(this._data[0], this._data[1], this._data[2], this._data[3]);
+			//PreviewGameInfo.storeScreenInfo(this._data[0], this._data[1], this._data[2], this._data[3]);
 		}
 	}
 }

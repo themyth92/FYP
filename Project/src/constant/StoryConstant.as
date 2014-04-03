@@ -49,13 +49,13 @@ package constant
 		public static const STAGE2_INSTR_ARROW_POS		:Point = new Point();
 		public static const STAGE2_SHOW_ARROW_INDEX		:Number = 3;
 		
-		public static const STAGE2_COLLECTION	:Vector.<String> = new <String>["green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees",
-																				"green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees",
-																				"green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees","green_trees",
-																				"red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees",
-																				"red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees",
-																				"red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees",
-																				"red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","red_trees","Goal"];
+		public static const STAGE2_COLLECTION	:Vector.<String> = new <String>["pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12",
+																				"pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12",
+																				"pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12","pattern_12",
+																				"pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09",
+																				"pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09",
+																				"pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09",
+																				"pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","pattern_09","Goal"];
 		public static const STAGE2_INDEX	  	:Vector.<uint> = new <uint>[1,2,3,4,5,6,7,8,9,10,11,
 																			12,13,14,15,16,17,18,19,20,21,22,
 																			23,24,25,26,27,28,29,30,31,32,33,
