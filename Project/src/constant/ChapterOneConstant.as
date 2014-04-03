@@ -36,6 +36,9 @@ package constant
 		public static const HERO_FEMALE_STAND		:Array        			= new Array('Player - Female/female_up_01', 'Player - Female/female_down_01','Player - Female/female_left_01', 'Player - Female/female_right_01');
 		public static const HERO_FEMALE_RUN			:Array         			= new Array('Player - Female/female_up_', 'Player - Female/female_down_', 'Player - Female/female_left_', 'Player - Female/female_right_');
 		
+		public static const HERO_FEMALE_STAND			:Array        			= new Array('Player - Female/female_up_01', 'Player - Female/female_down_01','Player - Female/female_left_01', 'Player - Female/female_right_01');
+		public static const HERO_FEMALE_RUN			:Array         			= new Array('Player - Female/female_up_', 'Player - Female/female_down_', 'Player - Female/female_left_', 'Player - Female/female_right_');
+		
 		/* Dialog bubble */
 		public static const DIALOG_TEXTFIELD_WIDTH	:uint  					= 200;
 		public static const DIALOG_TEXTFIELD_HEIGHT	:uint					= 200;

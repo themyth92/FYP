@@ -232,6 +232,10 @@ package object.CreateGameObject
 					if(this._state == 1)
 						return;
 					
+					//fix the bug when option panel on other object
+					if(event.target is Button)
+						return;
+						
 					//dont know why like this
 					var xPos:Number 					= touch.globalX - 40;
 					var yPos:Number 					= touch.globalY - 57;
