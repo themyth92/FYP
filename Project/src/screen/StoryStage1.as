@@ -8,14 +8,17 @@ package screen
 	
 	import events.NavigationEvent;
 	
+	import feathers.controls.Button;
+	import feathers.themes.MetalWorksMobileTheme;
+	
+	import gameData.GameData;
+	
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.IndexBoard;
 	import object.inGameObject.ScoreBoard;
 	
 	import serverCom.ServerClientCom;
-	import gameData.GameData;
 	
-	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -36,6 +39,8 @@ package screen
 		private var _escButton		:Button;
 		private var _gotPopUp		:Boolean;
 		private var _com           :ServerClientCom;
+		private var _optionBtn     :Button;
+		private var _menuScreen	:MenuScreen;
 				
 		private var _controller	:MainController;
 		
@@ -49,24 +54,34 @@ package screen
 		
 		private function onAddedToStage(event:Event):void
 		{
-			_controller 	= new MainController ();
-			_dialogue		= new Dialogue(_controller);
-			_indexBoard		= new IndexBoard(_controller);
-			_scoreBoard		= new ScoreBoard(_controller);
-			_com            = new ServerClientCom();
-			
-			_controller.assignObjectController(null, _dialogue, _indexBoard, this._scoreBoard);
-			_controller.assignScreen(Constant.STORY_SCREEN_1);
+			this._controller 		= new MainController ();
+			this._dialogue			= new Dialogue(_controller);
+			this._indexBoard		= new IndexBoard(_controller);
+			this._scoreBoard		= new ScoreBoard(_controller);
+			this._com            	= new ServerClientCom();	
+			this._optionBtn 		= new Button();		
+			this._menuScreen		= new MenuScreen();
+				
+			this._controller.assignObjectController(null, _dialogue, _indexBoard, this._scoreBoard);
+			this._controller.assignScreen(Constant.STORY_SCREEN_1);
 			
 			placeImageOnScreen();
 			setupGameObject();
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClicked);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this._optionBtn.addEventListener(Event.TRIGGERED, onOptionBtnTrigger);
+			
+			//add all event listener from the menu screen here
+			this.addEventListener('OptionMenuResumeButtonTrigger'		, onMenuCloseBtnTrigger);
+			this.addEventListener('OptionMenuQuitButtonTrigger'			, onMenuQuitBtnTrigger);
+			this.addEventListener('OptionMenuResetStateButtonTrigger'	, onMenuResetStateBtnTrigger);
 		}
-		
+
 		private function placeImageOnScreen():void
 		{
+			new MetalWorksMobileTheme();
+			
 			/* Load the image into variables */
 			this._background	= new Image(Assets.getAtlas(Constant.BACKGROUND_SPRITE).getTexture(Constant.BG_STAGE1));
 			this._screen		= new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture(Constant.STAGE1_SCREEN));
@@ -74,7 +89,6 @@ package screen
 			this._dialogueIMG 	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.DIALOGUE_IMG));
 			this._guiderIMG		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.GUIDER_IMG));
 			this._lifeIMG		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.LIFE_IMG));
-			this._escButton		= new Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.ESCB_IMG));
 			
 			/* Place the image to correct position on screen */
 			this._frameIMG.x 		= Constant.FRAME_STORY_POS.x;
@@ -88,9 +102,9 @@ package screen
 			
 			this._guiderIMG.x		= Constant.GUIDER_POS.x;
 			this._guiderIMG.y		= Constant.GUIDER_POS.y;
-			
-			this._escButton.x		= Constant.ESCB_POS.x;
-			this._escButton.y		= Constant.ESCB_POS.y;
+	
+			this._optionBtn.label	= 'Options';
+			this._optionBtn.useHandCursor	= true;
 			
 			/* Add image to display */
 			this.addChild(_background);
@@ -98,18 +112,18 @@ package screen
 			this.addChild(_dialogueIMG);
 			this.addChild(_screen);
 			this.addChild(_guiderIMG);
-			this.addChild(_escButton);
+			this.addChild(this._optionBtn);
 		}
 		
 		private function setupGameObject():void
 		{
-			_dialogue.x 	= Constant.DIALOGUE_POS.x + 75;
-			_dialogue.y 	= Constant.DIALOGUE_POS.y + 20;
+			this._dialogue.x 	= Constant.DIALOGUE_POS.x + 75;
+			this._dialogue.y 	= Constant.DIALOGUE_POS.y + 20;
 			
-			_indexBoard.x 	= Constant.GRID_STORY_POS.x;
-			_indexBoard.y 	= Constant.GRID_STORY_POS.y;
+			this._indexBoard.x 	= Constant.GRID_STORY_POS.x;
+			this._indexBoard.y 	= Constant.GRID_STORY_POS.y;
 			
-			_scoreBoard.x 	= 160;
+			this._scoreBoard.x 	= 160;
 			
 			this.addChild(_dialogue);
 			this.addChild(_indexBoard);
@@ -127,18 +141,22 @@ package screen
 			this.removeChild(_dialogue);
 			this.removeChild(_indexBoard);
 			this.removeChild(_scoreBoard);
+			this.removeChild(this._optionBtn);
+			this.removeChild(this._menuScreen);
 			
-			_background  = null;
-			_frameIMG    = null;
-			_dialogueIMG = null;
-			_screen      = null;
-			_guiderIMG   = null;
-			_escButton   = null;
-			_dialogue    = null;
-			_indexBoard  = null;
-			_scoreBoard  = null;
-			_controller  = null;
-			_com         = null;
+			this._background  	= null;
+			this._frameIMG    	= null;
+			this._dialogueIMG 	= null;
+			this._screen      	= null;
+			this._guiderIMG   	= null;
+			this._escButton   	= null;
+			this._dialogue    	= null;
+			this._indexBoard  	= null;
+			this._scoreBoard  	= null;
+			this._controller  	= null;
+			this._com         	= null;
+			this._optionBtn		= null;
+			this._menuScreen 	= null;
 
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
@@ -157,8 +175,8 @@ package screen
 		{
 			var isWon :Boolean;
 			var isLost:Boolean;
-			isWon = _controller.isWon;
-			isLost = _controller.isLost;
+			isWon 	= 	this._controller.isWon;
+			isLost 	= 	this._controller.isLost;
 			if(isWon){
 				
 				//save the state to server with the state number 1
@@ -176,6 +194,42 @@ package screen
 				//dispatch event to change screen
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
 			}
+		}
+		
+		private function onOptionBtnTrigger(event:Event):void
+		{
+			
+			//must pause the game first
+			this.addChild(this._menuScreen);
+		}
+		
+		private function onMenuCloseBtnTrigger(event:Event):void
+		{
+			//remove the menu screen
+			this.removeChild(this._menuScreen);
+		}
+		
+		private function onMenuQuitBtnTrigger(event:Event):void
+		{
+			//dispatch event to change screen
+			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN}, true));
+		}
+		
+		private function onMenuResetStateBtnTrigger(event:Event):void
+		{	
+			//reset the state here
+			this.removeChild(this._dialogue, 	true);
+			this.removeChild(this._indexBoard, true);
+			this.removeChild(this._scoreBoard, true);
+			
+			this._dialogue			= new Dialogue(this._controller);
+			this._indexBoard		= new IndexBoard(this._controller);
+			this._scoreBoard		= new ScoreBoard(this._controller);
+			
+			this.setupGameObject();
+
+			//reassign all the object to the repsective object in controller
+			this._controller.assignObjectController(null, this._dialogue, this._indexBoard, this._scoreBoard);
 		}
 	}
 }

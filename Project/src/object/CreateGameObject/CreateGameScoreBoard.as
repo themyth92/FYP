@@ -5,9 +5,14 @@ package object.CreateGameObject
 	import constant.Constant;
 	
 	import feathers.controls.Header;
+	import feathers.controls.List;
 	import feathers.controls.Panel;
+	import feathers.controls.PickerList;
 	import feathers.controls.TextInput;
+	import feathers.controls.renderers.DefaultListItemRenderer;
+	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.core.PopUpManager;
+	import feathers.data.ListCollection;
 	import feathers.themes.MetalWorksMobileTheme;
 	
 	import flash.geom.Point;
@@ -47,6 +52,7 @@ package object.CreateGameObject
 		private var _secStart		:int = 30;
 		
 		private var _popUpPanel		:Panel;
+		private var _screenSelect  :PickerList;
 				
 		public function CreateGameScoreBoard()
 		{
@@ -96,12 +102,51 @@ package object.CreateGameObject
 			this._lifeIMG.x  = LIFE_IMG_POS.x;
 			this._lifeIMG.y  = LIFE_IMG_POS.y;
 			
+			//screen select choice
+			this._screenSelect				= new PickerList();
+			this._screenSelect.prompt		= 'Add screen';
+			this._screenSelect.typicalItem	= 'Add screen';
+			
+			//list all the user defined screen
+			//and add in title
+			var screenList:ListCollection	= new ListCollection();
+			for(var i:uint = 0 ; i < Assets.getUserScreenTexture().length ;i++){
+				screenList.push({text : Assets.getUserScreenTexture()[i].title});
+			}
+			
+			this._screenSelect.dataProvider 	= screenList;
+			this._screenSelect.selectedIndex 	= -1;
+			
+			this._screenSelect.typicalItem 		= { text: "Screen Select" };
+			this._screenSelect.labelField 		= "text";
+			
+			this._screenSelect.listFactory = function():List
+			{
+				var list:List = new List();
+				
+				list.typicalItem = { text: "Screen Select" };
+				list.itemRendererFactory = function():IListItemRenderer
+				{
+					var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
+					renderer.labelField = "text";
+					return renderer;
+				};
+				return list;
+			};
+			
+			this._screenSelect.x 		= 400;
+			this._screenSelect.y		= 5;
+			this._screenSelect.width 	= 140;
+			this._screenSelect.height 	= 40;
+			this._screenSelect.useHandCursor = true;
+			
 			this.addChild(this._coinText);
 			this.addChild(this._lifeText);
 			this.addChild(this._timeText);
 			this.addChild(this._coinIMG);
 			this.addChild(this._timeIMG);
 			this.addChild(this._lifeIMG);
+			this.addChild(this._screenSelect);
 			
 			this._timeIMG.addEventListener(Event.TRIGGERED, onTimeClicked);
 			this._lifeIMG.addEventListener(Event.TRIGGERED, onLifeClicked);

@@ -104,6 +104,7 @@ package object.CreateGameObject
 			
 			//button
 			this._saveBtn   		    = new Button();
+			this._saveBtn.useHandCursor	= true;
 			this._saveBtn.x		 		= Constant.STARTB_POS.x;
 			this._saveBtn.y 			= Constant.STARTB_POS.y;
 			this._saveBtn.height	    = 45;
@@ -111,6 +112,7 @@ package object.CreateGameObject
 			this._saveBtn.label			= 'Save';
 			
 			this._previewBtn			= new Button();
+			this._previewBtn.useHandCursor	= true;
 			this._previewBtn.x 			= Constant.PREVIEWB_POS.x;
 			this._previewBtn.y 			= Constant.PREVIEWB_POS.y;
 			this._previewBtn.height    	= 45;
@@ -118,6 +120,7 @@ package object.CreateGameObject
 			this._previewBtn.label    	= 'Preview';
 			
 			this._publishBtn			= new Button();
+			this._publishBtn.useHandCursor	= true;
 			this._publishBtn.x 			= Constant.PUBLISHB_POS.x;
 			this._publishBtn.y 			= Constant.PUBLISHB_POS.y; 
 			this._publishBtn.height    	= 45;

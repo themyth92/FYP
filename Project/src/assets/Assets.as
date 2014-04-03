@@ -82,6 +82,9 @@ package assets
 		[Embed(source = '../media/sprite/loadingPage/preLoader.xml', mimeType = 'application/octet-stream')]
 		private static const AtlasXmlLoadingPage    :Class;
 		
+		[Embed(source = '../media/sound/CreateGameBackground.mp3')]
+		private static const CreateGameBackgroundSound:Class;
+		
 		private static var _gameTexture 	  	:Dictionary = new Dictionary();
 		private static var _gameTextureAtlas 	:Dictionary = new Dictionary();
 		

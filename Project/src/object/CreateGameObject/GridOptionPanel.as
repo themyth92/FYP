@@ -87,7 +87,10 @@ package object.CreateGameObject
 			items.fixed = true;
 			
 			this._list 					= new PickerList();
+			this._list.height			= 50;
+			this._list.width			= 140;
 			this._list.prompt 			= 'Questions';
+			this._list.useHandCursor   	= true; 
 			
 			this._list.dataProvider 	= new ListCollection(items);
 			this._list.selectedIndex 	= -1;
@@ -112,14 +115,18 @@ package object.CreateGameObject
 			//delete button
 			this._deleteBtn			= new Button();
 			this._deleteBtn.label	= 'Delete';
-			this._deleteBtn.y		= 58;
+			this._deleteBtn.y		= 48;
 			this._deleteBtn.width  	= 140;
+			this._deleteBtn.height	= 50;
+			this._deleteBtn.useHandCursor = true;
 			
 			//close button
 			this._closeBtn       	= new Button();
 			this._closeBtn.label 	= 'Close';
-			this._closeBtn.y 		= 116;
+			this._closeBtn.y 		= 95;
 			this._closeBtn.width	= 140; 
+			this._closeBtn.height	= 50;
+			this._closeBtn.useHandCursor = true;
 			
 			this._list.visible		= false;
 			this._deleteBtn.visible	= false;

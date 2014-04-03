@@ -17,7 +17,7 @@ package screen
 	public class PreviewLoader extends Sprite
 	{
 		//Test data
-		private var testData	 :Object = {
+	/*	private var testData	 :Object = {
 			hero :{pos : 12, gender : 1},
 			enemy : [],
 			obstacles : [],
@@ -99,6 +99,6 @@ package screen
 		
 		private function setupDataForScreen():void{
 			PreviewGameInfo.storeScreenInfo(this._data[0], this._data[1], this._data[2], this._data[3]);
-		}
+		}*/
 	}
 }
