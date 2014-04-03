@@ -7,6 +7,7 @@ package object.CreateGameObject
 	import feathers.controls.Alert;
 	import feathers.controls.Button;
 	import feathers.controls.Callout;
+	import feathers.controls.Header;
 	import feathers.controls.Label;
 	import feathers.controls.Panel;
 	import feathers.controls.PickerList;
@@ -79,7 +80,7 @@ package object.CreateGameObject
 			return this._titleInput.text;
 		}
 		
-		public function getPlayerInfo():Array
+		public function getPlayerInfo():Object
 		{
 			var gender		:String;
 			var pos			:Number;
@@ -90,29 +91,28 @@ package object.CreateGameObject
 				gender = "Female";
 			
 			pos = Number(this._playerPosInput.text);
-			var playerInfo	:Array	= new Array(gender, pos);
+			var playerInfo	:Object	= new Object();
+			playerInfo.pos = pos;
+			playerInfo.gender = gender;
 			return playerInfo;
 		}
 		
 		public function getEnemyInfo():Array
 		{
-			var enemy1		:Array;
-			var enemy2		:Array;
-			var amount		:Number = 0;
+			var enemy1		:Object = new Object();
+			var enemy2		:Object = new Object();
+						
+			enemy1.type 		= _enemy1InputType.selectedItem;
+			enemy1.pos 			= Number(_enemy1InputPos.text);
+			enemy1.speed 		= Number(_enemy1InputSpeed.text);
+			enemy1.textureIndex = _enemy1InputImage.selectedIndex + 1;
 			
-			if(_enemy1InputType.selectedIndex != 2)
-			{
-				amount ++;
-				enemy1 = new Array(_enemy1InputType.selectedItem, Number(_enemy1InputPos.text), Number(_enemy1InputSpeed.text), _enemy1InputImage.selectedIndex);
-			}
+			enemy2.type 		= _enemy2InputType.selectedItem;
+			enemy2.pos 			= Number(_enemy2InputPos.text);
+			enemy2.speed 		= Number(_enemy2InputSpeed.text);
+			enemy2.textureIndex = _enemy2InputImage.selectedIndex + 1;
 			
-			if(_enemy2InputType.selectedIndex != 2)
-			{
-				amount ++;
-				enemy2 = new Array(_enemy2InputType.selectedItem, Number(_enemy2InputPos.text), Number(_enemy2InputSpeed.text), _enemy2InputImage.selectedIndex);
-			}
-			
-			var enemyInfo	:Array = new Array(amount, enemy1, enemy2);
+			var enemyInfo	:Array = new Array(enemy1, enemy2);
 			return enemyInfo;
 		}
 		
@@ -206,6 +206,7 @@ package object.CreateGameObject
 				renderer.layoutOrder = BaseDefaultItemRenderer.LAYOUT_ORDER_LABEL_ACCESSORY_ICON;
 				return renderer;
 			};
+			this._enemy1InputImage.selectedIndex = 0;
 			
 			this._enemy2InputImage.dataProvider = new ListCollection(
 				[
@@ -225,7 +226,7 @@ package object.CreateGameObject
 				renderer.layoutOrder = BaseDefaultItemRenderer.LAYOUT_ORDER_LABEL_ACCESSORY_ICON;
 				return renderer;
 			};
-			this._enemy2InputImage.layoutData = new AnchorLayoutData(0, 0, 0, 0);
+			this._enemy2InputImage.selectedIndex = 0;
 			
 			this._enemy1InputType.x 	= 70; 	this._enemy1InputType.y 	= 425;
 			this._enemy1InputType.width = 40;	this._enemy1InputType.height= 40;
@@ -314,6 +315,7 @@ package object.CreateGameObject
 			var panelLayout:VerticalLayout = new VerticalLayout();
 			_endPtChoosePanel.height = 400;
 			_endPtChoosePanel.width = 600;
+
 			panelLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_CENTER;
 			panelLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_BOTTOM;
 			panelLayout.gap = 75;
@@ -370,14 +372,17 @@ package object.CreateGameObject
 			_endPtChoosePanel.addChild(notifyMsg);
 			var closeButton	:Button = new Button();
 			closeButton.label = "Ok";
-			closeButton.addEventListener(Event.TRIGGERED, onStartChoosingEndPts);
+			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void{
+				onStartChoosingEndPts(endPtAmount);
+			});
 			closeButton.y = 300;
 			_endPtChoosePanel.addChild(closeButton);
 		}
 		
-		private function onStartChoosingEndPts(event:Event):void
+		private function onStartChoosingEndPts(amount:Number):void
 		{
 			PopUpManager.removePopUp(_endPtChoosePanel);
+			this.dispatchEventWith('startChoosingEndPt', true, {id:"enemy1", option:amount, pos:Number(this._enemy1InputPos.text)});
 		}
 		
 		private function onEnemy2SpeedFocus(event:Event):void
@@ -427,6 +432,7 @@ package object.CreateGameObject
 				if(this._enemy2InputType.selectedIndex == 1)
 					enemyPatrolNotify();	
 				this._enemy2InputPos.clearFocus();
+				this.dispatchEventWith('displayCharacters', true, {id:"enemy2", textureIndex:this._enemy2InputImage.selectedIndex +1, pos:Number(this._enemy2InputPos.text)});
 			}
 		}
 		
@@ -477,6 +483,7 @@ package object.CreateGameObject
 				if(this._enemy1InputType.selectedIndex == 1)
 					enemyPatrolNotify();	
 				this._enemy1InputPos.clearFocus();
+				this.dispatchEventWith('displayCharacters', true, {id:"enemy1", textureIndex:this._enemy1InputImage.selectedIndex +1, pos:Number(this._enemy1InputPos.text)});
 			}
 		}
 		
@@ -500,7 +507,10 @@ package object.CreateGameObject
 				this._playerPosInput.text = "";	
 			}
 			else
+			{
 				this._playerPosInput.clearFocus();
+				this.dispatchEventWith('displayCharacters', true, {id:"player", gender:this._genderInput.isSelected, pos:Number(this._playerPosInput.text)});
+			}
 		}
 		
 	}

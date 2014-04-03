@@ -559,13 +559,13 @@ package feathers.themes
 			skinSelector.setValueForState(this.buttonDisabledSkinTextures, Button.STATE_DISABLED, false);
 			skinSelector.displayObjectProperties =
 			{
-				width: 60 * this.scale,
-				height: 60 * this.scale,
+				width: 10 * this.scale,
+				height: 10 * this.scale,
 				textureScale: this.scale
 			};
 			button.stateToSkinFunction = skinSelector.updateValue;
 
-			button.minWidth = button.minHeight = 10 * this.scale;
+			button.minWidth = button.minHeight = 2 * this.scale;
 			button.minTouchWidth = button.minTouchHeight = 10 * this.scale;
 		}
 
@@ -623,7 +623,7 @@ package feathers.themes
 			button.paddingTop = button.paddingBottom = 8 * this.scale;
 			button.paddingLeft = button.paddingRight = 10 * this.scale;
 			button.gap = 12 * this.scale;
-			button.minWidth = button.minHeight = 10 * this.scale;
+			button.minWidth = button.minHeight = 2 * this.scale;
 			button.minTouchWidth = button.minTouchHeight = 10 * this.scale;
 		}
 
@@ -753,7 +753,7 @@ package feathers.themes
 			button.paddingTop = button.paddingBottom = 8 * this.scale;
 			button.paddingLeft = button.paddingRight = 16 * this.scale;
 			button.gap = 12 * this.scale;
-			//button.minWidth = button.minHeight = 76 * this.scale;
+			button.minWidth = button.minHeight = 76 * this.scale;
 			button.minTouchWidth = button.minTouchHeight = 88 * this.scale;
 		}
 
@@ -1278,8 +1278,8 @@ package feathers.themes
 		{
 			header.minWidth = 88 * this.scale;
 			//header.minHeight = 88 * this.scale;
-			//header.paddingTop = header.paddingBottom = 14 * this.scale;
-			//header.paddingLeft = header.paddingRight = 18 * this.scale;
+//			header.paddingTop = header.paddingBottom = 14 * this.scale;
+//			header.paddingLeft = header.paddingRight = 18 * this.scale;
 
 			header.titleProperties.textFormat = this.headerTextFormat;
 			header.titleProperties.embedFonts = true;

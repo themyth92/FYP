@@ -1,6 +1,7 @@
 package object.CreateGameObject
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import com.adobe.base64.Base64Encoder;
 	import com.adobe.images.PNGEncoder;
@@ -42,25 +43,25 @@ package object.CreateGameObject
 		private var _gridPanel      :GridPanel;
 		private var _componentPanel :ComponentPanel;
 		private var _scoreBoard		:CreateGameScoreBoard;
-		private var _com				:ServerClientCom;
+		private var _com			:ServerClientCom;
 		
-		private var _data		:Object;
+		private var _data			:Object;
 		
 		//button
-		private var _saveBtn 		 :Button;
+		private var _saveBtn 		:Button;
 		private var _previewBtn     :Button;
 		private var _publishBtn     :Button;
-		
-		
+	
 		//need to pass in here the user 
 		//defined image and question list
 		public function CreateGameBoard(serverData:Object = null)	
 		{
 			if(serverData){
 				//if got the server data then decode it into grids here		
-			}
-			
+			}		
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener('displayCharacters', onDisplayCharacter);
+			this.addEventListener('startChoosingEndPt', onChoosingEndPt);
 		}
 		
 		private function onAddedToStage(event:Event):void{
@@ -128,7 +129,6 @@ package object.CreateGameObject
 			this._publishBtn.label		= 'Publish';
 			
 			this.addChild(background);
-			this.addChild(_scoreBoard);
 			this.addChild(gridFrame);
 			this.addChild(rightBox);
 			this.addChild(this._saveBtn);
@@ -137,11 +137,20 @@ package object.CreateGameObject
 			this.addChild(this._componentPanel);
 			this.addChild(this._obstaclePanel);
 			this.addChild(this._gridPanel);
+			this.addChild(this._scoreBoard);
 			
-			_saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
-			_previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
-			_publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
+			this._saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
+			this._previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
+			this._publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
  		}
+		
+		private function onDisplayCharacter(event:Event):void{
+			this._gridPanel.onShowCharacterEvent(event.data);
+		}
+		
+		private function onChoosingEndPt(event:Event):void{
+			this._gridPanel.startChoosingEndPt(event.data);
+		}
 		
 		private function onSaveBtnTrigger(event:Event):void
 		{
@@ -178,17 +187,11 @@ package object.CreateGameObject
 		}
 		
 		private function onPreviewBtnTrigger(event:Event):void
-		{
-			var scoreBoard		:Array;
-			var player			:Array;
-			var enemy			:Array;
-			
-			var maxCoin 		:int = _scoreBoard.maxCoin;
-			var maxLife			:int = _scoreBoard.maxLife;
-			var minStart		:int = _scoreBoard.minStart;
-			var secStart		:int = _scoreBoard.secStart;
-			
-			scoreBoard = new Array(maxCoin, maxLife, minStart, secStart);
+		{			
+			PreviewGameInfo.storeObstaclesInfo(this._gridPanel.getObsList());
+			PreviewGameInfo.storePlayerInfo(this._componentPanel.getPlayerInfo());
+			PreviewGameInfo.storeScoreInfo(this._scoreBoard.getScoreBoardInfo());
+			PreviewGameInfo.storeEnemyInfo(this._componentPanel.getEnemyInfo(), this._gridPanel.Enemy1EndPts, this._gridPanel.Enemy2EndPts);
 			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.PREVIEW_LOADER}, true));
 		}
 		

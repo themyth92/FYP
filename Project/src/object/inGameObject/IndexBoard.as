@@ -73,6 +73,7 @@ package object.inGameObject
 		private var _dragType      : String;
 		private var _testImg       : Image;
 		private var _playerPos	   : Point;
+		private var _gender			: String = "Male";
 		
 		//AI PATH FINDING VARIABLES
 		private var _tileVector : Vector.<Object>;
@@ -247,6 +248,7 @@ package object.inGameObject
 		private function setupPattern():void
 		{
 			var collection 	:Vector.<String>;
+			var imgCollection	:Vector.<Image>;
 			var index		:Vector.<uint>;
 			var type		:Vector.<String>;
 			var pos			:uint;
@@ -289,16 +291,113 @@ package object.inGameObject
 					pos			= StoryConstant.STAGE5_PLAYER_POS;
 					patternToStage(collection,index,type,pos);
 					break;
-				case Constant.PREVIEW_SCREEN:
-					collection = PreviewGameInfo._obsCollection;
-					index = PreviewGameInfo._obsIndex;
-					type = PreviewGameInfo._obsType;
-					pos = PreviewGameInfo._playerPos;
-					patternToStage(collection,index,type,pos);
+				case Constant.PLAY_SCREEN:
+					imgCollection 	= PreviewGameInfo._obsCollection;
+					index 			= PreviewGameInfo._obsIndex;
+					type 			= PreviewGameInfo._obsType;
+					pos 			= PreviewGameInfo._playerPos;
+					this._gender	= PreviewGameInfo._playerGender;
+					previewPatternToStage(imgCollection,index,type,pos);
+					previewEnemyToStage();
 					break;
 					
 			}
 		}
+		
+		private function previewPatternToStage(collection:Vector.<Image>, index:Vector.<uint>,type:Vector.<String>,pos:uint):void{
+			var walkable	:Boolean = false;
+			for(var i:uint=0; i<collection.length; i++)
+				_patternCollection.push(collection[i]);
+			
+			_patternIndex      = index;
+			_patternType 	   = type;
+			for(var j:uint=0; j<_patternType.length; j++)
+			{
+				if(_patternType[j] == COIN_TYPE)
+				{
+					_maxCoin ++;
+					_controller.getGameStat("max coin", _maxCoin);
+					walkable = true;						
+				}
+				positionObjectOnStage(_patternCollection[j], _patternIndex[j], walkable);				
+			}
+			
+			createHero(pos);
+		}
+		
+		private function previewEnemyToStage():void
+		{
+			this._enemyList = new Vector.<Enemies>;
+			var speed	:Number;
+			var img		:Number;
+			var pos		:Array; 
+			
+			if(PreviewGameInfo._enemyType[0] != "None")
+			{
+				pos = new Array(indexToPoint(PreviewGameInfo._enemyPos[0]).x, indexToPoint(PreviewGameInfo._enemyPos[0]).y)
+				speed = PreviewGameInfo._enemySpd[0];
+				img = PreviewGameInfo._enemyImg[0];
+				this._enemy1 = new Enemies(this._controller, pos[0], pos[1], PreviewGameInfo._enemyType[0], speed, img, 1);
+				
+				this._enemy1.x = pos[0];
+				this._enemy1.y = pos[1];
+				
+				if(PreviewGameInfo._enemyType[0] == "Patrol Enemy")
+				{
+					this._enemy1.setEndPoints(indexToPoint(PreviewGameInfo._enemyPos[0]));
+					for(var i:uint=0; i<PreviewGameInfo._enemy1EndPts.length ;i++)
+					{
+						this._enemy1.setEndPoints(indexToPoint(PreviewGameInfo._enemy1EndPts[i]));
+					}
+					this._gotPatrol = true;
+				}
+				else if(PreviewGameInfo._enemyType[0] == "Follow Enemy")
+				{
+					_controller.updateUnits(_enemy1, null, null);
+					
+					for(var k:Number=0; k<11; k++)
+					{
+						for(var j:Number=0; j<9; j++)
+						{
+							if((_tileVector[k][j].x == _enemy1.x) && (_tileVector[k][j].y == _enemy1.y))
+							{
+								_tileVector[k][j].start1  = true;
+								_tileVector[k][j].visited1 = true;
+								_startPoint1 = new Point(_tileVector[k][j].x, _tileVector[k][j].y);
+								_path        = new Vector.<Point>();
+								_currPoint1  = new Point(_startPoint1.x, _startPoint1.y);
+								break;
+							}
+						}
+					}
+					this._gotFollow = true;
+				}
+
+				
+				this._enemyList.push(_enemy1);
+				this.addChild(_enemy1);
+			}
+			
+			if(PreviewGameInfo._enemyType[1] != "None")
+			{
+				pos = new Array(indexToPoint(PreviewGameInfo._enemyPos[1]).x, indexToPoint(PreviewGameInfo._enemyPos[1]).y)
+				speed = PreviewGameInfo._enemySpd[1];
+				img	= PreviewGameInfo._enemyImg[1];
+				if(PreviewGameInfo._enemyType[1] == "Patrol Enemy")
+				{
+					this._enemy2 = new Enemies(this._controller, pos[0], pos[1], PreviewGameInfo._enemyType[1], speed, img, 2);
+					this._gotPatrol = true;
+				}
+				else if(PreviewGameInfo._enemyType[1] == "Follow Enemy")
+					this._gotFollow = true;
+				
+				this._enemy2.x = pos[0];
+				this._enemy2.y = pos[1];
+				this._enemyList.push(_enemy2);
+				this.addChild(_enemy2);
+			}
+		}
+		
 		
 		private function setupStage3Enemies():void
 		{
@@ -542,7 +641,7 @@ package object.inGameObject
 					
 					_hero.initialX = _hero.x;
 					_hero.initialY = _hero.y;
-					
+					_hero.gender = this._gender;
 					this.addChild(_hero);
 					_controller.updateUnits(null,null,_hero);
 					
@@ -900,11 +999,7 @@ package object.inGameObject
 				}
 			}
 		}
-		private function createPatrolEnemies(enemyNo:Number):void
-		{
-			
-		}
-		
+
 		public function createEnemies(type:Array, speed:Array, image:Array, pos:Array):void
 		{
 			if(type[0] != 0)

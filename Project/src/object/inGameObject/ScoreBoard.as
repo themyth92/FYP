@@ -7,6 +7,7 @@
 package object.inGameObject
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.ChapterOneConstant;
 	import constant.Constant;
@@ -187,6 +188,19 @@ package object.inGameObject
 					_minutesOn 	= 0;
 					_secondsOn  = 5;
 					break;
+				case Constant.PLAY_SCREEN:
+					var coinText	:String = PreviewGameInfo._maxCoin + "/" + PreviewGameInfo._maxCoin;
+					var lifeText	:String = PreviewGameInfo._maxLife + "/" + PreviewGameInfo._maxLife;
+					var timeText	:String = formatLeadingZero(PreviewGameInfo._minStart) + " : " + formatLeadingZero(PreviewGameInfo._secStart);
+					result = new Array(coinText, lifeText, timeText);
+					_maxCoin = PreviewGameInfo._maxCoin;
+					_maxLife = PreviewGameInfo._maxLife;
+					_currLife = _maxLife;
+					_currCoin = _maxCoin;
+					_minutesOn = PreviewGameInfo._minStart;
+					_secondsOn = PreviewGameInfo._secStart;
+					_controller.getGameStat("max life", _maxLife);
+					break;
 				default:
 					result = new Array("0/0", "1/1", "01 : 30");
 					_maxCoin	= 0;
@@ -313,7 +327,8 @@ package object.inGameObject
 					header.title = "Time";
 					return header;
 				}
-					
+				
+				_panel.headerProperties.@height = 20;
 				_panel.addChild(closeButton);
 				this._controller.gotPopUp = true;
 				PopUpManager.addPopUp( _panel);

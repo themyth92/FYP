@@ -54,7 +54,7 @@ package screen
 			this._scoreBoard	= new ScoreBoard(this._controller);
 			
 			this._controller.assignObjectController(this._console, this._dialogue, this._indexBoard, this._scoreBoard);
-			this._controller.assignScreen(Constant.PREVIEW_SCREEN);
+			this._controller.assignScreen(Constant.PLAY_SCREEN);
 			
 			this.placeImageOnScreen();
 			this.setupGameObject();
@@ -116,6 +116,7 @@ package screen
 			this.addChild(this._dialogue);
 			this.addChild(this._indexBoard);
 			this.addChild(this._scoreBoard);
+			this._controller.changeState(Constant.PLAYING_STATE);
 		}
 		
 		private function onButtonClicked(event:Event):void

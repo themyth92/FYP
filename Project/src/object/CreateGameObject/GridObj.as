@@ -20,7 +20,7 @@ package object.CreateGameObject
 		
 		//check whether the grid has object or not
 		private var _state         	:Number;
-		private var _quad     			:Quad;
+		private var _quad     		:Quad;
 		private var _obstacleObj   	:ObstacleObj;
 		
 		//used for obstacle panel to know the index of question
@@ -107,6 +107,14 @@ package object.CreateGameObject
 		{
 			_start1 = value;
 		}
+		
+		public function setQuadAlpha(value:Number):void{
+			this._quad.alpha = value;
+		}
+		
+		public function setQuadColor(value:uint):void{
+			this._quad.color = value;
+		}
 
 		public function setPosition(xPos:Number, yPos:Number):void
 		{
@@ -116,7 +124,6 @@ package object.CreateGameObject
 		
 		public function changeStateToObstacle(obstacleObj:ObstacleObj):void
 		{
-			
 			//remove first then add again
 			//prevent overlapping obstacle
 			if(this._obstacleObj != null)

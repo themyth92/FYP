@@ -162,7 +162,7 @@ package main
 							this.removeChild(_createScreen);
 							this.addChild(_previewLoader);
 							break;
-						case Constant.PREVIEW_SCREEN:
+						case Constant.PLAY_SCREEN:
 							this.removeChild(_previewLoader);
 							this.addChild(_previewScreen);
 						default:

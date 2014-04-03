@@ -44,6 +44,7 @@ package object.inGameObject
 		private var _heroStatus  :String;
 		private var _heroEnable  :Boolean;
 		private var _hero        :Sprite;
+		private var _gender		 :String;
 		
 		/*----------------------------
 		|	      Hero variables     |
@@ -121,6 +122,10 @@ package object.inGameObject
 			return _playerY;
 		}
 		
+		public function set gender(value:String):void{
+			this._gender = value;
+		}
+		
 		public function showHero(index:int, status:uint = 0):void{
 			
 			if(index >= _normalStand.length){
@@ -192,9 +197,17 @@ package object.inGameObject
 			
 			var blur:BlurFilter = new BlurFilter();
 			for(var index:uint = 0 ; index < ChapterOneConstant.HERO_MALE_STAND.length ; index++){
-				
-				image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
-				movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
+				if(this._gender == "Male")
+				{
+					trace("male");
+					image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_MALE_STAND[index]));
+					movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_MALE_RUN[index]));
+				}else
+				{
+					trace("female");
+					image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture(ChapterOneConstant.HERO_FEMALE_STAND[index]));
+					movie = new MovieClip(Assets.getAtlas(Constant.PLAYER_SPRITE).getTextures(ChapterOneConstant.HERO_FEMALE_RUN[index]));
+				}
 				
 				_normalStand.push(image);
 				_normalRun.push(movie);

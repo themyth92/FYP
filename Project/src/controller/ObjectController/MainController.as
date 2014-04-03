@@ -297,6 +297,7 @@ package controller.ObjectController
 				_maxLife = value;
 			if(type == "life")
 			{
+				trace("go here");
 				this._currLife = value;
 				notifyScoreBoard("life");
 			}
@@ -362,7 +363,6 @@ package controller.ObjectController
 		
 		private function changeToPlayingState():void
 		{
-			
 			this._scoreBoard.state 	= Constant.PLAYING_STATE;
 			this._dialogue.state = Constant.PLAYING_STATE;
 			_indexBoardController	.changeObjectState	(ChapterOneConstant.PLAYING_STATE);
