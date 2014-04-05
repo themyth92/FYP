@@ -93,20 +93,15 @@ package object.inGameObject
 		}
 		
 		public function nextDialogueLine():void{
-			try{								
-				if(this._dialogCurPos <= this._dialogueWhole.length){
-					this._dialogueLine.text = this._dialogueWhole[this._dialogCurPos];
-					if(this._screen != Constant.PLAY_SCREEN)
-						checkStoryEvent();
-					this._dialogCurPos ++;
-				}
-				else{
-					this._controller.changeState(Constant.PLAYING_STATE);
-					disableKeyListeners();
-				}
+			if(this._dialogCurPos <= this._dialogueWhole.length){
+				this._dialogueLine.text = this._dialogueWhole[this._dialogCurPos];
+				if(this._screen != Constant.PLAY_SCREEN)
+					checkStoryEvent();
+				this._dialogCurPos ++;
 			}
-			catch(error:Error){
-				trace('The dialog position of the dialog bubble is not defined.');
+			else{
+				disableKeyListeners();
+				this._controller.changeState(Constant.PLAYING_STATE);
 			}
 		}
 		

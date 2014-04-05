@@ -107,13 +107,13 @@ package constant
 		public static const INPUTBOX_IMG	:String		= "InputBox";
 		
 		/* Screens SpriteSheet */
-		public static const STAGE1_SCREEN	:String		= "Stage1Screen";
-		public static const STAGE2_SCREEN	:String		= "Stage2Screen";
-		public static const STAGE3_SCREEN	:String		= "Stage3Screen";
-		public static const STAGE4_SCREEN	:String		= "Stage4Screen";
-		public static const STAGE5_SCREEN	:String		= "Stage5Screen";
-		public static const	CREATE1_SCREEN	:String		= "GrassScreen";
-		public static const CREATE2_SCREEN	:String		= "WaterScreen";
+		public static const STAGE1_FIELD	:String		= "Stage1Screen";
+		public static const STAGE2_FIELD	:String		= "Stage2Screen";
+		public static const STAGE3_FIELD	:String		= "Stage3Screen";
+		public static const STAGE4_FIELD	:String		= "Stage4Screen";
+		public static const STAGE5_FIELD	:String		= "Stage5Screen";
+		public static const	CREATE1_FIELD	:String		= "GrassScreen";
+		public static const CREATE2_FIELD	:String		= "WaterScreen";
 		
 		/* Background SpriteSheet */
 		public static const BG_STAGE1		:String		= "Background_Stage1";
@@ -154,7 +154,7 @@ package constant
 		public static const EDITTING_STATE  		:String					= 'EDITTING';
 		public static const PLAYING_STATE			:String					= 'PLAYING';
 		public static const ENDING_STATE			:String					= 'ENDING';
-		public static const PAUSE_STATE			:String					= 'PAUSING';
+		public static const PAUSE_STATE				:String					= 'PAUSING';
 		
 		/**====================================================================
 		 * |  		                  	SIGNALS   			             	  | *

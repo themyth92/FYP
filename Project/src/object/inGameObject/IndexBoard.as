@@ -242,7 +242,7 @@ package object.inGameObject
 			if(_state == Constant.PLAYING_STATE)
 			{
 				_timer ++;
-				
+				trace("go here");
 				updateHeroPosition();
 				
 				/* Move player */ 
@@ -302,49 +302,64 @@ package object.inGameObject
 		
 		private function setupPattern():void
 		{
-			var collection 	:Vector.<String>;
-			var imgCollection	:Vector.<Image>;
-			var index		:Vector.<uint>;
-			var type		:Vector.<String>;
-			var pos			:uint;
+			var collection 		:Vector.<String>;
+			var imgCollection	:Vector.<Image> = new Vector.<Image>();
+			var index			:Vector.<uint>;
+			var type			:Vector.<String>;
+			var pos				:uint;
 			
 			switch(_screen){
 				case Constant.STORY_SCREEN_1:
 					collection 	= StoryConstant.STAGE1_COLLECTION;
+					for(var i:uint=0; i< collection.length; i++)
+						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE1_INDEX;
 					type		= StoryConstant.STAGE1_TYPE;
 					pos			= StoryConstant.STAGE1_PLAYER_POS;
-					patternToStage(collection,index,type,pos);
+					addObstaclesToBoard(imgCollection, index, type, null);
+					createHero(pos);
 					break;
 				case Constant.STORY_SCREEN_2:
 					collection 	= StoryConstant.STAGE2_COLLECTION;
+					for(var i:uint=0; i< collection.length; i++)
+						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE2_INDEX;
 					type		= StoryConstant.STAGE2_TYPE;
 					pos			= StoryConstant.STAGE2_PLAYER_POS;
-					patternToStage(collection,index,type,pos);
+					addObstaclesToBoard(imgCollection, index, type, null);
+					createHero(pos);
 					break;
 				case Constant.STORY_SCREEN_3:
 					collection 	= StoryConstant.STAGE3_COLLECTION;
+					for(var i:uint=0; i< collection.length; i++)
+						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE3_INDEX;
 					type		= StoryConstant.STAGE3_TYPE;
 					pos			= StoryConstant.STAGE3_PLAYER_POS;
-					patternToStage(collection,index,type,pos);
+					addObstaclesToBoard(imgCollection, index, type, null);
+					createHero(pos);
 					setupStage3Enemies();
 					break;
 				case Constant.STORY_SCREEN_4:
 					collection 	= StoryConstant.STAGE4_COLLECTION;
+					for(var i:uint=0; i< collection.length; i++)
+						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE4_INDEX;
 					type		= StoryConstant.STAGE4_TYPE;
 					pos			= StoryConstant.STAGE4_PLAYER_POS;
-					patternToStage(collection,index,type,pos);
+					addObstaclesToBoard(imgCollection, index, type, null);
+					createHero(pos);
 					setupStage4Enemies();
 					break;
 				case Constant.STORY_SCREEN_5:
 					collection 	= StoryConstant.STAGE5_COLLECTION;
+					for(var i:uint=0; i< collection.length; i++)
+						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE5_INDEX;
 					type		= StoryConstant.STAGE5_TYPE;
 					pos			= StoryConstant.STAGE5_PLAYER_POS;
-					patternToStage(collection,index,type,pos);
+					addObstaclesToBoard(imgCollection, index, type, null);
+					createHero(pos);
 					break;
 				case Constant.PLAY_SCREEN:
 					imgCollection 	= PreviewGameInfo._obsCollection;
@@ -352,7 +367,6 @@ package object.inGameObject
 					type 			= PreviewGameInfo._obsType;
 					pos 			= PreviewGameInfo._playerPos;
 					this._gender	= PreviewGameInfo._playerGender;
-//					previewPatternToStage(imgCollection,index,type,pos);
 					addObstaclesToBoard(imgCollection, index, type, PreviewGameInfo._obsQns);
 					createHero(pos);
 					previewEnemyToStage();
@@ -368,7 +382,10 @@ package object.inGameObject
 			{
 				pos = indexToPoint(index[i]);
 				//Create a new obstacle
-				var obstacles	:Obstacles = new Obstacles(type[i], pos, collection[i], qns[i].gotQns, qns[i].qnsIndex);
+				if(qns != null)
+					var obstacles	:Obstacles = new Obstacles(type[i], pos, collection[i], qns[i].gotQns, qns[i].qnsIndex);
+				else 
+					var obstacles	:Obstacles = new Obstacles(type[i], pos, collection[i]);
 				
 				//Position it on screen
 				obstacles.x = pos.x;
