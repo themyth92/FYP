@@ -86,6 +86,7 @@ package object.inGameObject
 		
 		private var _isDisplayedQuiz: Boolean = false;
 		private var _isHit			: Boolean;
+		private var _hitCounter		: Number = 0;
 		private var _currLife		: Number;
 		private var _maxLife		: Number;
 		private var _currCollectObs	: Number = 0;
@@ -242,6 +243,7 @@ package object.inGameObject
 			if(_state == Constant.PLAYING_STATE)
 			{
 				_timer ++;
+				this._hitCounter ++;
 				updateHeroPosition();
 				
 				/* Move player */ 
@@ -249,7 +251,7 @@ package object.inGameObject
 				this._player.y += this._player.moveY;
 				
 				/* Player's checking functions */
-				if(_timer >= 30)
+				if(_hitCounter >= 30)
 					this._isHit = false;
 				checkCollisionWithObstacles();
 				checkCollisionWithEnemy();
@@ -300,7 +302,14 @@ package object.inGameObject
 		}
 		
 		public function removeLockOnCorrect(index:Number):void{
-			this.deleteObject(index);
+			for(var i:uint = 0; i<this._obsList.length; i++)
+			{
+				if(this._obsList[i].pos.equals(indexToPoint(index)))
+				{
+					this.removeChild(this._obsList[i])
+					this._obsList.slice(i, 1);
+				}
+			}
 		}
 		
 		private function setupPattern():void
@@ -812,7 +821,21 @@ package object.inGameObject
 		
 		/**====================================================================
 		 * |	                     AI HANDLERS			                  | *
-		 * ====================================================================**/		
+		 * ====================================================================**/
+		public function stopEnemies():void
+		{
+			if(this._enemy1 != null)
+			{
+				this._enemy1.moveX = 0;
+				this._enemy1.moveY = 0;
+			}
+			
+			if(this._enemy2 != null)
+			{
+				this._enemy2.moveX = 0;
+				this._enemy2.moveY = 0;
+			}
+		}
 		private function makeTiles():void
 		{
 			var x:Number = 0;
@@ -1230,6 +1253,8 @@ package object.inGameObject
 			{
 				this._isHit = true;
 				this._currLife --;
+				this._controller.updateLifeScore(this._currLife);
+				this._hitCounter = 0;
 			}
 			if(this._currLife == 0)
 				this._controller.isLost = true;

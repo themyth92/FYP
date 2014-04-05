@@ -162,36 +162,19 @@ package object.CreateGameObject
 		
 		private function onSaveBtnTrigger(event:Event):void
 		{
-			//what need here
-			var dataReturn:Vector.<Object> 			= new Vector.<Object>();;
-			var gridObj:Vector.<Vector.<GridObj>> 	= this._gridPanel.getGridList();
-			
-			for(var i:uint = 0 ; i < gridObj.length ; i++){
-				
-				for(var j:uint = 0; j < gridObj[i].length ; j++){
-					
-					if(gridObj[i][j].state == 1){
-						
-						var obj:Object 		= {};
-						obj.index 			= this.decodeGridIndex(i,j);
-						obj.isUserDefText 	= gridObj[i][j].getObstacle().isUserDefText;
-						obj.textureIndex 	= gridObj[i][j].getObstacle().textureIndex;
-						obj.type  			= gridObj[i][j].getObstacle().obstacleType;
-						
-						dataReturn.push(obj);
-					}
-				}
-			}
-			
-			//take a screen shot first 
-			var screenShot:String = this.takeScreenShot(DisplayObject(this._gridPanel));
-			
-			//push the screenshot object inside the screen
-			dataReturn.push({screen : screenShot});
+			var data:Object = new Object();
+			data.id 		= null;
+			data.title 		= this._componentPanel.getTitle();
+			data.player		= this._componentPanel.getPlayerInfo();
+			data.enemy		= this._componentPanel.getEnemyInfo();
+			data.obstacles	= this._gridPanel.getObsList();
+			data.screen		= this._scoreBoard.getScreen();
+			data.scoreboard	= this._scoreBoard.getScoreBoardInfo();
+			data.screenShot = this.takeScreenShot(DisplayObject(this._gridPanel));
 			
 			//send to server this information whenever the 
 			//save game button is clicked, all the information will be stored on server
-			this._com.saveUserGameCreation(dataReturn);
+			this._com.saveUserGameCreation(data);
 		}
 		
 		private function onPreviewBtnTrigger(event:Event):void
@@ -209,6 +192,16 @@ package object.CreateGameObject
 			//store Obstacles
 			//store Enemies
 			//store Player
+			var data:Object = new Object();
+			data.id 		= null;
+			data.title 		= this._componentPanel.getTitle();
+			data.player		= this._componentPanel.getPlayerInfo();
+			data.enemy		= this._componentPanel.getEnemyInfo();
+			data.obstacles	= this._gridPanel.getObsList();
+			data.screen		= this._scoreBoard.getScreen();
+			data.scoreboard	= this._scoreBoard.getScoreBoardInfo();
+			data.screenShot = this.takeScreenShot(DisplayObject(this._gridPanel));
+			this._com.publishGame(data);
 		}
 		
 		//change the xindex and yindex inside the 2D array

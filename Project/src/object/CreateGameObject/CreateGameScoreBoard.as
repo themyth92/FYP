@@ -69,6 +69,10 @@ package object.CreateGameObject
 			return scoreBoard;
 		}
 		
+		public function getScreen():Number{
+			return this._screenSelect.selectedIndex;
+		}
+		
 		public function get maxCoin():int{
 			return _maxCoin;
 		}

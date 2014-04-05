@@ -189,6 +189,12 @@ package controller.ObjectController
 			this._scoreBoard 	= scoreboard;
 		}
 		
+		public function updateLifeScore(life:Number):void
+		{
+			this._scoreBoard.currLife = life;
+			this._scoreBoard.updateLifeText();
+		}
+		
 		public function getGameStat(type:String, value:Number):void
 		{
 			if(type == "max coin")
@@ -272,6 +278,7 @@ package controller.ObjectController
 			this._scoreBoard.state 	= Constant.PAUSE_STATE;
 			this._dialogue.state 	= Constant.PAUSE_STATE;
 			this._indexBoard.state  = Constant.PAUSE_STATE;
+			this._indexBoard.stopEnemies();
 			if(this._screen != Constant.STORY_SCREEN_1)
 			{
 				this._console.state 	= Constant.PAUSE_STATE;

@@ -26,6 +26,7 @@ package object.inGameObject
 			this._qnsIndex 	= qnsIndex;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
 		public function get type():String{
@@ -52,6 +53,12 @@ package object.inGameObject
 			this.addChild(this._image);
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		private function onRemoveFromStage(event:Event):void{
+			this.removeChild(this._image);
+			
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 	}
 }

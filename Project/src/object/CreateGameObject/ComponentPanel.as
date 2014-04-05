@@ -92,6 +92,7 @@ package object.CreateGameObject
 			
 			pos = Number(this._playerPosInput.text);
 			var playerInfo	:Object	= new Object();
+			
 			playerInfo.pos = pos;
 			playerInfo.gender = gender;
 			return playerInfo;
