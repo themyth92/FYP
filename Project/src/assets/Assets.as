@@ -82,9 +82,6 @@ package assets
 		[Embed(source = '../media/sprite/loadingPage/preLoader.xml', mimeType = 'application/octet-stream')]
 		private static const AtlasXmlLoadingPage    :Class;
 		
-		[Embed(source = '../media/sound/CreateGameBackground.mp3')]
-		private static const CreateGameBackgroundSound:Class;
-		
 		private static var _gameTexture 	  	:Dictionary = new Dictionary();
 		private static var _gameTextureAtlas 	:Dictionary = new Dictionary();
 		
@@ -94,7 +91,37 @@ package assets
 		private static var _userQuestion      :Array	    = new Array();
 		//used to store all the user screen image
 		private static var _userScreenTexture	:Array		= new Array();
+		//used to store user current story stage
+		private static var _userCurrentStoryStage : Number= 1;
 		
+		//keep track the page from server user access to this swf
+		private static var _pageID 				: Number= 1;
+		
+		/*
+		used to get and set user current story stage so that user
+		does not need to play again the stage that he plays
+		*/
+
+		public static function get pageID():Number
+		{
+			return _pageID;
+		}
+
+		public static function set pageID(value:Number):void
+		{
+			_pageID = value;
+		}
+
+		public static function get userCurrentStoryStage():Number
+		{
+			return _userCurrentStoryStage;
+		}
+		
+		public static function set userCurrentStoryStage(value:Number):void
+		{
+			_userCurrentStoryStage = value;
+		}
+
 		/**======================================
 			@ get texture from a single string
 			@ param : textureName
@@ -154,7 +181,7 @@ package assets
 							return null;
 					break;
 					
-					case Constant.MAIN_SCREEN:
+					case Constant.NAVIGATION_SCREEN:
 						//try catch if the embeded image can not be found inside the project file
 						try{
 							texture                   = getTexture('AtlasTextureMain');

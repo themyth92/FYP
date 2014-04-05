@@ -1,4 +1,4 @@
-package screen
+package screen.subStoryScreen
 {
 	import assets.Assets;
 	
@@ -13,12 +13,14 @@ package screen
 	import object.inGameObject.IndexBoard;
 	import object.inGameObject.ScoreBoard;
 	
+	import screen.Screen;
+	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
-	public class StoryStage5 extends Sprite
+	public class StoryStage5 extends Screen
 	{
 		private var _dialogue		:Dialogue;
 		private var _indexBoard		:IndexBoard;
@@ -39,6 +41,49 @@ package screen
 			super();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		override public function resetCurrentActiveScreen():void
+		{
+			this.removeChild(this._background);
+			this.removeChild(this._frameIMG);
+			this.removeChild(this._dialogueIMG);
+			this.removeChild(this._screen);
+			this.removeChild(this._guiderIMG);
+			this.removeChild(this._escButton);
+			
+			this.removeChild(this._dialogue);
+			this.removeChild(this._console);
+			this.removeChild(this._indexBoard);
+			this.removeChild(this._scoreBoard);
+			
+			this._background	= null;
+			this._frameIMG		= null;
+			this._dialogueIMG	= null;
+			this._screen		= null;
+			this._guiderIMG		= null;
+			this._escButton		= null;
+			this._dialogue		= null;
+			this._console		= null;
+			this._indexBoard	= null;
+			this._scoreBoard	= null;
+			
+			this._controller 	= new MainController ();	
+			this._console		= new Console(this._controller);
+			this._dialogue		= new Dialogue(this._controller);
+			this._indexBoard	= new IndexBoard(this._controller);
+			this._scoreBoard	= new ScoreBoard(this._controller);
+			
+			this._controller.assignObjectController(this._console, this._dialogue, this._indexBoard, this._scoreBoard);
+			this._controller.assignScreen(Constant.STORY_SCREEN_5);
+			
+			this.placeImageOnScreen();
+			this.setupGameObject();
+		}
+		
+		override public function pauseGame():void
+		{
+			
 		}
 		
 		private function onAddedToStage(event:Event):void
@@ -120,7 +165,7 @@ package screen
 			var buttonClicked	:Button = event.target as Button;
 			if(buttonClicked == _escButton)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN}, true));
+//				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN}, true));
 			}
 		}
 		

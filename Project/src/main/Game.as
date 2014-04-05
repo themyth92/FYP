@@ -4,171 +4,206 @@ package main
 	
 	import events.NavigationEvent;
 	
-	import gameData.GameData;
+	import manager.ServerClientManager;
 	
-	import screen.CreateScreen;
+	import screen.CreateGameScreen;
 	import screen.GameOverScreen;
 	import screen.LoadingScreen;
-	import screen.MainScreen;
-	import screen.PreviewLoader;
-	import screen.PreviewScreen;
-	import screen.StoryStage1;
-	import screen.StoryStage2;
-	import screen.StoryStage3;
-	import screen.StoryStage4;
-	import screen.StoryStage5;
+	import screen.NavigationScreen;
+	import screen.PlayScreen;
+	import screen.StoryScreen;
 	
-	import serverCom.ServerClientCom;
-	
+	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextField;
 	
 	public class Game extends Sprite
-	{
-		//Different screens in the game
-		private var _loadingScreen     	:LoadingScreen;
-		
-		//Selection screens
-		private var _mainScreen			:MainScreen;
-		
-		//Create game screen
-		private var _createScreen	    :CreateScreen;
-		private var _previewLoader		:PreviewLoader;
-		private var _previewScreen		:PreviewScreen;
-		
-		//Story mode screens
-		private var _storyStage1		:StoryStage1;
-		private var _storyStage2		:StoryStage2;
-		private var _storyStage3		:StoryStage3;
-		private var _storyStage4		:StoryStage4;
-		private var _storyStage5		:StoryStage5;
-		
-		//Gameover screen
-		private var _gameOver			:GameOverScreen;
+	{	
+		//parent screen
+		private var _navigationScreen		:NavigationScreen;
+		private var _createGameScreen	    :CreateGameScreen;	
+		private var _loadingScreen			:LoadingScreen;
+		private var _playScreen			:PlayScreen;
+		private var _storyScreen			:StoryScreen;
+		private var _gameOver				:GameOverScreen;
+		private var _serverClientManager  	:ServerClientManager;
 		
 		public function Game()
-		{
+		{	
 			super();
-			_loadingScreen   	= new LoadingScreen();
-			_mainScreen  		= new MainScreen();
-			_createScreen		= new CreateScreen();
-			_storyStage1		= new StoryStage1();
-			_storyStage2		= new StoryStage2();
-			_storyStage3		= new StoryStage3();
-			_storyStage4		= new StoryStage4();
-			_storyStage5		= new StoryStage5();
-			_gameOver			= new GameOverScreen();
-			_previewLoader		= new PreviewLoader();
-			_previewScreen		= new PreviewScreen();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
 		}
 		
 		private function onAddedToStage(event:Event):void{
+			
+			//loading all the textures and questions for first time bootstrapping the game
+			//depend on the page that server reply, the texture and question load in the
+			//game will be different
+			//The pages include 3 page : 
+			//1. story page
+			//2. repair the game page
+			//3. play the game page
+			
+			//use starling stage to pass the navigation event instead
+			//for some reason can not use the current object to listen to the event
+			
+			this._loadingScreen 			= new LoadingScreen();
+			this.addChild(this._loadingScreen);
+			
+			stage.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
-			this.addChild(_loadingScreen);
 		}
 		
-		private function onChangeScreen(e:NavigationEvent):void{
-		
-			if(e.screenID.needSaveState != undefined){
+		private function onChangeScreen(event:NavigationEvent):void
+		{
+			var fromScreen:String = event.screenID.from;
+			
+			if(event.screenID.from && event.screenID.to){
 				
-				if(GameData.getGameState() == 1){
+				switch(event.screenID.to){
 					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage1);
-				}
-				
-				if(GameData.getGameState() == 2){
+					case Constant.NAVIGATION_SCREEN:
+						
+						this.changeScreenToNavigationScreen(fromScreen);
+						break;
 					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage2);
-				}
-				
-				if(GameData.getGameState() == 3){
+					case Constant.STORY_SCREEN:
+						
+						this.changeScreenToStoryScreen();
+						break;
 					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage3);
-				}
-				
-				if(GameData.getGameState() == 4){
+					case Constant.CREATE_GAME_SCREEN:
+						
+						this.changeScreenToCreateGameScreen(fromScreen);
+						break;
 					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage4);
-				}
-				
-				if(GameData.getGameState() == 5){
+					case Constant.PLAY_SCREEN:
+						
+						this.changeScreenToPlayGameScreen(fromScreen);
+						break;
 					
-					this.removeChild(_mainScreen);
-					this.addChild(_storyStage5);
-				}
+					default:
+						break;
+				}	
 			}
-			else{
-				if(e.screenID.id != undefined){
-					switch(e.screenID.id){
-						case Constant.LOADING_SCREEN:
-							break;
-						
-						case Constant.MAIN_SCREEN:
-							this.removeChild(_loadingScreen);
-							this.removeChild(_storyStage1);
-							this.removeChild(_storyStage2);
-							this.removeChild(_storyStage3);
-							this.removeChild(_storyStage3);
-							this.removeChild(_storyStage4);
-							this.removeChild(_storyStage5);
-							this.removeChild(_createScreen);
-							this.addChild(_mainScreen);
-							break;
-						
-						case Constant.CREATE_GAME_SCREEN:
-							this.removeChild(_mainScreen);
-							this.addChild(_createScreen);
-							break;
-						
-						case Constant.STORY_SCREEN_1:
-							this.addChild(_storyStage1);
-							break;
-							
-						case Constant.STORY_SCREEN_2:
-							this.removeChild(_storyStage1);
-							this.addChild(_storyStage2);
-							break;
-							
-						case Constant.STORY_SCREEN_3:
-							this.removeChild(_storyStage2);
-							this.addChild(_storyStage3);
-							break;
-							
-						case Constant.STORY_SCREEN_4:
-							this.removeChild(_storyStage3);
-							this.addChild(_storyStage4);
-							break;
-						case Constant.STORY_SCREEN_5:
-							this.removeChild(_storyStage4);
-							this.addChild(_storyStage5);
-							break;
-						case Constant.GAME_OVER_SCREEN:
-							this.removeChild(_storyStage1);
-							this.removeChild(_storyStage2);
-							this.removeChild(_storyStage3);
-							this.removeChild(_storyStage3);
-							this.removeChild(_storyStage4);
-							this.removeChild(_storyStage5);
-							this.addChild(_gameOver);
-						case Constant.PREVIEW_LOADER:
-							this.removeChild(_createScreen);
-							this.addChild(_previewLoader);
-							break;
-						case Constant.PLAY_SCREEN:
-							this.removeChild(_previewLoader);
-							this.addChild(_previewScreen);
-						default:
-							break;
-					}
-				}
+		}
+		
+		private function changeScreenToNavigationScreen(fromScreen:String):void
+		{
+			switch(fromScreen){
+				
+				case Constant.LOADING_SCREEN:
+					
+					this._navigationScreen	= new NavigationScreen();
+					
+					this.addChild(this._navigationScreen);
+					//must remove the loading screen and set it to null 
+					this.removeChild(this._loadingScreen);
+					this._loadingScreen		= null;
+					
+					break;
+				case Constant.CREATE_GAME_SCREEN:
+					
+					this._navigationScreen	= new NavigationScreen();
+					this.addChild(this._navigationScreen);
+					
+					//remove rubbish
+					this.removeChild(this._createGameScreen);
+					this._createGameScreen 	= null;
+					break;
+				case Constant.STORY_SCREEN:
+					
+					this._navigationScreen	= new NavigationScreen();
+					this.addChild(this._navigationScreen);
+					
+					this.removeChild(this._storyScreen);
+					this._storyScreen		= null;
+					break;
+				default:
+					break;
+			}
+		}
+		
+		//no need from screen here because we sure that it must from 
+		//navigation screen
+		private function changeScreenToStoryScreen():void
+		{
+			this._storyScreen			= new StoryScreen();
+			this.addChild(this._storyScreen);
+			
+			//remove rubbish navigation here
+			this.removeChild(this._navigationScreen);
+			this._navigationScreen		=	null;
+		}
+		
+		private function changeScreenToPlayGameScreen(fromScreen:String):void
+		{
+			switch(fromScreen){
+				case Constant.LOADING_SCREEN:
+					
+					this._playScreen		= 	new PlayScreen();
+					this.addChild(this._playScreen);
+					
+					this.removeChild(this._loadingScreen);
+					this._loadingScreen		= null;
+					
+					break;
+				case Constant.CREATE_GAME_SCREEN:
+					
+					//must create something to chage the state of the create game screen
+					//so that it does not listen to the event from stage
+					//MUST NOT DELETE THE CREATE GAME OBJECT HERE
+					//so that we can retrieve it later
+					this._playScreen		= 	new PlayScreen();
+					this.addChild(this._playScreen);
+					
+					break;
+			}
+			
+		}
+		
+		//3 cases : 
+		//from navigation screen
+		//from loading screen
+		//from preview inside the create game screen
+		private function changeScreenToCreateGameScreen(fromScreen: String):void
+		{
+			switch(fromScreen){
+				
+				case Constant.NAVIGATION_SCREEN:
+					
+					this._createGameScreen	= new CreateGameScreen();
+					this.addChild(this._createGameScreen);
+					
+					this.removeChild(this._navigationScreen);
+					this._navigationScreen = null;
+					break;
+				
+				case Constant.LOADING_SCREEN:
+					
+					this._createGameScreen	= new CreateGameScreen();
+					this.addChild(this._createGameScreen);
+					
+					this.removeChild(this._loadingScreen);
+					this._loadingScreen 	= null;
+					break;
+				
+				case Constant.PLAY_SCREEN:
+					
+					//must not remove the create game screen object here
+					//because later we will resume it when user want to come back
+					//to continue create their game
+					this._createGameScreen	= new CreateGameScreen();
+					this.addChild(this._createGameScreen);
+					//must create something to retrieve all 
+					//the event in create game screen	
+					this.removeChild(this._playScreen);
+					this._playScreen 		= null;
+				default:
+					break;
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package screen
+package screen.subStoryScreen
 {
 	import assets.Assets;
 	
@@ -11,20 +11,19 @@ package screen
 	import feathers.controls.Button;
 	import feathers.themes.MetalWorksMobileTheme;
 	
-	import gameData.GameData;
-	
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.IndexBoard;
 	import object.inGameObject.ScoreBoard;
 	
-	import serverCom.ServerClientCom;
+	import screen.MenuScreen;
+	import screen.Screen;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
 	
-	public class StoryStage1 extends Sprite
+	public class StoryStage1 extends Screen
 	{
 		private var _dialogue		:Dialogue;
 		private var _indexBoard	:IndexBoard;
@@ -36,12 +35,7 @@ package screen
 		private var _dialogueIMG	:Image;
 		private var _guiderIMG		:Image;
 		private var _lifeIMG		:Image;
-		private var _escButton		:Button;
 		private var _gotPopUp		:Boolean;
-		private var _com           :ServerClientCom;
-		private var _optionBtn     :Button;
-		private var _menuScreen	:MenuScreen;
-				
 		private var _controller	:MainController;
 		
 		public function StoryStage1()
@@ -49,7 +43,44 @@ package screen
 			super();		
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+		}
+		
+		override public function resetCurrentActiveScreen():void
+		{
+			this.removeChild(_background);
+			this.removeChild(_frameIMG);
+			this.removeChild(_dialogueIMG);
+			this.removeChild(_screen);
+			this.removeChild(_guiderIMG);
+			this.removeChild(_dialogue);
+			this.removeChild(_indexBoard);
+			this.removeChild(_scoreBoard);
+			
+			this._background  	= null;
+			this._frameIMG    	= null;
+			this._dialogueIMG 	= null;
+			this._screen      	= null;
+			this._guiderIMG   	= null;
+			this._dialogue    	= null;
+			this._indexBoard  	= null;
+			this._scoreBoard  	= null;
+			this._controller  	= null;
+			
+			this._controller 		= new MainController ();
+			this._dialogue			= new Dialogue(_controller);
+			this._indexBoard		= new IndexBoard(_controller);
+			this._scoreBoard		= new ScoreBoard(_controller);
+			
+			this._controller.assignObjectController(null, _dialogue, _indexBoard, this._scoreBoard);
+			this._controller.assignScreen(Constant.STORY_SCREEN_1);
+			
+			placeImageOnScreen();
+			setupGameObject();
+		}
+		
+		override public function pauseGame():void
+		{
+			this._controller.changeState(Constant.PAUSE_STATE);	
 		}
 		
 		private function onAddedToStage(event:Event):void
@@ -57,10 +88,7 @@ package screen
 			this._controller 		= new MainController ();
 			this._dialogue			= new Dialogue(_controller);
 			this._indexBoard		= new IndexBoard(_controller);
-			this._scoreBoard		= new ScoreBoard(_controller);
-			this._com            	= new ServerClientCom();	
-			this._optionBtn 		= new Button();		
-			this._menuScreen		= new MenuScreen();
+			this._scoreBoard		= new ScoreBoard(_controller);	
 				
 			this._controller.assignObjectController(null, _dialogue, _indexBoard, this._scoreBoard);
 			this._controller.assignScreen(Constant.STORY_SCREEN_1);
@@ -68,14 +96,9 @@ package screen
 			placeImageOnScreen();
 			setupGameObject();
 			
-			this.addEventListener(Event.TRIGGERED, onButtonClicked);
-			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			this._optionBtn.addEventListener(Event.TRIGGERED, onOptionBtnTrigger);
-			
-			//add all event listener from the menu screen here
-			this.addEventListener('OptionMenuResumeButtonTrigger'		, onMenuCloseBtnTrigger);
-			this.addEventListener('OptionMenuQuitButtonTrigger'			, onMenuQuitBtnTrigger);
-			this.addEventListener('OptionMenuResetStateButtonTrigger'	, onMenuResetStateBtnTrigger);
+			this.addEventListener(Event.ENTER_FRAME, 			onEnterFrame);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, 	onRemoveFromStage);
+			this.removeEventListener(Event.ADDED_TO_STAGE, 		onAddedToStage);
 		}
 
 		private function placeImageOnScreen():void
@@ -102,9 +125,6 @@ package screen
 			
 			this._guiderIMG.x		= Constant.GUIDER_POS.x;
 			this._guiderIMG.y		= Constant.GUIDER_POS.y;
-	
-			this._optionBtn.label	= 'Options';
-			this._optionBtn.useHandCursor	= true;
 			
 			/* Add image to display */
 			this.addChild(_background);
@@ -112,7 +132,6 @@ package screen
 			this.addChild(_dialogueIMG);
 			this.addChild(_screen);
 			this.addChild(_guiderIMG);
-			this.addChild(this._optionBtn);
 		}
 		
 		private function setupGameObject():void
@@ -137,38 +156,22 @@ package screen
 			this.removeChild(_dialogueIMG);
 			this.removeChild(_screen);
 			this.removeChild(_guiderIMG);
-			this.removeChild(_escButton);
 			this.removeChild(_dialogue);
 			this.removeChild(_indexBoard);
 			this.removeChild(_scoreBoard);
-			this.removeChild(this._optionBtn);
-			this.removeChild(this._menuScreen);
 			
 			this._background  	= null;
 			this._frameIMG    	= null;
 			this._dialogueIMG 	= null;
 			this._screen      	= null;
 			this._guiderIMG   	= null;
-			this._escButton   	= null;
 			this._dialogue    	= null;
 			this._indexBoard  	= null;
 			this._scoreBoard  	= null;
 			this._controller  	= null;
-			this._com         	= null;
-			this._optionBtn		= null;
-			this._menuScreen 	= null;
 
-			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		}
-		
-		private function onButtonClicked(event:Event):void
-		{
-			var buttonClicked	:Button = event.target as Button;
-			if(buttonClicked == _escButton)
-			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN}, true));
-				this.removeEventListener(Event.TRIGGERED, onButtonClicked);
-			}
+			this.removeEventListener(Event.ENTER_FRAME, 		onEnterFrame);
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, 	onRemoveFromStage);
 		}
 		
 		private function onEnterFrame(event:Event):void
@@ -179,57 +182,14 @@ package screen
 			isLost 	= 	this._controller.isLost;
 			if(isWon){
 				
-				//save the state to server with the state number 1
-				//which means user has passed the first state
-				_com.saveUserIngameState(1);
-				
-				//save the state of the user in game
-				GameData.setGameState(2);
-				
 				//dispatch event to change screen
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_2}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.STORY_SCREEN_2}, true));
 			}
 			if(isLost)
 			{	
 				//dispatch event to change screen
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
 			}
-		}
-		
-		private function onOptionBtnTrigger(event:Event):void
-		{
-			
-			//must pause the game first
-			this.addChild(this._menuScreen);
-		}
-		
-		private function onMenuCloseBtnTrigger(event:Event):void
-		{
-			//remove the menu screen
-			this.removeChild(this._menuScreen);
-		}
-		
-		private function onMenuQuitBtnTrigger(event:Event):void
-		{
-			//dispatch event to change screen
-			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN}, true));
-		}
-		
-		private function onMenuResetStateBtnTrigger(event:Event):void
-		{	
-			//reset the state here
-			this.removeChild(this._dialogue, 	true);
-			this.removeChild(this._indexBoard, true);
-			this.removeChild(this._scoreBoard, true);
-			
-			this._dialogue			= new Dialogue(this._controller);
-			this._indexBoard		= new IndexBoard(this._controller);
-			this._scoreBoard		= new ScoreBoard(this._controller);
-			
-			this.setupGameObject();
-
-			//reassign all the object to the repsective object in controller
-			this._controller.assignObjectController(null, this._dialogue, this._indexBoard, this._scoreBoard);
 		}
 	}
 }

@@ -21,7 +21,7 @@ package screen
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
-	public class PreviewScreen extends Sprite
+	public class PlayScreen extends Sprite
 	{
 		private var _dialogue		:Dialogue;
 		private var _indexBoard		:IndexBoard;
@@ -37,7 +37,7 @@ package screen
 		
 		private var _controller		:MainController;
 		
-		public function PreviewScreen()
+		public function PlayScreen()
 		{
 			super();
 			
@@ -124,7 +124,7 @@ package screen
 			var buttonClicked	:Button = event.target as Button;
 			if(buttonClicked == _escButton)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.NAVIGATION_SCREEN}, true));
 			}
 		}
 		

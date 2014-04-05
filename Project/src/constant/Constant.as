@@ -14,18 +14,20 @@ package constant
 		 * |	                        SCREENS     			              | *
 		 * ====================================================================**/
 		public static const LOADING_SCREEN				:String = 'loadingScreen';
-		public static const FIRST_CHAPTER_SCREEN		:String = 'firstChapScreen';
-		public static const MAIN_SCREEN					:String = 'mainScreen';
+		public static const FIRST_CHAPTER_SCREEN			:String = 'firstChapScreen';
+		public static const NAVIGATION_SCREEN				:String = 'navigationScreen';
 		public static const CREATE_GAME_SCREEN			:String	= 'createScreen';
-		public static const ABOUT_SCREEN				:String = 'aboutScreen';
+		public static const QUIT_SCREEN					:String	= 'quitScreen';
 		public static const STORY_SCREEN_1				:String	= 'storyStage1';
 		public static const STORY_SCREEN_2				:String	= 'storyStage2';
 		public static const STORY_SCREEN_3				:String	= 'storyStage3';
 		public static const STORY_SCREEN_4				:String	= 'storyStage4';
 		public static const STORY_SCREEN_5				:String	= 'storyStage5';
-		public static const GAME_OVER_SCREEN			:String	= 'gameOver';
+		public static const GAME_OVER_SCREEN				:String	= 'gameOver';
 		public static const PLAY_SCREEN					:String = 'playScreen';
 		public static const PREVIEW_LOADER				:String = 'previewLoader';
+		public static const STORY_SCREEN					:String = 'storyScreen';
+		public static const MENU_SCREEN					:String = 'menuScreen';
 		
 		/**====================================================================
 		 * |	                  SPRITESHEET NAME   			              | *
@@ -140,6 +142,7 @@ package constant
 		public static const EDITTING_STATE  		:String					= 'EDITTING';
 		public static const PLAYING_STATE			:String					= 'PLAYING';
 		public static const ENDING_STATE			:String					= 'ENDING';
+		public static const PAUSE_STATE			:String					= 'PAUSING';
 		
 		/**====================================================================
 		 * |  		                  	SIGNALS   			             	  | *
@@ -150,5 +153,12 @@ package constant
 		public static const STATE_CHANGE	: String = "stateChange";
 		public static const	ERROR_NOTIFY1	: String = "errorNotify1";
 		public static const	ERROR_NOTIFY2	: String = "errorNotify2";
+		
+		/**====================================================================
+		 * |  		                  	SOUNDS   			             	  | *
+		 * ====================================================================**/
+		public static const NAVIGATION_BG_SOUND: String = 'NavigationBackgroundSound';
+		public static const CREATE_GAME_BG_SOUND : String = 'CreateGameBackgroundSound';
+		public static const STORY_GAME_BG_SOUND :String	= 'StoryBackgroundSound';
 	}
 }

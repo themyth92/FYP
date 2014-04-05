@@ -1,89 +1,112 @@
 /*
-
-*Display all the element for the loading screen
-
+	we have 3 pages and depend on the page
+	we will load the data from server differently
+	1. story page which will load all the user defined data include : 
+		question list and obstacle texture
+	2. repair game which will load the user defined data include : question list 
+		and obstacle texture plus the saved game data
+	3. play game which will load the data from server which belong to the 
+		game owner
 */
-
-package screen  
+package screen
 {
-	import assets.Assets;
-	
 	import constant.Constant;
 	
-	import controller.TextureController.TextureLoaderControl;
+	import controller.LoaderControler.LoaderController;
 	
 	import events.NavigationEvent;
 	
+	import feathers.controls.ProgressBar;
+	import feathers.layout.AnchorLayoutData;
+	import feathers.themes.MetalWorksMobileTheme;
+	
+	import main.Game;
+	
+	import manager.ServerClientManager;
+	
 	import object.LoaderObject;
 	
-	import serverCom.ServerClientCom;
-	
-	import starling.display.Image;
+	import starling.animation.Tween;
+	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
-		
+	
 	public class LoadingScreen extends Sprite
 	{	
-		private var _textureLoader : TextureLoaderControl;
-		private var _loaderObject  : LoaderObject;
-		private var _serCliObj     : ServerClientCom;
+		private static const LOAD_COMPLETE   	:String = 'LoadComplete';
+		private static const STORY_PAGE 		:int = 1;
+		private static const SAVE_PAGE  		:int = 2;
+		private static const PLAY_PAGE  		:int = 3;
+		
+		private var _progress					:ProgressBar;
+		private var _loadController 			:LoaderController;
+		private var _serverClientManager     	:ServerClientManager;
+		private var _pcent						:Number;
 		
 		public function LoadingScreen()
 		{
+			
 			super();
 			
-			//this is for game object to dispatch event
-			this.addEventListener(Event.REMOVED_FROM_STAGE      , onRemoveFromStage);
-			this.addEventListener(Event.ADDED_TO_STAGE          , onAddedToStage);
+			this.addEventListener(Event.ADDED_TO_STAGE,  	onAddedToStage);
+			this.addEventListener(Event.ENTER_FRAME, 	 	onEnterFrame);
+			this.addEventListener(Event.REMOVED_FROM_STAGE,	onRemoveFromStage);
+			this.addEventListener(LOAD_COMPLETE, 		 	onLoadComplete);
 		}
-		
-		private function onAddedToStage(e:Event):void{
-			
-			_loaderObject   = new LoaderObject();
-			_textureLoader  = new TextureLoaderControl();
-			_serCliObj      = new ServerClientCom();
-			
-			this.addChild(_loaderObject);
-			this.addChild(_textureLoader);
-			
-			var qsImgList:Object 				= _serCliObj.retrieveQuestionAndImageListFromServer();
-		
-			_textureLoader.loadUserTexture(this.getImgList(qsImgList), this.getQsList(qsImgList));	
-		}
-		
-		private function onRemoveFromStage(e:Event):void{
-			
-			this.removeChild(_loaderObject);
-			_loaderObject  = null;
-			_textureLoader = null;
-		}
-		
-		//process to return the image list from data from server
-		private function getImgList(qsImgList : Object):Array{
 
-			if(qsImgList != {} && qsImgList != null){
-				
-				if(qsImgList.image){
-					
-					return qsImgList.image;
-				}
-			}
-			
-			return new Array();
+		private function onEnterFrame(event:Event):void{
+			this._progress.value = this._loadController.loadedPcent;
 		}
 		
-		//process to return the question list from data from server
-		private function getQsList(qsImgList : Object):Array{
+		private function onAddedToStage(event:Event):void
+		{
 			
-			if(qsImgList != {} && qsImgList != null){
+			new MetalWorksMobileTheme();
+			
+			this._progress 								= new ProgressBar();
+			this._pcent									= 0;
+			
+			this._progress.minimum 						= 0;
+			this._progress.maximum 						= 100;
+			this._progress.value 						= 0;
+			const progressLayoutData:AnchorLayoutData 	= new AnchorLayoutData();
+			progressLayoutData.horizontalCenter	 		= 0;
+			progressLayoutData.verticalCenter 			= 0;
+			this._progress.layoutData 					= progressLayoutData;
+			this._progress.x 							= 265;
+			this._progress.y 							= 600/2;
+
+			this.addChild(this._progress);
+			
+			//add loader object controller
+			this._serverClientManager					= new ServerClientManager();
+			var serverObj:Object 						= this._serverClientManager.initCallServer();
+			
+			this._loadController						= new LoaderController(serverObj);
+		}
+		
+		private function onLoadComplete(event:Event):void
+		{
+			//rely on the pageID from server
+			//route the user to specific page
+			//if page ID == story page then route to navigation page
+			//if page ID == repair page then route to create game page 
+			//if page ID == play gmae page the route to play game page
+			if(event.data.pageID == STORY_PAGE){
 				
-				if(qsImgList.question){
-					
-					return qsImgList.question;
-				}
-			}
-			
-			return new Array();
+				//for some reason
+				//this can not pass event to the game object
+				//therefore use current starling stage instead
+				Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.LOADING_SCREEN, to :Constant.NAVIGATION_SCREEN}, true));
+			}		
+		}
+		
+		private function onRemoveFromStage(event:Event):void
+		{
+			this.removeChild(this._progress);
+			this._progress		 		= null;
+			this._loadController 		= null;
+			this._serverClientManager	= null;
 		}
 	}
 }

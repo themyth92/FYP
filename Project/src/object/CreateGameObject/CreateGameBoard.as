@@ -18,13 +18,14 @@ package object.CreateGameObject
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
+	import manager.ServerClientManager;
+	
 	import object.CreateGameObject.ComponentPanel;
 	import object.CreateGameObject.CreateGameScoreBoard;
 	import object.CreateGameObject.GridPanel;
 	import object.CreateGameObject.ObstacleObj;
 	import object.CreateGameObject.ObstaclePanel;
-	
-	import serverCom.ServerClientCom;
+	import object.SoundObject;
 	
 	import starling.core.RenderSupport;
 	import starling.core.Starling;
@@ -39,18 +40,21 @@ package object.CreateGameObject
 	{	
 		private static const DRAG_FORMAT:String = 'draggableQuad';
 		
-		private var _obstaclePanel  :ObstaclePanel;
-		private var _gridPanel      :GridPanel;
-		private var _componentPanel :ComponentPanel;
+		private var _obstaclePanel  	:ObstaclePanel;
+		private var _gridPanel      	:GridPanel;
+		private var _componentPanel 	:ComponentPanel;
 		private var _scoreBoard		:CreateGameScoreBoard;
-		private var _com			:ServerClientCom;
+		private var _com				:ServerClientManager;
 		
-		private var _data			:Object;
+		private var _data				:Object;
 		
 		//button
-		private var _saveBtn 		:Button;
-		private var _previewBtn     :Button;
-		private var _publishBtn     :Button;
+		private var _saveBtn 			:Button;
+		private var _previewBtn     	:Button;
+		private var _publishBtn     	:Button;
+		
+		//sound
+		private var _soundObject		: SoundObject;
 	
 		//need to pass in here the user 
 		//defined image and question list
@@ -68,7 +72,7 @@ package object.CreateGameObject
 			
 			new MetalWorksMobileTheme();
 			
-			this._com					= new ServerClientCom();
+			this._com					= new ServerClientManager();
 			
 			this._scoreBoard			= new CreateGameScoreBoard();
 			
@@ -128,6 +132,9 @@ package object.CreateGameObject
 			this._publishBtn.width		= 130;
 			this._publishBtn.label		= 'Publish';
 			
+			this._soundObject			= new SoundObject();
+			this._soundObject.playBackgroundMusic(Constant.CREATE_GAME_SCREEN);
+			
 			this.addChild(background);
 			this.addChild(gridFrame);
 			this.addChild(rightBox);
@@ -138,6 +145,7 @@ package object.CreateGameObject
 			this.addChild(this._obstaclePanel);
 			this.addChild(this._gridPanel);
 			this.addChild(this._scoreBoard);
+			this.addChild(this._soundObject);
 			
 			this._saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
 			this._previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);

@@ -39,7 +39,7 @@ package screen
 			else
 			{
 				this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN, needSaveState : true}, true));
+				//this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN, needSaveState : true}, true));
 			}
 		}
 		

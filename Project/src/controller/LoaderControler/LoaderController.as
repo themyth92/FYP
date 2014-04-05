@@ -4,7 +4,7 @@
  * ====================== * 
  **************************/
 
-package controller.TextureController 
+package controller.LoaderControler 
 {
 	import assets.Assets;
 	
@@ -19,48 +19,86 @@ package controller.TextureController
 	import flash.external.ExternalInterface;
 	import flash.net.URLRequest;
 	
+	import screen.LoadingScreen;
+	
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	
-	public class TextureLoaderControl extends Sprite
+	public class LoaderController extends LoadingScreen
 	{
-		private var _loader       : Loader;
-		private var _fileIndex    : uint;
-		private var _numberOfFile : uint;
-		private var _imgList      : Array;
-		private var _questionList : Array;
+		private static const STORY_PAGE 	: int = 1;
+		private static const SAVE_PAGE  	: int = 2;
+		private static const PLAY_PAGE  	: int = 3;
+		private static const LOAD_COMPLETE: String =  'LoadComplete';
+		
+		private var _loader       			: Loader;
+		private var _fileIndex    			: uint;
+		private var _numberOfFile 			: uint;
+		private var _imgList      			: Array;
+		private var _questionList 			: Array;
+		private var _serverData   			: Object;
+		private var _loadedPcent			: Number;
 		
 		//keep track of the index of the image loaded
 		//to be either screen or obstacle
-		private var _screenTexIndex	:uint = 0;
-		private var _obstaclesTexIndex : uint = 0;
+		private var _screenTexIndex		: uint = 0;
+		private var _obstaclesTexIndex 	: uint = 0;
 		
-		public function TextureLoaderControl()
+		public function LoaderController(serverData : Object)
 		{
-			_fileIndex    = 0;
-			_numberOfFile = 0;
-			_imgList      = new Array();
-			_questionList = new Array();
+			super();
+			
+			this._fileIndex    		= 0;
+			this._numberOfFile 		= 0;
+			
+			this._serverData		= serverData;
+			
+			this.processDataFromServer();
+		}
+
+		public function get loadedPcent():Number
+		{
+			return _loadedPcent;
+		}
+		
+		private function processDataFromServer():void
+		{
+			if(this._serverData && this._serverData.pageID){
+				
+				//keep the pageID somewhere
+				Assets.pageID	=	this._serverData.pageID;
+				
+				//if the server repond with attributes pageID = 1
+				if(this._serverData.pageID == STORY_PAGE){
+					
+					//set the current story stage for user
+					if(this._serverData.userStage)
+						Assets.userCurrentStoryStage	=	this._serverData.userStage;
+						
+					this._questionList 	= this.getQsList(this._serverData);
+					this._imgList	  	= this.getImgList(this._serverData);
+					this.loadUserTexture();
+				}
+			}
 		}
 		
 		//the image list will be passed here
 		//retrieve from the question and img list from server
-		public function loadUserTexture(imgList:Array, questionList:Array):void{
+		private function loadUserTexture():void{ 
 			
-			_imgList 		= imgList;
-			_questionList 	= questionList; 
-			
-			if(_questionList != null && _questionList.length > 0){
+			if(this._questionList != null && this._questionList.length > 0){
 				this.loadAllQuestion();	
 			}
 			
-			if(_imgList != null && _imgList.length > 0){
+			if(this._imgList != null && this._imgList.length > 0){
 				
-				_numberOfFile = _imgList.length;
+				this._numberOfFile = this._imgList.length;
 				loadEachTexure();	
 			}
 			else{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.MAIN_SCREEN}, true));
+				
+				//dispatch event when load complete
+				this.dispatchEventWith(LOAD_COMPLETE, true, {pageID : this._serverData.pageID});
 			}
 		}
 		
@@ -84,11 +122,11 @@ package controller.TextureController
 			}
 		}
 		
-		//for debugging purpose
+		//keep track of data loaded
 		private function onLoadProgress(e:ProgressEvent):void{
 			
-			var pcent:Number = e.target.bytesLoaded / e.target.bytesTotal * 100;
-			trace('File ' + _fileIndex + ' is loading ' + pcent);
+			this._loadedPcent =  e.target.bytesLoaded / e.target.bytesTotal * 100;
+		
 		}
 		
 		//complete the event when the file load complete
@@ -124,8 +162,6 @@ package controller.TextureController
 				throw(error);
 			}
 			
-			
-			
 			_loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, onLoadComplete);
 			_loader.contentLoaderInfo.removeEventListener(ProgressEvent.PROGRESS, onLoadProgress);
 			_loader = null;
@@ -135,8 +171,10 @@ package controller.TextureController
 				loadEachTexure();
 			}
 			else{
-				//dispatch event here to change the screen
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id : Constant.MAIN_SCREEN}, true));	
+				
+				//when load complete
+				this.dispatchEventWith(LOAD_COMPLETE, false, {pageID : this._serverData.pageID});
+				//this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.LOADING_SCREEN, to :Constant.NAVIGATION_SCREEN}, true)); 
 			}
 		}
 		
@@ -157,6 +195,40 @@ package controller.TextureController
 											 this._questionList[i].hint, i); 
 				}
 			}
+		}
+		
+		/*
+			function will be used to decode the data from server
+			when user come to page story or repair their own game
+			These function will retrieve all the user defined texture 
+			and question from data from server
+		*/
+		//process to return the image list from data from server
+		private function getImgList(qsImgList : Object):Array{
+			
+			if(qsImgList != {} && qsImgList != null){
+				
+				if(qsImgList.image){
+					
+					return qsImgList.image;
+				}
+			}
+			
+			return new Array();
+		}
+		
+		//process to return the question list from data from server
+		private function getQsList(qsImgList : Object):Array{
+			
+			if(qsImgList != {} && qsImgList != null){
+				
+				if(qsImgList.question){
+					
+					return qsImgList.question;
+				}
+			}
+			
+			return new Array();
 		}
 	}
 }

@@ -147,7 +147,8 @@ package controller.ObjectController
 			
 		public function assignScreen(screen:String):void
 		{
-			_screen = screen;
+			this._screen = screen;
+			
 			if(this._console != null)
 				this._console.screen = screen;
 			if(this._dialogue != null)
@@ -297,7 +298,6 @@ package controller.ObjectController
 				_maxLife = value;
 			if(type == "life")
 			{
-				trace("go here");
 				this._currLife = value;
 				notifyScoreBoard("life");
 			}
@@ -325,17 +325,20 @@ package controller.ObjectController
 		{
 			switch(state)
 			{
-				case ChapterOneConstant.INSTRUCTING_STATE:
+				case Constant.INSTRUCTING_STATE:
 					changeToInstructingState();
 					break;
-				case ChapterOneConstant.EDITTING_STATE:
+				case Constant.EDITTING_STATE:
 					changeToEdittingState();
 					break;
-				case ChapterOneConstant.PLAYING_STATE:
+				case Constant.PLAYING_STATE:
 					changeToPlayingState();
 					break;
-				case ChapterOneConstant.ENDING_STATE:
+				case Constant.ENDING_STATE:
 					changeToEndingState();
+					break;
+				case Constant.PAUSE_STATE:
+					changeToPauseState();
 					break;
 				default:
 					break;
@@ -359,6 +362,17 @@ package controller.ObjectController
 			this._dialogue.state = Constant.EDITTING_STATE;
 			_indexBoardController	.changeObjectState	(ChapterOneConstant.EDITTING_STATE);
 			this._scoreBoard.state = Constant.EDITTING_STATE;
+		}
+		
+		private function changeToPauseState():void
+		{
+			this._scoreBoard.state 	= Constant.PAUSE_STATE;
+			this._dialogue.state 	= Constant.PAUSE_STATE;
+			this._indexBoardController.changeObjectState(Constant.PAUSE_STATE);
+			if(this._screen != Constant.STORY_SCREEN_1)
+			{
+				this._console.state 	= Constant.PAUSE_STATE;
+			}
 		}
 		
 		private function changeToPlayingState():void

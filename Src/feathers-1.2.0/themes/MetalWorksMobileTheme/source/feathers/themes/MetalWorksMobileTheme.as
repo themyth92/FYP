@@ -1105,16 +1105,7 @@ package feathers.themes
 			{
 				textureScale: this.scale
 			};
-			if(slider.direction == Slider.DIRECTION_VERTICAL)
-			{
-				skinSelector.displayObjectProperties.width = 60 * this.scale;
-				skinSelector.displayObjectProperties.height = 210 * this.scale;
-			}
-			else
-			{
-				skinSelector.displayObjectProperties.width = 210 * this.scale;
-				skinSelector.displayObjectProperties.height = 60 * this.scale;
-			}
+			
 			slider.minimumTrackProperties.stateToSkinFunction = skinSelector.updateValue;
 			slider.maximumTrackProperties.stateToSkinFunction = skinSelector.updateValue;
 		}

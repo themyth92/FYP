@@ -25,7 +25,7 @@ package screen
 	import starling.events.Event;
 	import starling.events.KeyboardEvent;
 	
-	public class CreateScreen extends Sprite
+	public class CreateGameScreen extends Sprite
 	{
 		//Game Objects
 		private var _console		:Console;
@@ -74,7 +74,7 @@ package screen
 		private var _userDefinedObstacle : Array;
 		private var _gameBoard           : CreateGameBoard;
 		
-		public function CreateScreen()
+		public function CreateGameScreen()
 		{
 			super();
 			/*_controller 		= new Controller();
