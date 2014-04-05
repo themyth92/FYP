@@ -16,10 +16,13 @@ package screen
 	import object.inGameObject.IndexBoard;
 	import object.inGameObject.ScoreBoard;
 	
+	import starling.animation.Tween;
+	import starling.core.Starling;
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.text.TextField;
 	
 	public class PreviewScreen extends Sprite
 	{
@@ -28,6 +31,7 @@ package screen
 		private var _scoreBoard		:ScoreBoard;
 		private var _console		:Console;
 		
+		private var _gameTitle		:TextField;
 		private var _background		:Image;
 		private var _screen			:Image;
 		private var _frameIMG		:Image;
@@ -46,6 +50,7 @@ package screen
 		
 		private function onAddedToStage(event:Event):void
 		{
+			//Setup object and connect them to main controller
 			this._controller 	= new MainController ();
 			
 			this._console		= new Console(this._controller);
@@ -56,6 +61,34 @@ package screen
 			this._controller.assignObjectController(this._console, this._dialogue, this._indexBoard, this._scoreBoard);
 			this._controller.assignScreen(Constant.PLAY_SCREEN);
 			
+			//Display Game Title
+			this.displayGameTitle();
+		}
+		
+		private function displayGameTitle():void
+		{
+			//add game title to screen
+			//display game title for 1-2 seconds
+			//remove the title
+			this._gameTitle = new TextField(600, 400, PreviewGameInfo._gameTitle,"Verdana",48,0xffffff, true);
+			this._gameTitle.x = 100;
+			this._gameTitle.y = 100;
+			this._gameTitle.alpha = 0;
+			this.addChild(this._gameTitle);
+			var showTitle	:Tween = new Tween (this._gameTitle, 2.0);
+			showTitle.fadeTo(1);
+			showTitle.reverse = true;
+			showTitle.repeatCount = 2;
+			showTitle.repeatDelay = 1.0;
+			showTitle.onComplete = continueSetup;
+			Starling.juggler.add(showTitle);
+		}
+		
+		private function continueSetup():void
+		{
+			this.removeChild(this._gameTitle);
+			
+			//Setup image on the screen
 			this.placeImageOnScreen();
 			this.setupGameObject();
 			
@@ -68,27 +101,35 @@ package screen
 		{
 			/* Load the image into variables */
 			this._background	= new Image(Assets.getAtlas(Constant.BACKGROUND_SPRITE).getTexture(Constant.BG_STAGE2));
-			this._screen		= new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture(Constant.STAGE2_SCREEN));
+			if(PreviewGameInfo._gameScreen.isUserDef)
+			{
+				this._screen	= new Image(Assets.getUserScreenTexture()[PreviewGameInfo._gameScreen.textureIndex].texture);
+				this._screen.width = 440;
+				this._screen.height = 360;
+			}
+			else
+				this._screen	= new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture(PreviewGameInfo._gameScreen.textureIndex));
+			
 			this._frameIMG 		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.FRAME_IMG));
 			this._dialogueIMG 	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.DIALOGUE_IMG));
 			this._guiderIMG		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.GUIDER_IMG));
 			this._escButton		= new Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.ESCB_IMG));
 			
 			/* Place the image to correct position on screen */
-			this._frameIMG.x 		= Constant.FRAME_STORY_POS.x;
-			this._frameIMG.y 		= Constant.FRAME_STORY_POS.y;
+			this._frameIMG.x 	= Constant.FRAME_STORY_POS.x;
+			this._frameIMG.y 	= Constant.FRAME_STORY_POS.y;
 			
-			this._dialogueIMG.x 	= Constant.DIALOGUE_POS.x;
-			this._dialogueIMG.y 	= Constant.DIALOGUE_POS.y;
+			this._dialogueIMG.x = Constant.DIALOGUE_POS.x;
+			this._dialogueIMG.y = Constant.DIALOGUE_POS.y;
 			
-			this._screen.x			= Constant.GRID_STORY_POS.x;
-			this._screen.y			= Constant.GRID_STORY_POS.y;
+			this._screen.x		= Constant.GRID_STORY_POS.x;
+			this._screen.y		= Constant.GRID_STORY_POS.y;
 			
-			this._guiderIMG.x		= Constant.GUIDER_POS.x;
-			this._guiderIMG.y		= Constant.GUIDER_POS.y;
+			this._guiderIMG.x	= Constant.GUIDER_POS.x;
+			this._guiderIMG.y	= Constant.GUIDER_POS.y;
 			
-			this._escButton.x		= Constant.ESCB_POS.x;
-			this._escButton.y		= Constant.ESCB_POS.y;
+			this._escButton.x	= Constant.ESCB_POS.x;
+			this._escButton.y	= Constant.ESCB_POS.y;
 			
 			/* Add image to display */
 			this.addChild(this._background);
@@ -101,6 +142,7 @@ package screen
 		
 		private function setupGameObject():void
 		{
+			//setup Game Object on stage
 			this._console.x 	= Constant.CONSOLE_PLAY_POS.x;
 			this._console.y 	= Constant.CONSOLE_PLAY_POS.y;
 			
@@ -160,8 +202,9 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon()){
-//				GameData.setGameState(5);
-//				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.STORY_SCREEN_5}, true));
+				//If won
+				//Display "Congratulation"
+				//Replay Or Quit
 			}
 			if(isLost())
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));

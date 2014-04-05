@@ -40,7 +40,7 @@ package screen
 		private var _gotPopUp		:Boolean;
 		private var _com           :ServerClientCom;
 		private var _optionBtn     :Button;
-		private var _menuScreen	:MenuScreen;
+//		private var _menuScreen		:MenuScreen;
 				
 		private var _controller	:MainController;
 		
@@ -60,7 +60,7 @@ package screen
 			this._scoreBoard		= new ScoreBoard(_controller);
 			this._com            	= new ServerClientCom();	
 			this._optionBtn 		= new Button();		
-			this._menuScreen		= new MenuScreen();
+//			this._menuScreen		= new MenuScreen();
 				
 			this._controller.assignObjectController(null, _dialogue, _indexBoard, this._scoreBoard);
 			this._controller.assignScreen(Constant.STORY_SCREEN_1);
@@ -142,7 +142,7 @@ package screen
 			this.removeChild(_indexBoard);
 			this.removeChild(_scoreBoard);
 			this.removeChild(this._optionBtn);
-			this.removeChild(this._menuScreen);
+//			this.removeChild(this._menuScreen);
 			
 			this._background  	= null;
 			this._frameIMG    	= null;
@@ -156,7 +156,7 @@ package screen
 			this._controller  	= null;
 			this._com         	= null;
 			this._optionBtn		= null;
-			this._menuScreen 	= null;
+//			this._menuScreen 	= null;
 
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
@@ -200,13 +200,13 @@ package screen
 		{
 			
 			//must pause the game first
-			this.addChild(this._menuScreen);
+//			this.addChild(this._menuScreen);
 		}
 		
 		private function onMenuCloseBtnTrigger(event:Event):void
 		{
 			//remove the menu screen
-			this.removeChild(this._menuScreen);
+//			this.removeChild(this._menuScreen);
 		}
 		
 		private function onMenuQuitBtnTrigger(event:Event):void

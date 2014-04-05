@@ -151,7 +151,6 @@ package object.CreateGameObject
 		
 		private function onCloseBtnTrigger(event:Event):void
 		{
-			
 			//change to normal state
 			//which still in the same postion of the panel
 			this.changeStateGrid(0, this.x, this.y, -1);

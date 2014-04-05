@@ -5,6 +5,7 @@ package object.CreateGameObject
 	import constant.Constant;
 	
 	import feathers.controls.Alert;
+	import feathers.controls.Button;
 	import feathers.controls.LayoutGroup;
 	import feathers.data.ListCollection;
 	import feathers.dragDrop.DragData;
@@ -63,10 +64,9 @@ package object.CreateGameObject
 			this._enemy1EndPts		= new Vector.<Number>();
 			this._enemy2EndPts		= new Vector.<Number>();
 			
-			for(var i:uint = 0 ; i < 10 ; i++){
-				
+			for(var i:uint = 0 ; i < Assets.getUserQuestion().length ; i++){
 				var question:Object   	= new Object();
-				question.title = 'question' + i;
+				question.title = Assets.getUserQuestion()[i].title;
 				this._questionList.push(question);
 			}			
 			
@@ -97,6 +97,7 @@ package object.CreateGameObject
 						obj.isUserDef = this._gridObjects[i][j].getObstacle().isUserDefText;
 						obj.pos = (i+1)+(j*11);
 						obj.type = this._gridObjects[i][j].getObstacle().obstacleType;
+						obj.qnsIndex = this._gridObjects[i][j].selectedIndex;
 						list.push(obj);
 					}
 				}

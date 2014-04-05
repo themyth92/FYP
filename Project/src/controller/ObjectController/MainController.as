@@ -7,12 +7,9 @@
 package controller.ObjectController
 {
 	//Import library
-	import constant.ChapterOneConstant;
 	import constant.Constant;
 	import constant.StoryConstant;
-	
-	import controller.ObjectController.IndexBoardController;
-	
+		
 	import object.inGameObject.Console;
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.Enemies;
@@ -32,18 +29,14 @@ package controller.ObjectController
 		private var _enemy2 				 : Enemies;
 		private var _indexBoard              : IndexBoard;
 		private var _scoreBoard				 : ScoreBoard;
-	
-		/*----------------------------
-		| 	 Controller variable     |
-		-----------------------------*/
-		private var _indexBoardController    : IndexBoardController;
-		
+
 		/*----------------------------
 		|	      Game Stat          |
 		-----------------------------*/
 		private var _heroX:Number;
 		private var _heroY:Number;
 		
+		private var _currCollectedObs	:Number;
 		private var _coinCollected 			 : Number;
 		private var _maxCoin				 : Number = 0;
 		private var _currLife				 : Number;
@@ -74,6 +67,10 @@ package controller.ObjectController
 		
 		public function MainController(){
 			
+		}
+		
+		public function set currCollectedObs(value:Number):void{
+			this._currCollectedObs = value;
 		}
 		
 		/**====================================================================
@@ -189,99 +186,6 @@ package controller.ObjectController
 			this._dialogue      = dialogBubble;
 			this._indexBoard    = indexBoard;
 			this._scoreBoard 	= scoreboard;
-			
-			_indexBoardController   = new IndexBoardController	(_indexBoard);
-		}
-				
-				
-		public function checkOutOfGameArea():Array
-		{
-			return this._indexBoard.checkPlayerOutOfArea();
-		}
-		
-		public function startGame(player:Array, enemy1:Array, enemy2:Array):String
-		{
-			var enemyType :Array = new Array(enemy1[0], enemy2[0]);
-			var enemyPos  :Array = new Array(enemy1[1], enemy2[1]);
-			var enemySpd  :Array = new Array(enemy1[2], enemy2[2]);
-			var enemyImg  :Array = new Array(enemy1[3], enemy2[3]);
-			
-			_indexBoardController.createEnemies(enemyType, enemySpd, enemyImg, enemyPos);
-			_indexBoardController.createPlayer(player[0], player[1]);
-			
-			changeState(ChapterOneConstant.PLAYING_STATE);
-			return null;
-		}
-		
-		public function previewGame(player:Array, enemy1:Array, enemy2:Array):String
-		{
-			var enemyType :Array = new Array(enemy1[0], enemy2[0]);
-			var enemyPos  :Array = new Array(enemy1[1], enemy2[1]);
-			var enemySpd  :Array = new Array(enemy1[2], enemy2[2]);
-			var enemyImg  :Array = new Array(enemy1[3], enemy2[3]);
-			
-			_indexBoardController.createEnemies(enemyType, enemySpd, enemyImg, enemyPos);
-			_indexBoardController.createPlayer(player[0], player[1]);
-			
-			return null;
-		}
-		
-		public function notifyObserver(e:Object):void
-		{
-			if(e.event){
-				if(e.event == ChapterOneConstant.TRIGGER){
-					switch(e.target){
-						case ChapterOneConstant.DIALOG_NEXT_ARROW:
-							//_dialogueController.changeDialog(e.arg);
-						break;
-						default:
-						break;
-					}
-				}
-				else if(e.event == ChapterOneConstant.KEY_PRESSED){
-					switch(e.target){
-						case ChapterOneConstant.HERO:
-							_indexBoardController.moveHero(e.arg);
-						break;
-					}
-				}
-				else if(e.event == ChapterOneConstant.KEY_RELEASED){
-					switch(e.target){
-						case ChapterOneConstant.HERO:
-							_indexBoardController.stopHero(e.arg);
-						break;
-					}
-				}
-			}
-			else
-				trace('Error with event undefined');
-		}
-		
-		public function notifyForCollisionChecking(x:Number,y:Number):Array
-		{
-			_heroX = x;
-			_heroY = y;
-			return _indexBoardController.collideWithObstacles(x,y);
-		}
-		
-		public function checkCollision():void
-		{
-			_indexBoardController.collideWithEnemy();
-		}
-		
-		public function notifyCollectCoin(index:uint):void
-		{
-			_indexBoardController.removeCoinOnCollision(index);
-		}
-		
-		public function notifyIndexBoard(type:String):void
-		{
-			_indexBoard.onTouchListener(true, type);
-		}
-		
-		public function mouseInputAnalyze(type:String, x:Number, y:Number):void
-		{
-			_indexBoardController.dragDropAnalyze(type,x,y);
 		}
 		
 		public function getGameStat(type:String, value:Number):void
@@ -325,16 +229,16 @@ package controller.ObjectController
 		{
 			switch(state)
 			{
-				case ChapterOneConstant.INSTRUCTING_STATE:
+				case Constant.INSTRUCTING_STATE:
 					changeToInstructingState();
 					break;
-				case ChapterOneConstant.EDITTING_STATE:
+				case Constant.EDITTING_STATE:
 					changeToEdittingState();
 					break;
-				case ChapterOneConstant.PLAYING_STATE:
+				case Constant.PLAYING_STATE:
 					changeToPlayingState();
 					break;
-				case ChapterOneConstant.ENDING_STATE:
+				case Constant.ENDING_STATE:
 					changeToEndingState();
 					break;
 				default:
@@ -346,26 +250,25 @@ package controller.ObjectController
 		{
 			this._console.state 	= Constant.INSTRUCTING_STATE;
 			this._console.enableConsole();
-			
 			this._scoreBoard.state	= Constant.INSTRUCTING_STATE;
-			this._dialogue.state = Constant.INSTRUCTING_STATE;
-			_indexBoardController	.changeObjectState	(ChapterOneConstant.INSTRUCTING_STATE);
+			this._dialogue.state 	= Constant.INSTRUCTING_STATE;
+			this._indexBoard.state  = Constant.INSTRUCTING_STATE;
 		}
 		
 		private function changeToEdittingState():void
 		{
 			this._console.state 	= Constant.EDITTING_STATE;
 			this._console.enableConsole();
-			this._dialogue.state = Constant.EDITTING_STATE;
-			_indexBoardController	.changeObjectState	(ChapterOneConstant.EDITTING_STATE);
-			this._scoreBoard.state = Constant.EDITTING_STATE;
+			this._dialogue.state	= Constant.EDITTING_STATE;
+			this._indexBoard.state  = Constant.EDITTING_STATE;
+			this._scoreBoard.state 	= Constant.EDITTING_STATE;
 		}
 		
 		private function changeToPlayingState():void
 		{
 			this._scoreBoard.state 	= Constant.PLAYING_STATE;
-			this._dialogue.state = Constant.PLAYING_STATE;
-			_indexBoardController	.changeObjectState	(ChapterOneConstant.PLAYING_STATE);
+			this._dialogue.state 	= Constant.PLAYING_STATE;
+			this._indexBoard.state  = Constant.PLAYING_STATE;
 					
 			if(_screen != Constant.STAGE1_SCREEN)
 			{
@@ -376,7 +279,7 @@ package controller.ObjectController
 				_maxLife = 1;
 			_currLife 	= _maxLife;
 			_coinCollected 	= 0;
-			_indexBoardController.updateLifeOnGameStart(_maxLife);
+			this._indexBoard.updateMaxLife(_maxLife);
 			notifyScoreBoard("coin");
 			notifyScoreBoard("life");
 		}
@@ -384,10 +287,9 @@ package controller.ObjectController
 		private function changeToEndingState():void
 		{
 			this._console.state 	= Constant.ENDING_STATE;
-			this._dialogue.state = Constant.ENDING_STATE;
-			_indexBoardController	.changeObjectState	(ChapterOneConstant.ENDING_STATE);
-			
-			this._scoreBoard.state = Constant.ENDING_STATE;
+			this._dialogue.state 	= Constant.ENDING_STATE;
+			this._indexBoard.state  = Constant.ENDING_STATE;			
+			this._scoreBoard.state  = Constant.ENDING_STATE;
 		}	
 		
 		/**====================================================================
@@ -397,10 +299,10 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
-				case ChapterOneConstant.STATE_CHANGE:
+				case Constant.STATE_CHANGE:
 					changeState(state);
 					break;
-				case ChapterOneConstant.CONSOLE_ENTER:
+				case Constant.CONSOLE_ENTER:
 					var commandArr:Array = this._console.commandArray;
 					if(commandArr[0] == false && _screen == Constant.STORY_SCREEN_2)
 					{
@@ -417,7 +319,7 @@ package controller.ObjectController
 						{
 							this._dialogue.errorDialogue(StoryConstant.STAGE2_ERROR_GUIDER2);						}
 					}
-					_indexBoardController.analyzeArrayInput(commandArr);
+					_indexBoard.analyzeArrayInput(commandArr);
 					break;
 				default:
 					break;
@@ -428,12 +330,10 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
-				case ChapterOneConstant.STATE_CHANGE:
+				case Constant.STATE_CHANGE:
 					changeState(state);
 					break;
-				case ChapterOneConstant.DIALOG_CHANGE:
-//					notifyDialogueController(ChapterOneConstant.DIALOG_CHANGE,e);
-//					notifyInstrArrController(ChapterOneConstant.DIALOG_CHANGE,e);
+				case Constant.DIALOG_CHANGE:
 					break;
 				default:
 					break;
@@ -444,7 +344,7 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
-				case ChapterOneConstant.STATE_CHANGE:
+				case Constant.STATE_CHANGE:
 					changeState(state);
 					break;
 				default:
@@ -456,7 +356,7 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
-				case ChapterOneConstant.STATE_CHANGE:
+				case Constant.STATE_CHANGE:
 					changeState(state);
 					break;
 				default:
@@ -468,7 +368,7 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
-				case ChapterOneConstant.STATE_CHANGE:
+				case Constant.STATE_CHANGE:
 					changeState(state);
 					break;
 				default:
@@ -480,7 +380,7 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
-				case ChapterOneConstant.STATE_CHANGE:
+				case Constant.STATE_CHANGE:
 					changeState(state);
 					break;
 				default:
@@ -492,7 +392,7 @@ package controller.ObjectController
 		{
 			switch(type)
 			{
-				case ChapterOneConstant.STATE_CHANGE:
+				case Constant.STATE_CHANGE:
 					changeState(state);
 					break;
 				default:
@@ -527,7 +427,7 @@ package controller.ObjectController
 			switch(type)
 			{
 				case "stage5RemoveLock":
-					this._indexBoardController.removeLockOnCorrect(StoryConstant.STAGE5_QUESTION_POS);
+					//this._indexBoardController.removeLockOnCorrect(StoryConstant.STAGE5_QUESTION_POS);
 					break;
 				default:
 					break;

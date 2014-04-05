@@ -2,7 +2,6 @@ package object.inGameObject
 {
 	import assets.Assets;
 	
-	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
 	import controller.ObjectController.MainController;

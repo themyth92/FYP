@@ -9,7 +9,6 @@ package object.inGameObject
 	import assets.Assets;
 	import assets.PreviewGameInfo;
 	
-	import constant.ChapterOneConstant;
 	import constant.Constant;
 	import constant.StoryConstant;
 	
@@ -31,6 +30,7 @@ package object.inGameObject
 	import starling.display.Sprite;
 	import starling.errors.AbstractClassError;
 	import starling.events.Event;
+	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -39,42 +39,58 @@ package object.inGameObject
 	public class IndexBoard extends Sprite
 	{
 		//STATES VARIABLE
-		private var _state 	:String = constant.ChapterOneConstant.INSTRUCTING_STATE;
+		private var _state 	:String = Constant.INSTRUCTING_STATE;
 		
+		/*----------------------------
+		|	      Hero constant      |
+		-----------------------------*/
+		private static const PLAYER_SPEED_FORWARD	:int 	= 3;
+		private static const PLAYER_SPEED_BACKWARD	:int 	= -3;
 		//CONSTANT
 		private static const PATTERN_PREFIX:String	 = 'pattern_';
 		private static const MAXIMUM_COLUMN:uint 	 = 11;
 		private static const MAXIMUM_ROW:uint        = 9;
 		private static const PIXEL_MOVE:int 	     = 40;
 		private static const COIN_TYPE:String		 = "03";
+		//INDEX BOARD CONSTANT
+		private static const LIST_COMMAND			:Array 	= [0,1];
+		private static const MAXIMUM_PATTERN		:uint   = 1;
+		private static const FALSE_LENGTH_ARRAY 	:uint   = 1;
+		private static const DELETE_LENGTH_ARRAY 	:uint   = 2;
+		private static const CREATE_LENGTH_ARRAY	:uint   = 3;
+		private static const HERO_TYPE				:String = "04";
 		
-		//TOUCH VARIABLES
-		private var _touch			   :Touch;
-		private var _touchArea		   :Quad = new Quad(480,320);
-		private var _isTriggered	   :Boolean;
 		
 		//INDEXBOARD VARIABLES
 		private var _patternCollection  :Vector.<Image>;
 		private var _patternType	    :Vector.<String>;
 		private var _patternIndex       :Vector.<uint>;
+		private var _obsList			:Vector.<Obstacles>;
 		private var _maxCoin		 	:Number = 0;
 		private var _screen				:String;
 		private var _gameArea			:Rectangle;
 		
 		//HERO VARARIABLES
-		private var _enemy1		   : Enemies;
-		private var _enemy2		   : Enemies;
-		private var _enemyList		:Vector.<Enemies>;
-		private var _gotFollow		:Boolean = false;
-		private var _gotPatrol		:Boolean = false;
-		private var _hero	       : Player;
-		private var _controller	   : MainController;
-		private var _heroIndex	   : uint;
-		private var _dragType      : String;
-		private var _testImg       : Image;
-		private var _playerPos	   : Point;
+		private var _enemy1		   	: Enemies;
+		private var _enemy2		   	: Enemies;
+		private var _enemyList		: Vector.<Enemies>;
+		private var _gotFollow		: Boolean = false;
+		private var _gotPatrol		: Boolean = false;
+		private var _player	       	: Player;
+		private var _controller	   	: MainController;
+		private var _heroIndex	   	: uint;
+		private var _dragType      	: String;
+		private var _testImg       	: Image;
+		private var _playerPos	   	: Point;
 		private var _gender			: String = "Male";
 		
+		private var _isDisplayedQuiz: Boolean = false;
+		private var _isHit			: Boolean;
+		private var _currLife		: Number;
+		private var _maxLife		: Number;
+		private var _currCollectObs	: Number = 0;
+		private var _maxCollectObs	: Number = 0;
+
 		//AI PATH FINDING VARIABLES
 		private var _tileVector : Vector.<Object>;
 		private var _path	: Vector.<Point>;
@@ -97,13 +113,15 @@ package object.inGameObject
 		public function IndexBoard(controller:MainController)
 		{
 			this._controller   = controller;
-			this._hero         = new Player(_controller);
+			this._player         = new Player(_controller);
 	
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
-		/** Get Set **/
+		/**====================================================================
+		 * |	                     GET-SET FUNCTIONS		                  | *
+		 * ====================================================================**/
 		public function get enemyList():Vector.<Enemies>
 		{
 			return _enemyList;
@@ -131,7 +149,7 @@ package object.inGameObject
 		
 		public function get hero():Player
 		{
-			return _hero;
+			return _player;
 		}
 		
 		public function get enemy1():Enemies
@@ -147,19 +165,23 @@ package object.inGameObject
 		public function set screen(value:String):void{
 			this._screen = value;
 		}
+		
+		public function get obsList():Vector.<Obstacles>{
+			return this._obsList;
+		}
+		
+		public function set state(value:String):void{
+			this._state = value;
+		}
 
 		/**====================================================================
 		 * |	                     EVENT HANDLERS			                  | *
 		 * ====================================================================**/
-		/** ADDED_TO_STAGE **/
+		/*-----------------------------------------------------------------------
+		| @Added to stage										                 |		
+		-------------------------------------------------------------------------*/
 		private function onAddedToStage(e:Event):void{
 			_gameArea = new Rectangle(0,0, 440, 360);
-
-			this._touchArea.x 		= 0;
-			this._touchArea.y 		= 0;
-			this._touchArea.alpha 	= 0;
-			
-			this.addChild(_touchArea);
 			
 			_patternCollection = new Vector.<Image>();
 			_patternIndex      = new Vector.<uint>();
@@ -169,29 +191,72 @@ package object.inGameObject
 			makeTiles();
 			
 			_screen = _controller.screen;
-			if(_screen != Constant.CREATE_GAME_SCREEN)
-				setupPattern();
+			setupPattern();
 			
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
-		public function stage2MonsterOn():void
+		/*-----------------------------------------------------------------------
+		| @Key pressed event for player's movement			                     |		
+		-------------------------------------------------------------------------*/
+		private function onKeyDown(e:KeyboardEvent):void
 		{
-			var enemyIMG :Image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_4'));
-			var enemyPos :Point	= indexToPoint(StoryConstant.STAGE2_ENEMY_POS);
-			enemyIMG.x = enemyPos.x;
-			enemyIMG.y = enemyPos.y;
-			this.addChild(enemyIMG);
+			if(_state == Constant.PLAYING_STATE)
+			{
+				if(e.keyCode == Keyboard.LEFT){			
+					movePlayer(Constant.KEY_LEFT);
+				}
+				else if(e.keyCode == Keyboard.RIGHT){
+					movePlayer(Constant.KEY_RIGHT);
+				}
+				else if(e.keyCode == Keyboard.UP){
+					movePlayer(Constant.KEY_UP);
+				}
+				else if(e.keyCode == Keyboard.DOWN){
+					movePlayer(Constant.KEY_DOWN);
+				}
+			}
 		}
 		
-		/** ENTER_FRAME **/
+		/*-----------------------------------------------------------------------
+		| @Key pressed event for stopping player			                     |		
+		-------------------------------------------------------------------------*/
+		private function onKeyUp(e:KeyboardEvent):void
+		{
+			if(_state == Constant.PLAYING_STATE)
+			{
+				this._player.moveX = 0;
+				this._player.moveY = 0;
+				stopPlayer();
+			}
+		}
+		
+		/*-----------------------------------------------------------------------
+		| @Actions perform each frame						                     |		
+		-------------------------------------------------------------------------*/
 		private function onEnterFrame(event:Event):void
 		{
-			if(_state == constant.ChapterOneConstant.PLAYING_STATE)
+			if(_state == Constant.PLAYING_STATE)
 			{
 				_timer ++;
+				
 				updateHeroPosition();
+				
+				/* Move player */ 
+				this._player.x += this._player.moveX;
+				this._player.y += this._player.moveY;
+				
+				/* Player's checking functions */
+				if(_timer >= 30)
+					this._isHit = false;
+				checkCollisionWithObstacles();
+				checkCollisionWithEnemy();
+				checkPlayerOutOfArea();
+				
+				/* Enemies' moving functions */
 				if(_gotFollow)
 				{
 					if(_enemy1 != null &&_enemy1.type == Constant.FOLLOW_TYPE)
@@ -210,39 +275,29 @@ package object.inGameObject
 			}
 		}
 		
-		public function checkPlayerOutOfArea():Array
+		/*-----------------------------------------------------------------------
+		| @Remove from stage								                     |		
+		-------------------------------------------------------------------------*/
+		private function onRemoveFromStage(e:Event):void
 		{
-			var outOfArea	:String;
-			var playerX		:uint;
-			var playerY		:uint;
-			var result		:Array;
-			
-			if(this._hero.playerX + 40 > _gameArea.right)
-			{
-				playerX = _gameArea.right - 40;
-				playerY = this._hero.playerY;
-				outOfArea = "Horizontal";
-			}
-			else if(this._hero.playerX < _gameArea.x)
-			{
-				playerX = 0;
-				playerY = this._hero.playerY;
-				outOfArea = "Horizontal";
-			}
-			else if(this._hero.playerY + 40 > _gameArea.bottom)
-			{
-				outOfArea = "Vertical";
-				playerY = _gameArea.bottom - 40;
-				playerX = this._hero.playerX;
-			}
-			else if(this._hero.playerY < _gameArea.y)
-			{
-				outOfArea = "Vertical";
-				playerY = 0;
-				playerX = this._hero.playerX;
-			}	
-			result = new Array(outOfArea, playerX, playerY);
-			return result;
+			this.dispose();
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			this.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+		}
+		
+		/**====================================================================
+		 * |	               SETTING UP OBJECT ON BOARD		              | *
+		 * ====================================================================**/
+		
+		public function stage2MonsterOn():void
+		{
+			var enemyIMG :Image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_4'));
+			var enemyPos :Point	= indexToPoint(StoryConstant.STAGE2_ENEMY_POS);
+			enemyIMG.x = enemyPos.x;
+			enemyIMG.y = enemyPos.y;
+			this.addChild(enemyIMG);
 		}
 		
 		private function setupPattern():void
@@ -297,11 +352,41 @@ package object.inGameObject
 					type 			= PreviewGameInfo._obsType;
 					pos 			= PreviewGameInfo._playerPos;
 					this._gender	= PreviewGameInfo._playerGender;
-					previewPatternToStage(imgCollection,index,type,pos);
+//					previewPatternToStage(imgCollection,index,type,pos);
+					addObstaclesToBoard(imgCollection, index, type, PreviewGameInfo._obsQns);
+					createHero(pos);
 					previewEnemyToStage();
 					break;
 					
 			}
+		}
+		
+		private function addObstaclesToBoard(collection:Vector.<Image>, index:Vector.<uint>, type:Vector.<String>, qns:Vector.<Object>):void{
+			var pos		:Point;
+			this._obsList = new Vector.<Obstacles>();
+			for(var i:uint=0; i<collection.length; i++)
+			{
+				pos = indexToPoint(index[i]);
+				//Create a new obstacle
+				var obstacles	:Obstacles = new Obstacles(type[i], pos, collection[i], qns[i].gotQns, qns[i].qnsIndex);
+				
+				//Position it on screen
+				obstacles.x = pos.x;
+				obstacles.y = pos.y;
+				
+				//Count collectible obstacles
+				//Update to Main Controller => ScoreBoard
+				if(type[i] == "02")
+					this._maxCollectObs ++;
+				
+				this._obsList.push(obstacles);
+				this.addChild(obstacles);
+			}
+		}
+		
+		private function createEnemy():void
+		{
+			
 		}
 		
 		private function previewPatternToStage(collection:Vector.<Image>, index:Vector.<uint>,type:Vector.<String>,pos:uint):void{
@@ -398,7 +483,6 @@ package object.inGameObject
 			}
 		}
 		
-		
 		private function setupStage3Enemies():void
 		{
 			var enemy1_pos 	:Array  = new Array(indexToPoint(StoryConstant.STAGE3_ENEMY1_POS).x, indexToPoint(StoryConstant.STAGE3_ENEMY1_POS).y)
@@ -473,84 +557,55 @@ package object.inGameObject
 			
 			createHero(pos);
 		}
-		
-		private function updateHeroPosition():void
-		{
-			clearVisitedTiles();
-			_enemy1Found = false;
-			_endPoint1.x = int(_hero.playerX / 40) * 40;
-			_endPoint1.y = int(_hero.playerY / 40) * 40;
-		}
-		
-		private function clearVisitedTiles():void
-		{
-			var x :Number = int(_hero.playerX / 40);
-			var y :Number = int(_hero.playerY / 40);
-			for(var j:Number=0; j<9 ; j++)
-			{
-				_tileVector[x][j].visited = false;
-			}
-			
-			for(var i:Number=0; i<11 ; i++)
-			{
-				_tileVector[i][y].visited = false;
-			}
-		}
-		
-		/** REMOVE_FROM_STAGE **/
-		private function onRemoveFromStage	(e:Event):void
-		{
-			this.dispose();
-			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
-		}
-		
-		/** MOUSE_TOUCH **/
-		private function onTouch(event:TouchEvent):void
-		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE)
-			{
-				_touch = event.getTouch(this._touchArea);
 				
-				//IF USER DIDNT CHOOSE ANY OBJECT => DO NOTHING
-				if(_isTriggered)
-					if(_touch != null)
-					{
-						this._testImg.x = _touch.globalX - 41;
-						this._testImg.y = _touch.globalY - 57;
-						_testImg.touchable = false;
-						this.addChild(_testImg);
-						//IF MOUSE PRESSED
-						if(_touch.phase == TouchPhase.ENDED) 
-						{
-							//ANALYZE INPUT: LOCATION OF THE MOUSE + OBJECT TYPE
-							_controller.mouseInputAnalyze(_dragType, _touch.globalX, _touch.globalY);
-							//READY FOR NEXT CHOICE OF OBJECT
-							_isTriggered = false;
-							this.removeChild(this._testImg);
-						}
-					}
-			}
-		}
-		
-		/** TURN ON TOUCH LISTENTER AFTER USER CHOOSE AN OBJECT FROM PATTERN LIST **/
-		public function onTouchListener(isTriggered:Boolean, type: String):void
-		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE)
-			{
-				this._isTriggered 	= isTriggered;
-				this._dragType      = type;
-			}
-		}
 		
 		
 		/**====================================================================
 		 * |	                 OBJECT CREATION   			                  | *
 		 * ====================================================================**/
+		public function analyzeArrayInput(arr:Array):void
+		{			
+			//NO COMMAND             => DO NOTHING
+			if(arr.length == FALSE_LENGTH_ARRAY)
+				return;
+				
+				//DELETE COMMAND          => DELETE
+			else if(arr.length == DELETE_LENGTH_ARRAY){				
+				if(arr[0] == LIST_COMMAND[0]){
+					var index:uint = arr[1];
+					deleteObject(index);
+					return;
+				}
+			}
+				
+				//CREATE COMMAND 		  => CHECK WHAT TYPE
+				//IF NOT "CHARACTER" TYPE => CREATE
+				//IF "CHARACTER" TYPE     => CHECK WHETHER CHARACTER EXISTED 
+				//IF NOT 				  => CREATE 
+				//ELSE                    => DO NOTHING
+			else if(arr.length == CREATE_LENGTH_ARRAY){
+				if(arr[0] == LIST_COMMAND[1]){
+					index            = arr[2];
+					var name :String = arr[1];
+					this._maxCollectObs ++;
+					if(name != HERO_TYPE)
+					{
+						createObject(name, index);
+						return;
+					}
+					else if(createHero(index))
+						return;
+					else
+						trace("More than one hero");	
+				}
+			}
+			return;
+		}		
+		
 		/** CREATE OBJECT BASED ON TYPE AND INDEX **/
 		public function createObject(name:String, index:uint):void
 		{
-			if((_state == constant.ChapterOneConstant.EDITTING_STATE && _screen == Constant.CREATE_GAME_SCREEN) || (_screen != Constant.CREATE_GAME_SCREEN))
+			if((_state == Constant.EDITTING_STATE && _screen == Constant.CREATE_GAME_SCREEN) || (_screen != Constant.CREATE_GAME_SCREEN))
 			{
 				this.deleteObject(index);
 				
@@ -581,40 +636,40 @@ package object.inGameObject
 		/**GET THE OBJECT'S LOCATION ON INDEXBOARD BASED ON INDEX **/
 		private function positionObjectOnStage(obj:Image, index:uint, isWalkable:Boolean):void
 		{	
-				if(index > 0 && index <= MAXIMUM_ROW*MAXIMUM_COLUMN){
+			if(index > 0 && index <= MAXIMUM_ROW*MAXIMUM_COLUMN){
 					
-					var modular      : int = index % MAXIMUM_COLUMN;
-					var rowIndex 	 : uint = 0;
-					var columnIndex  : uint = 0;
+				var modular      : int = index % MAXIMUM_COLUMN;
+				var rowIndex 	 : uint = 0;
+				var columnIndex  : uint = 0;
+				
+				if(modular == 0){
 					
-					if(modular == 0){
-						
-						rowIndex    = int(index/MAXIMUM_COLUMN) - 1;
-						columnIndex = MAXIMUM_COLUMN - 1; 
-					}
-					else{
-						
-						rowIndex    = int(index/MAXIMUM_COLUMN);
-						columnIndex = modular - 1;
-					}
-					
-					if(columnIndex < 0 || rowIndex < 0){
-						trace('problem with finding the position of the pattern. Program should be paused for debugging');
-						return;
-					}
-					_tileVector[columnIndex][rowIndex].walkable = isWalkable;
-					
-					obj.x = columnIndex	* PIXEL_MOVE;
-					obj.y = rowIndex	* PIXEL_MOVE;
-					
-					this.addChild(obj);
+					rowIndex    = int(index/MAXIMUM_COLUMN) - 1;
+					columnIndex = MAXIMUM_COLUMN - 1; 
 				}
+				else{
+					
+					rowIndex    = int(index/MAXIMUM_COLUMN);
+					columnIndex = modular - 1;
+				}
+				
+				if(columnIndex < 0 || rowIndex < 0){
+					trace('problem with finding the position of the pattern. Program should be paused for debugging');
+					return;
+				}
+				_tileVector[columnIndex][rowIndex].walkable = isWalkable;
+				
+				obj.x = columnIndex	* PIXEL_MOVE;
+				obj.y = rowIndex	* PIXEL_MOVE;
+				
+				this.addChild(obj);
+			}
 		}
 		
 		/** CREATE CHARACTER **/
 		public function createHero(index:Number):Boolean
 		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE || _screen != Constant.CREATE_GAME_SCREEN)
+			if(_state == Constant.EDITTING_STATE || _screen != Constant.CREATE_GAME_SCREEN)
 			{
 				var modular      : int  = index % MAXIMUM_COLUMN;
 				var rowIndex 	 : uint = 0;
@@ -622,39 +677,32 @@ package object.inGameObject
 				
 				_heroIndex = index;
 				
-				//IF NO CHARACTER CREATED => CREATED
-				if(!_hero.heroEnable)
+				if(modular == 0)
 				{
-					if(modular == 0)
-					{
-						rowIndex    = int(index/MAXIMUM_COLUMN) - 1;
-						columnIndex = MAXIMUM_COLUMN - 1; 
-					}
-					else
-					{
-						rowIndex    = int(index/MAXIMUM_COLUMN);
-						columnIndex = modular - 1;
-					}
-					
-					_hero.x = columnIndex * PIXEL_MOVE;
-					_hero.y = rowIndex	  * PIXEL_MOVE;
-					
-					_hero.initialX = _hero.x;
-					_hero.initialY = _hero.y;
-					_hero.gender = this._gender;
-					this.addChild(_hero);
-					_controller.updateUnits(null,null,_hero);
-					
-					_tileVector[columnIndex][rowIndex].end = true;
-					_endPoint1  = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
-					_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
-					
-					_enemyGo = true;
-					return true;
+					rowIndex    = int(index/MAXIMUM_COLUMN) - 1;
+					columnIndex = MAXIMUM_COLUMN - 1; 
 				}
 				else
-					//IF CHARACTER CREATED => DO NOTHING
-					return false;
+				{
+					rowIndex    = int(index/MAXIMUM_COLUMN);
+					columnIndex = modular - 1;
+				}
+					
+				_player.x = columnIndex * PIXEL_MOVE;
+				_player.y = rowIndex * PIXEL_MOVE;
+				
+				_player.gender = this._gender;
+					
+				this.addChild(_player);
+				this._isHit = false;
+				_controller.updateUnits(null,null,_player);
+					
+				_tileVector[columnIndex][rowIndex].end = true;
+				_endPoint1  = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+				_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+				
+				_enemyGo = true;
+				return true;
 			}
 			else
 				return false;
@@ -666,13 +714,13 @@ package object.inGameObject
 		/** DELETE OBJECT AT INDEX LOCATION **/
 		public function deleteObject(index:uint):void
 		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE || _state == constant.ChapterOneConstant.PLAYING_STATE)
+			if(_state == Constant.EDITTING_STATE || _state == Constant.PLAYING_STATE)
 			{
 				//IF INDEX GIVEN IS CHARACTER'S INDEX + CHARACTER CREATED 
 				//=> DELETE CHARACTER
-				if(index == _heroIndex && _hero.heroEnable)
+				if(index == _heroIndex)
 				{
-					this.deleteHero();						
+					this.deletePlayer();						
 					return;
 				}
 				
@@ -695,28 +743,50 @@ package object.inGameObject
 		}
 		
 		/** DELETE CHARACTERS **/ 
-		public function deleteHero():void
+		public function deletePlayer():void
 		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE)
+			if(_state == Constant.EDITTING_STATE)
 			{
-				if(_hero.heroEnable)
-				{
-					this.removeChild(_hero);
-					_hero.heroEnable = false;
-					return;
-				}
-				else
-					return;
+				this.removeChild(_player);
+				return;
 			}
 		}
 		
-		
-		/**====================================================================
-		 * |	                   STATE HANDLER   			                  | *
-		 * ====================================================================**/
-		public function changeState(currentState:String):void
+		public function createPlayer(pos:Number, gender:String):void
 		{
-			_state = currentState;
+			if(_state == Constant.EDITTING_STATE)
+			{
+				var modular      : int  = pos % MAXIMUM_COLUMN;
+				var rowIndex 	 : uint = 0;
+				var columnIndex  : uint = 0;
+				
+				_heroIndex = pos;
+				
+				//IF NO CHARACTER CREATED => CREATED
+				if(modular == 0)
+				{
+					rowIndex    = int(pos/MAXIMUM_COLUMN) - 1;
+					columnIndex = MAXIMUM_COLUMN - 1; 
+				}
+				else
+				{
+					rowIndex    = int(pos/MAXIMUM_COLUMN);
+					columnIndex = modular - 1;
+				}
+				
+				_player.x = columnIndex * PIXEL_MOVE;
+				_player.y = rowIndex	* PIXEL_MOVE;
+				
+				this.addChild(_player);
+				_controller.updateUnits(null,null,_player);
+				
+				_tileVector[columnIndex][rowIndex].end = true;					
+				_endPoint1 = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+				_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+				
+				_enemyGo = true;
+				return;
+			}
 		}
 		
 		/**====================================================================
@@ -746,6 +816,30 @@ package object.inGameObject
 			}
 		}
 		
+		private function updateHeroPosition():void
+		{
+			clearVisitedTiles();
+			_enemy1Found = false;
+			_endPoint1.x = int(this._player.x / 40) * 40;
+			_endPoint1.y = int(this._player.y / 40) * 40;
+		}
+		
+		private function clearVisitedTiles():void
+		{
+			var x :Number = int(this._player.x / 40);
+			var y :Number = int(this._player.y / 40);
+			for(var j:Number=0; j<9 ; j++)
+			{
+				_tileVector[x][j].visited = false;
+			}
+			
+			for(var i:Number=0; i<11 ; i++)
+			{
+				_tileVector[i][y].visited = false;
+			}
+		}
+
+		
 		private function getG(n1:Number, n2:Number):Number
 		{
 			return 1;
@@ -764,6 +858,9 @@ package object.inGameObject
 				return true;
 		}
 		
+		/*-----------------------------------------------------------------------
+		| @Enemy follows player													|
+		-------------------------------------------------------------------------*/
 		private function enemyFollow(enemy:Enemies):void
 		{
 			if(!_enemy1Found)
@@ -805,8 +902,6 @@ package object.inGameObject
 							if((savedPoint.x != _endPoint1.x) || (savedPoint.y != _endPoint1.y))
 							{
 								_enemy1.targetPt = savedPoint;
-//								_enemy1.x = savedPoint.x;
-//								_enemy1.y = savedPoint.y;
 								var m:Number = savedPoint.x / 40;
 								var n:Number = savedPoint.y / 40;
 								_tileVector[m][n].visited = true;	
@@ -825,8 +920,6 @@ package object.inGameObject
 							{
 								_currPoint1 = _path[_path.length - 2];
 								_enemy1.targetPt = _currPoint1;
-//								_enemy1.x = _currPoint1.x;
-//								_enemy1.y = _currPoint1.y;
 								_path.pop();
 							}
 							else
@@ -840,6 +933,9 @@ package object.inGameObject
 			}
 		}
 		
+		/*-----------------------------------------------------------------------
+		| @Enemy go patrol														|
+		-------------------------------------------------------------------------*/
 		private function enemyPatrol(enemy:Enemies):void
 		{
 			var moveX:Number;
@@ -900,55 +996,258 @@ package object.inGameObject
 			}
 		}
 		
-		public function displayQuestion():void
-		{
-			var qns: Question = new Question(this._controller, Constant.SHORT_QUESTION);
-			this.addChild(qns);
+		/**====================================================================
+		 * |                    	STATS CONTROL FUNCTION                    | *
+		 * ====================================================================**/
+		public function updateMaxLife(life:Number):void{
+			this._maxLife 	= life;
+			this._currLife  = life;
 		}
 		
-		public function createPlayer(pos:Number, gender:String):void
+		public function updateCloseQuiz():void{
+			this._isDisplayedQuiz = false;
+		}
+		
+		/**====================================================================
+		 * |                    CHARACTER CONTROL FUNCTION                    | *
+		 * ====================================================================**/
+		
+		/**************************** MAIN FUNCTIONS ****************************/
+		/*-----------------------------------------------------------------------
+		| @Move and Stop Player upon key pressed			                     |		
+		-------------------------------------------------------------------------*/
+		private function movePlayer(key:String):void
 		{
-			if(_state == constant.ChapterOneConstant.EDITTING_STATE)
+			switch(key){
+				case Constant.KEY_LEFT:
+					this._player.moveX 	 		= PLAYER_SPEED_BACKWARD;
+					this._player.moveY 	 		= 0;
+					this._player.playerStatus   = Constant.HERO_STATUS_LEFT;
+					this._player.showHero(2, 1);
+					break;
+				
+				case Constant.KEY_RIGHT:
+					this._player.moveX 	 		= PLAYER_SPEED_FORWARD;
+					this._player.moveY 	 		= 0;
+					this._player.playerStatus   = Constant.HERO_STATUS_RIGHT;
+					this._player.showHero(3, 1);
+					break;
+				
+				case Constant.KEY_DOWN:
+					this._player.moveX 	 		= 0;
+					this._player.moveY 	 		= PLAYER_SPEED_FORWARD;
+					this._player.playerStatus   = Constant.HERO_STATUS_DOWN;
+					this._player.showHero(1, 1);
+					break;
+				
+				case Constant.KEY_UP:
+					this._player.moveX  	 	= 0;
+					this._player.moveY  	 	= PLAYER_SPEED_BACKWARD;
+					this._player.playerStatus   = Constant.HERO_STATUS_UP;
+					this._player.showHero(0, 1);
+					break;
+				
+				default:
+					break;
+			}
+		}
+
+		private function stopPlayer():void
+		{
+			this._player.moveX = 0;
+			this._player.moveY = 0;
+			
+			switch(this._player.playerStatus)
+			{		
+				case Constant.HERO_STATUS_UP:
+					this._player.showHero(0,0);
+					break;
+				case Constant.HERO_STATUS_DOWN:
+					this._player.showHero(1,0);
+					break;
+				case Constant.HERO_STATUS_LEFT:
+					this._player.showHero(2,0);
+					break;
+				case Constant.HERO_STATUS_RIGHT:
+					this._player.showHero(3,0);
+					break;
+			}
+		}
+		
+		/*-----------------------------------------------------------------------
+		| @Prevent player from going out of game area		                     |		
+		-------------------------------------------------------------------------*/
+		private function checkPlayerOutOfArea():void
+		{
+			if(this._player.x + 40 > _gameArea.right)
+				this._player.x = _gameArea.right - 40;
+			else if(this._player.x < _gameArea.x)
+				this._player.x = 0;
+			else if(this._player.y + 40 > _gameArea.bottom)
+				this._player.y = _gameArea.bottom - 40;
+			else if(this._player.y < _gameArea.y)
+				this._player.y = 0;
+		}
+		
+		/*-----------------------------------------------------------------------
+		| @Check collision with obstacles										|
+		| @Perform corresponding actions with obstacles' type					|
+		-------------------------------------------------------------------------*/
+		private function checkCollisionWithObstacles():void
+		{
+			var obsList	:Vector.<Obstacles> = this._obsList;
+			var player	:Player = this._player;
+			
+			if(obsList.length == 0)
+				return;
+			else
 			{
-				var modular      : int  = pos % MAXIMUM_COLUMN;
-				var rowIndex 	 : uint = 0;
-				var columnIndex  : uint = 0;
+				var vx	:Number;
+				var vy	:Number;
+				var playerX	:Number;
+				var playerY :Number;
 				
-				_heroIndex = pos;
-				
-				//IF NO CHARACTER CREATED => CREATED
-				if(!_hero.heroEnable)
+				for(var i:uint=0; i<obsList.length; i++)
 				{
-					if(modular == 0)
+					vx = (this._player.x + this._player.width/2) - (obsList[i].pos.x + obsList[i].width/2);
+					vy = (this._player.y + this._player.height/2) - (obsList[i].pos.y + obsList[i].height/2);
+					
+					if(Math.abs(vx) < this._player.width/2 + obsList[i].width/2)
 					{
-						rowIndex    = int(pos/MAXIMUM_COLUMN) - 1;
-						columnIndex = MAXIMUM_COLUMN - 1; 
+						if(Math.abs(vy) < this._player.height/2 + obsList[i].height/2)
+						{
+							var overlapX	:Number = this._player.width/2 + obsList[i].width/2 - Math.abs(vx);
+							var overlapY	:Number = this._player.height/2 + obsList[i].height/2 - Math.abs(vy);
+							
+							if(obsList[i].gotQns)
+								showQuestion(obsList[i].qnsIndex);
+							
+							if(obsList[i].type == Constant.COLLECT_OBS)
+							{
+								obsCollect(i);
+								break;
+							}
+							else if(overlapX >= overlapY)
+							{
+								if(vy > 0)
+									this._player.y += overlapY;
+								else
+									this._player.y -= overlapY;
+							}
+							else
+							{
+								if(vx > 0)
+									this._player.x += overlapX;
+								else
+									this._player.x -= overlapX;
+							}
+							
+							if(obsList[i].type == Constant.DAMEGE_OBS)
+								takeDamage();
+							else if(obsList[i].type == Constant.TELE_OBS)
+								teleport();
+							else if(obsList[i].type == Constant.GOAL_OBS)
+								trace("finish");
+								//finishStage();
+							break;
+						}
 					}
-					else
+				}
+			}
+		}
+	
+		/*-----------------------------------------------------------------------
+		| @Check collision with enemies											|
+		| @Take damage upon contact												|
+		-------------------------------------------------------------------------*/
+		private function checkCollisionWithEnemy():void
+		{
+			var enemyList	:Vector.<Enemies> = this._enemyList;
+			if(enemyList != null)
+			{
+				if(enemyList.length != 0)
+				{
+					var vx			:Number;
+					var vy			:Number;
+					for(var i:uint=0; i< enemyList.length; i++)
 					{
-						rowIndex    = int(pos/MAXIMUM_COLUMN);
-						columnIndex = modular - 1;
+						vx = (this._player.x + (this._player.width/2)) - (enemyList[i].enemyX + (enemyList[i].image.width/2));
+						vy = (this._player.y + (this._player.height/2)) - (enemyList[i].enemyY + (enemyList[i].image.height/2));
+						
+						if(Math.abs(vx) < this._player.width/2 + enemyList[i].image.width/2)
+						{
+							if(Math.abs(vy) < this._player.height/2 + enemyList[i].image.height/2)
+							{	
+								takeDamage();
+							}
+						}
 					}
-					
-					_hero.x = columnIndex * PIXEL_MOVE;
-					_hero.y = rowIndex	  * PIXEL_MOVE;
-					
-					_hero.initialX = _hero.x;
-					_hero.initialY = _hero.y;
-					
-					this.addChild(_hero);
-					_controller.updateUnits(null,null,_hero);
-					
-					_tileVector[columnIndex][rowIndex].end = true;					
-					_endPoint1 = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
-					_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
-					
-					_enemyGo = true;
-					return;
 				}
 			}
 		}
 		
+		/**************************** SUPPORT FUNCTIONS ****************************/
+		
+		/*-----------------------------------------------------------------------
+		| @Collect obstacles upon contact										|
+		-------------------------------------------------------------------------*/
+		private function obsCollect(index:Number):void{
+			//Remove obstacles from display
+			this.removeChild(this._obsList[index]);
+			//Remove obstacles from the obstacles list
+			this._obsList.slice(index, 1);
+			//Increase the stats
+			this._currCollectObs ++;
+			//Report to main controller to display on scoreboard
+			this._controller.currCollectedObs = this._currCollectObs;
+		}
+		
+		/*-----------------------------------------------------------------------
+		| @Take damage => life reduces											|
+		-------------------------------------------------------------------------*/
+		private function takeDamage():void{
+			if(!this._isHit)
+			{
+				this._isHit = true;
+				this._currLife --;
+			}
+			if(this._currLife == 0)
+				this._controller.isLost = true;
+		}
+		
+		/*-----------------------------------------------------------------------
+		| @Teleport to certain location											|
+		-------------------------------------------------------------------------*/
+		private function teleport():void{
+			
+		}
+		
+		/*-----------------------------------------------------------------------
+		| @Finish the stage														|
+		| @Report back to server												|
+		-------------------------------------------------------------------------*/
+		private function finishStage():void{
+			this._controller.isWon = true;
+		}
+		
+		/*-----------------------------------------------------------------------
+		| @If obstacles got qns => show											|
+		-------------------------------------------------------------------------*/
+		private function showQuestion(index:Number):void{
+			if(!_isDisplayedQuiz)
+			{
+				var qns: Question = new Question(this._controller, index);
+				this._isDisplayedQuiz = true;
+				this.addChild(qns);
+			}
+		}
+		
+		/**====================================================================
+		 * |                    		 APIs			                      | *
+		 * ====================================================================**/
+		/*-----------------------------------------------------------------------
+		| @Compute the point on screen from given grid's index					|
+		-------------------------------------------------------------------------*/
 		private function indexToPoint(index:Number):Point
 		{
 			var modular      : int  = index % MAXIMUM_COLUMN;
@@ -968,91 +1267,6 @@ package object.inGameObject
 			var resultPts	:Point = new Point(columnIndex * PIXEL_MOVE, rowIndex * PIXEL_MOVE);
 			
 			return resultPts;
-		}
-		
-		private function createFollowEnemies(enemyNo:Number, pos:Number, spd:Number, img:Number):void
-		{
-			if(enemyNo == 1)
-			{
-				_enemy1 = new Enemies(_controller, indexToPoint(pos).x, indexToPoint(pos).y, Constant.FOLLOW_TYPE, spd, img, 1);
-				_gotFollow = true;
-				_enemy1.x = indexToPoint(pos).x;
-				_enemy1.y = indexToPoint(pos).y;
-				
-				this.addChild(_enemy1);
-				_controller.updateUnits(_enemy1, null, null);
-				
-				for(var i:Number=0; i<11; i++)
-				{
-					for(var j:Number=0; j<9; j++)
-					{
-						if((_tileVector[i][j].x == _enemy1.x) && (_tileVector[i][j].y == _enemy1.y))
-						{
-							_tileVector[i][j].start1  = true;
-							_tileVector[i][j].visited1 = true;
-							_startPoint1 = new Point(_tileVector[i][j].x, _tileVector[i][j].y);
-							_path        = new Vector.<Point>();
-							_currPoint1  = new Point(_startPoint1.x, _startPoint1.y);
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		public function createEnemies(type:Array, speed:Array, image:Array, pos:Array):void
-		{
-			if(type[0] != 0)
-			{
-				if(type[0] == 1)
-					createFollowEnemies(1, pos[0], speed[0], image[0]);
-//				else if(type[0] == 2)
-//					createPatrolEnemies(1, pos[0], speed[0], image[0]);
-			}
-			
-			if(type[1] != 0)
-			{
-				//if(type[1] == 1)
-				//	createFollowEnemies(2, pos[1], speed[1], image[1]);
-				_enemy2 = new Enemies(_controller, indexToPoint(pos[1]).x, indexToPoint(pos[1]).y, Constant.PATROL_TYPE, speed[1], image[1], 2);
-				_gotPatrol = true;
-				_enemy2.x = indexToPoint(pos[1]).x;
-				_enemy2.y = indexToPoint(pos[1]).y;	
-					
-				this.addChild(_enemy2);
-				_controller.updateUnits(null, _enemy2, null);
-				
-				for(var m:Number=0; m<11; m++)
-				{
-					for(var n:Number=0; n<9; n++)
-					{
-						if((_tileVector[m][n].x == _enemy2.x) && (_tileVector[m][n].y == _enemy2.y))
-						{
-							_tileVector[m][n].start2  = true;
-							_tileVector[m][n].visited = false;
-							_endPointPatrol2 = new Vector.<Point>();
-							var endPoint : Point;
-							endPoint = new Point (_enemy2.x, _enemy2.y - 80);
-							_endPointPatrol2.push(endPoint);
-							endPoint = new Point (_enemy2.x + 80, _enemy2.y - 80);
-							_endPointPatrol2.push(endPoint);
-							endPoint = new Point (_enemy2.x + 80, _enemy2.y);
-							_endPointPatrol2.push(endPoint);
-							endPoint = new Point (_enemy2.x, _enemy2.y);
-							_endPointPatrol2.push(endPoint);
-							
-							_startPoint2 = new Point(_tileVector[m][n].x, _tileVector[m][n].y);
-							_currPoint2  = new Point(_enemy2.x, _enemy2.y);
-							break;
-						}
-					}
-				}	
-			}
-		}
-		
-		public function finishStage():void
-		{
-			_controller.isWon = true;
 		}
 	}
 }

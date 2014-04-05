@@ -9,7 +9,6 @@ package object.inGameObject
 	//import library
 	import assets.Assets;
 	
-	import constant.ChapterOneConstant;
 	import constant.Constant;
 	import constant.StoryConstant;
 	
@@ -38,7 +37,7 @@ package object.inGameObject
 		/*----------------------------
 		|	     Bubble state        |
 		-----------------------------*/
-		private var _state					 :String = ChapterOneConstant.INSTRUCTING_STATE;
+		private var _state					 :String = Constant.INSTRUCTING_STATE;
 		
 		private var _isKeyUp:Boolean;
 		
@@ -148,10 +147,10 @@ package object.inGameObject
 		 * ====================================================================**/
 		private function onAddedToStage(e:Event):void
 		{
-			this._dialogueLine 		= new TextField(500 , 100, null ,ChapterOneConstant.GROBOLD_FONT, 18);
+			this._dialogueLine 		= new TextField(500 , 100, null ,Constant.GROBOLD_FONT, 18);
 			this._dialogCurPos 		= 0;				
-			this._dialogueLine.x 	= ChapterOneConstant.DIALOG_POSX;
-			this._dialogueLine.y 	= ChapterOneConstant.DIALOG_POSY + 30;
+			this._dialogueLine.x 	= 10;
+			this._dialogueLine.y 	= 10;
 
 			setDialogue(null);
 			this.addChild(_dialogueLine);
