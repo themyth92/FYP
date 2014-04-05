@@ -35,8 +35,7 @@ package screen.subStoryScreen
 		private var _frameIMG		:Image;
 		private var _dialogueIMG	:Image;
 		private var _guiderIMG		:Image;
-		private var _lifeIMG		:Image;
-		private var _com           :ServerClientManager;	
+		private var _lifeIMG		:Image;	
 		private var _controller	:MainController;
 		
 		public function StoryStage2()
@@ -84,7 +83,12 @@ package screen.subStoryScreen
 		
 		override public function pauseGame():void
 		{
-			
+			this._controller.changeState(Constant.PAUSE_STATE);	
+		}
+		
+		override public function unpauseGame():void
+		{
+			this._controller.changeState(Constant.PLAYING_STATE);
 		}
 		
 		private function onAddedToStage(event:Event):void
@@ -140,16 +144,16 @@ package screen.subStoryScreen
 		
 		private function setupGameObject():void
 		{
-			_console.x 		= Constant.CONSOLE_PLAY_POS.x;
-			_console.y 		= Constant.CONSOLE_PLAY_POS.y;
+			this._console.x 		= Constant.CONSOLE_PLAY_POS.x;
+			this._console.y 		= Constant.CONSOLE_PLAY_POS.y;
 			
-			_dialogue.x 	= Constant.DIALOGUE_POS.x + 75;
-			_dialogue.y 	= Constant.DIALOGUE_POS.y + 20;
+			this._dialogue.x 	= Constant.DIALOGUE_POS.x + 75;
+			this._dialogue.y 	= Constant.DIALOGUE_POS.y + 20;
 			
-			_indexBoard.x 	= Constant.GRID_STORY_POS.x;
-			_indexBoard.y 	= Constant.GRID_STORY_POS.y;
+			this._indexBoard.x 	= Constant.GRID_STORY_POS.x;
+			this._indexBoard.y 	= Constant.GRID_STORY_POS.y;
 			
-			_scoreBoard.x 	= 160;
+			this._scoreBoard.x 	= 160;
 			
 			this.addChild(_console);
 			this.addChild(_dialogue);
@@ -187,13 +191,11 @@ package screen.subStoryScreen
 		private function onEnterFrame(event:Event):void
 		{	
 			if(isWon()){
-				this._com.saveUserIngameState(2);
-				GameData.setGameState(3);
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.STORY_SCREEN_3}, true));
 			}
 			else if(isLost())
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.GAME_OVER_SCREEN}, true));
 			}
 		}
 		private function isWon():Boolean

@@ -85,7 +85,12 @@ package screen.subStoryScreen
 		
 		override public function pauseGame():void
 		{
-			
+			this._controller.changeState(Constant.PAUSE_STATE);
+		}
+		
+		override public function unpauseGame():void
+		{
+			this._controller.changeState(Constant.PLAYING_STATE);
 		}
 		
 		private function onAddedToStage(event:Event):void

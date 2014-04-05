@@ -205,6 +205,7 @@ package screen
 					
 					break;
 				case RESUME_GAME_EVENT:
+					this._currentStage.unpauseGame();
 					this.removeChild(this._menuScreen);
 					this._menuScreen	= null;
 					

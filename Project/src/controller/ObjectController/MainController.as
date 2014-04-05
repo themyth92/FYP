@@ -271,7 +271,7 @@ package controller.ObjectController
 		{
 			this._scoreBoard.state 	= Constant.PAUSE_STATE;
 			this._dialogue.state 	= Constant.PAUSE_STATE;
-			this._indexBoardController.changeObjectState(Constant.PAUSE_STATE);
+			//this._indexBoardController.changeObjectState(Constant.PAUSE_STATE);
 			if(this._screen != Constant.STORY_SCREEN_1)
 			{
 				this._console.state 	= Constant.PAUSE_STATE;

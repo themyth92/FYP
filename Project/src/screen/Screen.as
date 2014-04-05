@@ -7,16 +7,11 @@ package screen
 {
 	import starling.display.Sprite;
 	
-	public class Screen extends Sprite implements IScreen
+	public class Screen extends Sprite
 	{
 		public function Screen()
 		{
 			super();
-		}
-		
-		public function quitCurrentActiveScreen():void
-		{
-			
 		}
 		
 		public function resetCurrentActiveScreen():void
@@ -25,6 +20,11 @@ package screen
 		}
 		
 		public function pauseGame():void
+		{
+			
+		}
+		
+		public function unpauseGame():void
 		{
 			
 		}

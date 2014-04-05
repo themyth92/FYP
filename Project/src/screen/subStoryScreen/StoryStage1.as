@@ -83,6 +83,11 @@ package screen.subStoryScreen
 			this._controller.changeState(Constant.PAUSE_STATE);	
 		}
 		
+		override public function unpauseGame():void
+		{
+			this._controller.changeState(Constant.PLAYING_STATE);
+		}
+		
 		private function onAddedToStage(event:Event):void
 		{
 			this._controller 		= new MainController ();
@@ -151,14 +156,15 @@ package screen.subStoryScreen
 		
 		private function onRemoveFromStage(event:Event):void
 		{
-			this.removeChild(_background);
-			this.removeChild(_frameIMG);
-			this.removeChild(_dialogueIMG);
-			this.removeChild(_screen);
-			this.removeChild(_guiderIMG);
-			this.removeChild(_dialogue);
-			this.removeChild(_indexBoard);
-			this.removeChild(_scoreBoard);
+			this.removeChild(this._background);
+			this.removeChild(this._frameIMG);
+			this.removeChild(this._dialogueIMG);
+			this.removeChild(this._screen);
+			this.removeChild(this._guiderIMG);
+			this.removeChild(this._dialogue);
+			this.removeChild(this._indexBoard);
+			this.removeChild(this._scoreBoard);
+			this.removeChild(this._lifeIMG);
 			
 			this._background  	= null;
 			this._frameIMG    	= null;
@@ -169,6 +175,7 @@ package screen.subStoryScreen
 			this._indexBoard  	= null;
 			this._scoreBoard  	= null;
 			this._controller  	= null;
+			this._lifeIMG		= null;
 
 			this.removeEventListener(Event.ENTER_FRAME, 		onEnterFrame);
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, 	onRemoveFromStage);

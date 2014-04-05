@@ -36,6 +36,7 @@ package object
 				case Constant.CREATE_GAME_SCREEN:
 					this._soundManager	= SoundAssets.getMusic(Constant.CREATE_GAME_BG_SOUND);
 					this._soundManager.playSound(Constant.CREATE_GAME_BG_SOUND, SoundManager._soundVolume, 100);
+					break;
 				case Constant.STORY_SCREEN:
 					this._soundManager	= SoundAssets.getMusic(Constant.STORY_GAME_BG_SOUND);
 					this._soundManager.playSound(Constant.STORY_GAME_BG_SOUND, SoundManager._soundVolume, 100);
