@@ -52,7 +52,6 @@ package object
 		
 		private function onAddedToStage(event:Event):void
 		{	
-			
 			this._slider 				= new Slider();
 			this._slider.minimum 		= 0;
 			this._slider.maximum 		= 100;
