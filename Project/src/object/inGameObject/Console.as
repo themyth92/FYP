@@ -9,7 +9,6 @@ package object.inGameObject
 	//import library
 	import assets.Assets;
 	
-	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
 	import controller.ObjectController.MainController;
@@ -103,17 +102,17 @@ package object.inGameObject
 			this._console 	= new TextInput();
 			if(this._screen == Constant.STORY_SCREEN_2)
 				this._console.visible = false;
-			this._console.width   = ChapterOneConstant.TEXTFIELD_WIDTH;
-			this._console.height  = ChapterOneConstant.TEXTFIELD_HEIGTH + 30;
+			this._console.width   = Constant.TEXTFIELD_WIDTH;
+			this._console.height  = Constant.TEXTFIELD_HEIGTH + 30;
 			this._console.textEditorFactory               = function():ITextEditor{
 				var format:TextFieldTextEditor = new TextFieldTextEditor();
-				format.textFormat = new TextFormat(ChapterOneConstant.GROBOLD_FONT, 15, 0xffff);
+				format.textFormat = new TextFormat(Constant.GROBOLD_FONT, 15, 0xffff);
 				format.embedFonts = true;
 				return format;
 			};
 			this._console.maxChars         = 50;
 			
-			this._errorSign  = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(ChapterOneConstant.WARNING_SIGN));
+			this._errorSign  = new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.WARNING_SIGN));
 			this._errorSign.x              = WARNING_SIGN_POSX;
 			this._errorSign.y              = WARNING_SIGN_POSY;
 			this._errorSign.visible 		= false;

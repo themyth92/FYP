@@ -9,7 +9,6 @@ package object.inGameObject
 	import assets.Assets;
 	import assets.PreviewGameInfo;
 	
-	import constant.ChapterOneConstant;
 	import constant.Constant;
 	import constant.StoryConstant;
 	
@@ -51,7 +50,7 @@ package object.inGameObject
 		private static const END_TIME		: String= "00 : 00";
 		
 		/* CONTROL VARIBALES */
-		private var _state				  	: String = ChapterOneConstant.INSTRUCTING_STATE;
+		private var _state				  	: String = Constant.INSTRUCTING_STATE;
 		private var _panel					: Panel;
 		private var _controller	    		: MainController;
 		private var _startPlaying			: Boolean = true;

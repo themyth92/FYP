@@ -8,7 +8,8 @@ package assets
 
 	public class PreviewGameInfo
 	{
-		public static var _gameTitle	:String;
+		public static var _gameTitle	:String = "Test Title";
+		public static var _gameScreen	:Object = {isUserDef:true, textureIndex:0};
 		
 		public static var _playerPos	:uint;
 		public static var _playerGender	:String;
@@ -28,7 +29,7 @@ package assets
 		public static var _obsCollection:Vector.<Image> 	= new Vector.<Image>();
 		public static var _obsIndex		:Vector.<uint> 		= new Vector.<uint>();
 		public static var _obsType		:Vector.<String> 	= new Vector.<String>();
-		public static var _obsQnsIndex	:Vector.<Array> 	= new Vector.<Array>();
+		public static var _obsQns		:Vector.<Object> 	= new Vector.<Object>();
 		
 		public static var _screenIndex	:Number;
 		
@@ -71,16 +72,34 @@ package assets
 			var obsTexture	: Image;
 			for(var i:uint = 0; i < obsObj.length; i++)
 			{
+				//Get obstalces' image
 				if(obsObj[i].isUserDef)
 					obsTexture = new Image(Assets.getUserTexture()[obsObj[i].textureIndex].texture);
 				else
 					obsTexture = new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("pattern_" + formatLeadingZero(obsObj[i].textureIndex)));
-				
+				//Store images into vector
 				_obsCollection.push(obsTexture);
+				
+				//Store obstacles' position on grid
 				_obsIndex.push(obsObj[i].pos);
+				
+				//Store obstacles' type
 				_obsType.push(formatLeadingZero(obsObj[i].type));
-//				if(obsObj[i].qnsIndex != null)
-//					_obsQnsIndex.push(obsObj[i].qnsIndex);
+				
+				//Store obstacles' question
+				if(obsObj[i].qnsIndex != null)
+				{
+					var qns 	 = new Object();
+					qns.gotQns	 = true;
+					qns.qnsIndex = obsObj[i].qnsIndex;
+				}
+				else
+				{
+					var qns		 = new Object();
+					qns.gotQns 	 = false;
+					qns.qnsIndex = -1;
+				}
+				_obsQns.push(qns);
 			}
 		}
 		

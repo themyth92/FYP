@@ -2,7 +2,6 @@ package object.inGameObject
 {
 	import assets.Assets;
 	
-	import constant.ChapterOneConstant;
 	import constant.Constant;
 	
 	import controller.ObjectController.MainController;
@@ -13,35 +12,33 @@ package object.inGameObject
 	import feathers.controls.Panel;
 	import feathers.controls.Radio;
 	import feathers.controls.ScrollContainer;
-	import feathers.controls.TextInput;
 	import feathers.core.PopUpManager;
 	import feathers.core.ToggleGroup;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalLayout;
 	
-	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextField;
-	import starling.textures.Texture;
 	import starling.utils.HAlign;
 	
 	public class Question extends Sprite
 	{
-		[Embed(source = '../media/sprite/spriteSheet/Blackboard.jpg')]
-		private static const Blackboard:Class;
-		
-		private static const SHORT_QUESTION	:String = "1 + 1= ?";
-		private static const SHORT_ANSWER	:String = "2";
 		private static const MCQ_QUESTION	:String = "Which continent does Singapore belongs to?";
 		private static const MCQ_CHOICES	:Array = new Array("Asia", "Europe", "Africa");
 		private static const MCQ_ANSWER		:Number = 0;
 		
-		private var _type 			:String;
-		private var _question		:TextField;
-		private var _answerShort	:TextInput;
-		private var _answerMCQ		:ToggleGroup;
+		private var _questionDiv	:TextField;
+		private var _choicesDiv		:ToggleGroup;
+		private var _statusDiv		:TextField;
+		private var _hintDiv		:TextField;
+		
+		//Provided information
+		private var _correctAns		:String;
+		private var _hint			:String;
+		private var _choices		:Array;
+		
 		private var _questionArea	:Panel;
 		private var _isDisplayed	:Boolean = false;
 		private var _isPoppedUp		:Boolean = false;
@@ -49,19 +46,25 @@ package object.inGameObject
 		private var _mcqLayout		:VerticalLayout;
 		private var _controller		:MainController;
 		
-		public function Question(controller:MainController, type:String)
+		public function Question(controller:MainController, index:Number)
 		{
 			this._controller = controller;
-			this._type = type;
 			this._isDisplayed = true;
 			
-			if(_type == Constant.MCQ_QUESTION)
+			this._questionDiv = new TextField(500, 150, null, Constant.GROBOLD_FONT, 18, 0xFF0000);
+			
+			if(index != -1)
 			{
-				this._mcqLayout = new VerticalLayout();
-				this._mcqLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
-				this._mcqLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
-				this._mcqLayout.gap = 20;
+				this._questionDiv.text = "Question :" + Assets.getUserQuestion()[index].title;
+				this._choices = Assets.getUserQuestion()[index].answers;
+				this._hint = Assets.getUserQuestion()[index].hint;
+				this._correctAns = Assets.getUserQuestion()[index].select;
 			}
+			
+			this._mcqLayout = new VerticalLayout();
+			this._mcqLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
+			this._mcqLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
+			this._mcqLayout.gap = 20;
 				
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
 		}
@@ -72,6 +75,7 @@ package object.inGameObject
 			{
 				displayQuestionArea();
 				displayQuestion();
+				displayStatus();
 				PopUpManager.addPopUp(_questionArea);
 				this._isPoppedUp = true;
 			}
@@ -79,6 +83,11 @@ package object.inGameObject
 				
 		private function displayQuestionArea():void
 		{
+			var panelLayout	:VerticalLayout = new VerticalLayout();
+			panelLayout.gap = 10;
+			panelLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
+			panelLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_TOP;
+			
 			_questionArea = new Panel();
 			_questionArea.x = 50;
 			_questionArea.y = 50;
@@ -91,136 +100,105 @@ package object.inGameObject
 				header.y = -15;
 				return header;
 			}
+			_questionArea.layout = panelLayout;
 		}
 		
 		private function displayQuestion():void
 		{
-			_question = new TextField(500, 150, null, ChapterOneConstant.GROBOLD_FONT, 18, 0xFF0000);
-			if(_type == Constant.MCQ_QUESTION)
-				_question.text = "Question: " + MCQ_QUESTION;
-			else if(_type == Constant.SHORT_QUESTION)
-				_question.text = "Question: " + SHORT_QUESTION;
-			_question.y = -65;
-			_question.autoScale = true;
-			_question.hAlign = HAlign.LEFT;
+			this._questionDiv.y = -65;
+			this._questionDiv.autoScale = true;
+			this._questionDiv.hAlign = HAlign.LEFT;
 			
-			_questionArea.addChild(_question);
-			var submitButton	:feathers.controls.Button = new feathers.controls.Button();
-			submitButton.label = "Submit";
-			submitButton.height = 50;
-			submitButton.width = 150;
-			submitButton.x = 520;
-			submitButton.y = 320;
-			if(this._type == Constant.SHORT_QUESTION)
-				submitButton.addEventListener(Event.TRIGGERED, function(e:Event): void {
-					onSubmitShortAns(_answerShort);
-				});
-			else if(this._type == Constant.MCQ_QUESTION)
-				submitButton.addEventListener(Event.TRIGGERED, function(e:Event): void {
-					onSubmitMCQAns(_answerMCQ);
-				});
-			_questionArea.addChild(submitButton);
-			
-			if(_type == Constant.SHORT_QUESTION)
-				displayAnswerBox();
-			else if (_type == Constant.MCQ_QUESTION)
-				displayChoices();	
-		}
-		
-		private function displayAnswerBox():void
-		{
-			this._answerShort = new TextInput();
-			this._answerShort.width = 500;
-			this._answerShort.height = 150;
-			this._answerShort.x = 50;
-			this._answerShort.y = 100;
-			this._questionArea.addChild(this._answerShort);
-			this.addChild(_questionArea);
+			_questionArea.addChild(this._questionDiv);
+			displayChoices();	
 		}
 		
 		private function displayChoices():void
 		{		
-			this._answerMCQ = new ToggleGroup();
+			this._choicesDiv = new ToggleGroup();
 			
 			var radioContainer:ScrollContainer = new ScrollContainer();
 			radioContainer.layout = this._mcqLayout;
 			radioContainer.horizontalScrollPolicy = ScrollContainer.SCROLL_POLICY_OFF;
 			radioContainer.verticalScrollPolicy = ScrollContainer.SCROLL_POLICY_OFF;
 			
-			for(var i:uint=0; i<MCQ_CHOICES.length; i++)
+			for(var i:uint=0; i<this._choices.length; i++)
 			{
 				var choices:Radio = new Radio();
-				choices.label = MCQ_CHOICES[i];
-				_answerMCQ.addItem(choices);
+				choices.label = this._choices[i].answer;
+				_choicesDiv.addItem(choices);
 				radioContainer.addChild(choices);
 			}
-			radioContainer.x = 50;
-			radioContainer.y = 100;
 			this._questionArea.addChild(radioContainer);
+		}
+		
+		private function displayStatus():void{
+			
+			this._hintDiv = new TextField(500, 40, null, "Verdana", 16, 0xFFFFFF);
+			this._questionArea.addChild(this._hintDiv);
+			this._statusDiv = new TextField(500, 30, null,"Verdana", 16, 0xFF0000);
+			
+			this._questionArea.addChild(this._statusDiv);
+			
+			var buttonGroup	:LayoutGroup = new LayoutGroup();
+			var buttonGroupLayout	:HorizontalLayout = new HorizontalLayout();
+			buttonGroupLayout.gap = 75;
+			buttonGroupLayout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_CENTER;
+			buttonGroup.layout = buttonGroupLayout;
+			
+			var submitButton :Button = new Button();
+			submitButton.label = "Submit";
+			submitButton.height = 50;
+			submitButton.width = 150;
+			submitButton.addEventListener(Event.TRIGGERED, onSubmitAns);
+			buttonGroup.addChild(submitButton);
+			
+			var hint	:Button = new Button();
+			hint.label = "Show Hint";
+			hint.height = 50;
+			hint.width = 150;
+			hint.addEventListener(Event.TRIGGERED, showHint);
+			buttonGroup.addChild(hint);
+			
+			var closeButton :Button = new Button();
+			closeButton.label = "Exit";
+			closeButton.height = 50;
+			closeButton.width = 150;
+			closeButton.addEventListener(Event.TRIGGERED, onCloseQuestionWindow);
+			buttonGroup.addChild(closeButton);
+			
+			this._questionArea.addChild(buttonGroup);
 			this.addChild(_questionArea);
 		}
 		
-		private function onSubmitShortAns(answer:TextInput):void{
-			_isCorrect = checkAnswer(answer.text,0);
+		private function onSubmitAns():void{
+			_isCorrect = checkAnswer(this._choicesDiv.selectedIndex);
 			this._controller.updateAnswerStatus(this._isCorrect);
 			displayResult(_isCorrect);
 		}
 		
-		private function onSubmitMCQAns(answer:ToggleGroup):void{
-			_isCorrect = checkAnswer(null,answer.selectedIndex);
-			this._controller.updateAnswerStatus(this._isCorrect);
-			displayResult(_isCorrect);
-		}
-		
-		private function checkAnswer(shortAnswer:String, mcqAnswer:int):Boolean
+		private function checkAnswer(mcqAnswer:int):Boolean
 		{
 			var result :Boolean;
-			switch(_type)
-			{
-				case Constant.SHORT_QUESTION:
-					if(shortAnswer.toLocaleLowerCase() == SHORT_ANSWER)
-						result = true;
-					else
-						result = false;
-					break;
-				case Constant.MCQ_QUESTION:
-					if(mcqAnswer == MCQ_ANSWER)
-						result = true;
-					else
-						result = false;
-					break;
-				default:
-					result = false;
-					break;
-			}
+		
+			if(mcqAnswer+1 == Number(this._correctAns))
+				result = true;
+			else
+				result = false;
 			return result;
 		}
 		
 		private function displayResult(isCorrect:Boolean):void
 		{
-			_questionArea.removeChildren();
-			var correction :TextField = new TextField(500, 150, null, ChapterOneConstant.GROBOLD_FONT, 15, 0xFF0000);;
-			correction.y = -65;
-			correction.autoScale = true;
-			correction.hAlign = HAlign.CENTER;
 			if(isCorrect)
-				correction.text = "Congratulation! You are correct!";
+				this._statusDiv.text = "Congratulation! You are correct!";
 			else
-			{
-				if(_type == Constant.SHORT_QUESTION)
-					correction.text = "Sorry. The correct answer is '" + SHORT_ANSWER + "'.";
-				else
-					correction.text = "Sorry. The correct option is 'Option " + (MCQ_ANSWER + 1) + "'.";
-			}
-			_questionArea.addChild(correction);
-			var closeButton :feathers.controls.Button = new feathers.controls.Button();
-			closeButton.height = 50;
-			closeButton.width = 150;
-			closeButton.x = 520;
-			closeButton.y = 320;
-			closeButton.label = "OK";
-			closeButton.addEventListener(Event.TRIGGERED, onCloseQuestionWindow);
-			_questionArea.addChild(closeButton);
+				this._statusDiv.text = "Sorry. Your answer is not correct.";
+		}
+		
+		private function showHint(event:Event):void
+		{
+			this._hintDiv.text = this._hint;
 		}
 		
 		private function onCloseQuestionWindow(event:Event):void
@@ -228,7 +206,5 @@ package object.inGameObject
 			PopUpManager.removePopUp(_questionArea, true );
 			_isPoppedUp = false;
 		}
-		
-		
 	}
 }

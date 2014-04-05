@@ -205,6 +205,10 @@ package object.CreateGameObject
 		
 		private function onPublishBtnTrigger(event:Event):void
 		{
+			//store ScoreBoard
+			//store Obstacles
+			//store Enemies
+			//store Player
 			
 		}
 		
@@ -214,8 +218,7 @@ package object.CreateGameObject
 		{	
 			return xIndex + yIndex*11 + 1;
 		}
-		
-		
+			
 		//take the screen shot
 		private function takeScreenShot(disp : DisplayObject, scl:Number=1.0):String
 		{

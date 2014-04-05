@@ -10,6 +10,11 @@ package constant
 
 	public class Constant
 	{
+		public static const GROBOLD_FONT			:String			   	    = 'Grobold';
+		public static const TEXTFIELD_WIDTH			:uint   	     		= 151;
+		public static const TEXTFIELD_HEIGTH		:uint  	    			= 32;
+		public static const WARNING_SIGN  			:String       			= 'warningSign';
+
 		/**====================================================================
 		 * |	                        SCREENS     			              | *
 		 * ====================================================================**/
@@ -60,8 +65,6 @@ package constant
 															   				'volumeIncBtn', 'volumeSlider');
 		
 		public static const ENEMY_SPRITE_TEXTURE:Array			= new Array('Enemy/Enemy_1', 'Enemy/Enemy_2', 'Enemy/Enemy_3', 'Enemy/Enemy_4', 'Enemy/Enemy_5', 'Enemy/Enemy_6');
-		//font
-		public static const GROBOLD_FONT: String              = 'Grobold';
 		
 		/**====================================================================
 		 * |	                    IMAGE POSITION   			              | *
@@ -136,6 +139,15 @@ package constant
 		public static const MCQ_QUESTION 	:String = "mcqQns";
 		
 		/**====================================================================
+		 * |  		                  OBSTACLES TYPE   			              | *
+		 * ====================================================================**/
+		public static const BLOCK_OBS		:String = "01";
+		public static const COLLECT_OBS		:String = "02";
+		public static const DAMEGE_OBS		:String = "03";
+		public static const	TELE_OBS		:String = "04";
+		public static const GOAL_OBS		:String = "05";
+		
+		/**====================================================================
 		 * |  		                  	STATES   			             	  | *
 		 * ====================================================================**/
 		public static const INSTRUCTING_STATE		:String					= 'INSTRUCTING';
@@ -153,6 +165,24 @@ package constant
 		public static const STATE_CHANGE	: String = "stateChange";
 		public static const	ERROR_NOTIFY1	: String = "errorNotify1";
 		public static const	ERROR_NOTIFY2	: String = "errorNotify2";
+		
+		/**====================================================================
+		 * |  		                  	PLAYER   			             	  | *
+		 * ====================================================================**/
+		public static const KEY_LEFT				:String       	    	= 'keyLeft';
+		public static const KEY_RIGHT				:String      	    	= 'keyRight';
+		public static const KEY_DOWN				:String       	    	= 'keyDown';
+		public static const KEY_UP					:String         	    = 'keyUp'; 
+		
+		public static const HERO_STATUS_LEFT		:String     			= 'left';
+		public static const HERO_STATUS_RIGHT		:String    				= 'right';
+		public static const HERO_STATUS_UP			:String       			= 'up';
+		public static const HERO_STATUS_DOWN		:String     			= 'down';
+		
+		public static const HERO_MALE_STAND			:Array        			= new Array('Player - Male/male_up_01', 'Player - Male/male_down_01','Player - Male/male_left_01', 'Player - Male/male_right_01');
+		public static const HERO_MALE_RUN			:Array         			= new Array('Player - Male/male_up_', 'Player - Male/male_down_', 'Player - Male/male_left_', 'Player - Male/male_right_');
+		public static const HERO_FEMALE_STAND		:Array        			= new Array('Player - Female/female_up_01', 'Player - Female/female_down_01','Player - Female/female_left_01', 'Player - Female/female_right_01');
+		public static const HERO_FEMALE_RUN			:Array         			= new Array('Player - Female/female_up_', 'Player - Female/female_down_', 'Player - Female/female_left_', 'Player - Female/female_right_');
 		
 		/**====================================================================
 		 * |  		                  	SOUNDS   			             	  | *
