@@ -22,11 +22,12 @@ package screen
 	
 	public class StoryScreen extends Sprite
 	{	
-		private static const RESET_CURRENT_LEVEL_EVENT: String = 'OptionMenuResetLevelButtonTrigger';
+		private static const RESET_CURRENT_LEVEL_EVENT: String = 'ResetLevelButtonTrigger';
 		private static const RESET_STORY_EVENT		: String = 'OptionMenuResetStoryButtonTrigger';
 		private static const RESUME_GAME_EVENT		: String = 'OptionMenuResumeButtonTrigger';
-		private static const QUIT_GAME_EVENT			: String = 'OptionMenuQuitButtonTrigger';
+		private static const QUIT_GAME_EVENT			: String = 'QuitButtonTrigger';
 		private static const MENU_EVENT				: String = 'MenuEvent';
+		private static const GAME_OVER_EVENT			: String = 'GameOverEvent';
 		
 		private static const STORY_STAGE_1 			: uint = 1;
 		private static const STORY_STAGE_2 			: uint = 2;
@@ -42,6 +43,7 @@ package screen
 		private var _currentStage 	: Screen;
 		private var _menuButton	: Button;
 		private var _menuScreen	: MenuScreen;
+		private var _gameOverScreen: GameOverScreen;
 		private var _soundObject	: SoundObject;
 		
 		public function StoryScreen()
@@ -99,6 +101,7 @@ package screen
 			this.addEventListener(Event.REMOVED_FROM_STAGE, 		onRemoveFromStage);
 			this.addEventListener(NavigationEvent.CHANGE_SCREEN, 	onChangeScreen);
 			this.addEventListener(MENU_EVENT, 						onMenuTrigger);
+			this.addEventListener(GAME_OVER_EVENT,					onGameOverTrigger);
 			this._menuButton.addEventListener(Event.TRIGGERED, 		onMenuScreenBtnTrigger);
 
 		}
@@ -108,6 +111,7 @@ package screen
 			this._menuButton.removeEventListener(MENU_EVENT, 			onMenuTrigger);	
 			this.removeChild(this._menuButton);		
 			this.removeChild(this._currentStage);
+			this.removeChild(this._gameOverScreen);
 	
 			this._currentStage				= null;
 			this._menuButton				= null;
@@ -117,7 +121,10 @@ package screen
 			this._storyStage3				= null;
 			this._storyStage4				= null;
 			this._storyStage5				= null;
+			this._gameOverScreen			= null;
 			
+			this.removeEventListener(MENU_EVENT, 						onMenuTrigger);
+			this.removeEventListener(GAME_OVER_EVENT,					onGameOverTrigger);
 			this.removeEventListener(NavigationEvent.CHANGE_SCREEN, 	onChangeScreen);
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, 			onRemoveFromStage);
 		}
@@ -125,12 +132,19 @@ package screen
 		//switch story screen on change state
 		//remember to keep track of the stage in currentStage
 		private function onChangeScreen(event:NavigationEvent):void
-		{
+		{	
 			
 			//due to current architecture
 			//we need to remove the option button first and add it again
 			this.removeChild(this._menuButton);
 			this.removeChild(this._currentStage);
+			
+			//2 special cases when the screen id is gameover or game success screen
+			if(event.screenID.to == Constant.GAME_OVER_SCREEN){
+				
+				this._gameOverScreen			= new GameOverScreen(Constant.STORY_SCREEN);
+				this.addChild(this._gameOverScreen);
+			}
 			
 			switch(event.screenID.to){
 				
@@ -179,7 +193,10 @@ package screen
 			}
 			
 			this.addChild(this._currentStage);
-			this.addChild(this._menuButton);
+			
+			//prevent menu button add on top of the game over screen
+			if(event.screenID.to != Constant.GAME_OVER_SCREEN)
+				this.addChild(this._menuButton);
 		}
 		
 		//show menu screen
@@ -239,6 +256,26 @@ package screen
 					
 					break;
 				default:
+					break;
+			}
+		}
+		
+		private function onGameOverTrigger(event:Event):void
+		{
+			switch(event.data.event){
+				case QUIT_GAME_EVENT:
+					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.STORY_SCREEN, to :Constant.NAVIGATION_SCREEN}, true));
+					break;
+				case RESET_CURRENT_LEVEL_EVENT:
+					this._currentStage.resetCurrentActiveScreen();
+					
+					//we need to add in again because we remove it alr
+					this.addChild(this._menuButton);
+					
+					this.removeChild(this._gameOverScreen);
+					this._gameOverScreen	= null;
+					break;
+				default :
 					break;
 			}
 		}

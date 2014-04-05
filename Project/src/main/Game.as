@@ -157,6 +157,7 @@ package main
 					//so that it does not listen to the event from stage
 					//MUST NOT DELETE THE CREATE GAME OBJECT HERE
 					//so that we can retrieve it later
+					this.removeChild(this._createGameScreen);
 					this._playScreen		= 	new PlayScreen();
 					this.addChild(this._playScreen);
 					

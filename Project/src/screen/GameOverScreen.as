@@ -6,48 +6,90 @@ package screen
 	
 	import events.NavigationEvent;
 	
+	import feathers.controls.Button;
+	
+	import starling.animation.Tween;
+	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
 	public class GameOverScreen extends Sprite
 	{		
+		private static const QUIT_GAME_EVENT			: String = 'QuitButtonTrigger';
+		private static const RESET_CURRENT_LEVEL_EVENT: String = 'ResetLevelButtonTrigger';
+		private static const GAME_OVER_EVENT			: String = 'GameOverEvent';
+		
 		private var _background 	:Image;
 		private var _gameOverText	:Image;
+		private var _fromScreen	:String;
+		private var _quitBtn		:Button;
+		private var _retryBtn		:Button;
 		
-		public function GameOverScreen()
+		public function GameOverScreen(fromScreen:String)
 		{
 			super();
+			this._fromScreen	=	 fromScreen;
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		}
 		
 		private function onAddedToStage(event:Event):void
 		{
-			this._background = new Image(Assets.getTexture("GameOverScreen"));
-			this._gameOverText = new Image(Assets.getTexture("GameOverText"));
-			this._gameOverText.alpha = 0;
-			this.addChild(_background);
-			this.addChild(_gameOverText);
-			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		}
-		
-		private function onEnterFrame(event:Event):void
-		{
-			if(this._gameOverText.alpha != 1)
-				this._gameOverText.alpha += 0.005;
-			else
-			{
-				this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-				//this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.MAIN_SCREEN, needSaveState : true}, true));
+			this._background 		= new Image(Assets.getTexture("GameOverScreen"));
+			this._gameOverText 		= new Image(Assets.getTexture("GameOverText"));
+			this.addChild(this._background);
+			this.addChild(this._gameOverText);
+			
+			//check the screen which call the game over screen
+			switch(this._fromScreen){
+				case Constant.STORY_SCREEN:
+					
+					this._quitBtn				= new Button();
+					this._quitBtn.label			= 'Quit';
+					this._quitBtn.x 			= 100;
+					this._quitBtn.y				= 400;
+					this._quitBtn.width			= 200;
+					
+					this._retryBtn				= new Button();
+					this._retryBtn.label		= 'Retry';
+					this._retryBtn.x 			= 500;
+					this._retryBtn.y			= 400;
+					this._retryBtn.width		= 200;
+					
+					this.addChild(this._quitBtn);
+					this.addChild(this._retryBtn);
+					
+					this._quitBtn.addEventListener(Event.TRIGGERED, 	onQuitBtnTrigger);
+					this._retryBtn.addEventListener(Event.TRIGGERED, 	onRetryBtnTrigger);
+					
+					break;
+				default:
+					break;
 			}
+			
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);	
 		}
 		
 		private function onRemoveFromStage(event:Event):void
 		{
-			this._background = null;
-			this._gameOverText = null;
+			this.removeChild(this._background);
+			this.removeChild(this._gameOverText);
+			
+			this._background 	= null;
+			this._gameOverText 	= null;
+		
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);			
+		}
+		
+		private function onQuitBtnTrigger(event:Event):void
+		{
+			this.dispatchEventWith(GAME_OVER_EVENT, true, {event : QUIT_GAME_EVENT});
+		}
+		
+		private function onRetryBtnTrigger(event:Event):void
+		{
+			this.dispatchEventWith(GAME_OVER_EVENT, true, {event : RESET_CURRENT_LEVEL_EVENT});	
 		}
 	
 	}

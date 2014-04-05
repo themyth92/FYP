@@ -93,15 +93,21 @@ package object.inGameObject
 		}
 		
 		public function nextDialogueLine():void{
-			if(this._dialogCurPos <= this._dialogueWhole.length){
-				this._dialogueLine.text = this._dialogueWhole[this._dialogCurPos];
-				if(this._screen != Constant.PLAY_SCREEN)
-					checkStoryEvent();
-				this._dialogCurPos ++;
-			}
-			else{
-				disableKeyListeners();
-				this._controller.changeState(Constant.PLAYING_STATE);
+			try
+			{
+				if(this._dialogCurPos <= this._dialogueWhole.length){
+					this._dialogueLine.text = this._dialogueWhole[this._dialogCurPos];
+					if(this._screen != Constant.PLAY_SCREEN)
+						checkStoryEvent();
+					this._dialogCurPos ++;
+				}
+				else{
+					disableKeyListeners();
+					this._controller.changeState(Constant.PLAYING_STATE);
+				}
+			}catch(e:Error)
+			{
+				
 			}
 		}
 		

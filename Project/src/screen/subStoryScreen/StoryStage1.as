@@ -195,7 +195,7 @@ package screen.subStoryScreen
 			if(isLost)
 			{	
 				//dispatch event to change screen
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.GAME_OVER_SCREEN}, true));
 			}
 		}
 	}

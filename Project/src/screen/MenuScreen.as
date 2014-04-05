@@ -35,10 +35,10 @@ package screen
 	//without creating a common menu screen in game class
 	public class MenuScreen extends PanelScreen
 	{
-		private static const RESET_CURREN_LEVEL_EVENT : String = 'OptionMenuResetLevelButtonTrigger';
+		private static const RESET_CURRENT_LEVEL_EVENT: String = 'ResetLevelButtonTrigger';
 		private static const RESET_STORY_EVENT		: String = 'OptionMenuResetStoryButtonTrigger';
 		private static const RESUME_GAME_EVENT		: String = 'OptionMenuResumeButtonTrigger';
-		private static const QUIT_GAME_EVENT			: String = 'OptionMenuQuitButtonTrigger';
+		private static const QUIT_GAME_EVENT			: String = 'QuitButtonTrigger';
 		private static const MENU_EVENT				: String = 'MenuEvent';
 		
 		private var _buttonGroup	: ButtonGroup;
@@ -124,7 +124,7 @@ package screen
 		
 		private function onResetLevelBtnTrigger(event:Event):void
 		{
-			this.dispatchEventWith(MENU_EVENT, true, {event : RESET_CURREN_LEVEL_EVENT});
+			this.dispatchEventWith(MENU_EVENT, true, {event : RESET_CURRENT_LEVEL_EVENT});
 		}
 	}
 }

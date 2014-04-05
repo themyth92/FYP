@@ -36,7 +36,7 @@ package manager
 		
 		public function publishGame(returnData: Object):void
 		{
-			ExternalInterface.call('publish');
+			ExternalInterface.call('publishGame', returnData);
 		}
 	}
 }
