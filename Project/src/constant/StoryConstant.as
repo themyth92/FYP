@@ -170,13 +170,14 @@ package constant
 																	"Let's head in");
 
 		
-		public static const STAGE5_COLLECTION	:Vector.<String> = new <String>["pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
-																				"Lock_Red",
+		public static const STAGE5_COLLECTION	:Vector.<String> = new <String>["Lock_Red","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00","pattern_00",
 																				"Goal"];
-		public static const STAGE5_INDEX		:Vector.<uint>	 = new <uint>[6,17,28,39,61,72,83,94,50,55];
-		public static const STAGE5_TYPE 		:Vector.<String> = new <String>["00","00","00","00","00","00","00","00",
-																				"Question",
+		public static const STAGE5_INDEX		:Vector.<uint>	 = new <uint>[50,6,17,28,39,61,72,83,94,55];
+		public static const STAGE5_TYPE 		:Vector.<String> = new <String>["00","00","00","00","00","00","00","00","00",
 																				"05"];
+		
+		public static const STAGE5_QNS			:Vector.<Object> = new <Object>[{gotQns:true, qnsIndex:1},{gotQns:false, qnsIndex:-1},{gotQns:false, qnsIndex:-1},{gotQns:false, qnsIndex:-1},
+																					{gotQns:false, qnsIndex:-1},{gotQns:false, qnsIndex:-1},{gotQns:false, qnsIndex:-1},{gotQns:false, qnsIndex:-1},{gotQns:false, qnsIndex:-1},{gotQns:false, qnsIndex:-1}];
 		public static const STAGE5_PLAYER_POS	:uint = 45;
 		public static const STAGE5_QUESTION_POS	:uint = 50;
 	}

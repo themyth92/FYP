@@ -242,7 +242,6 @@ package object.inGameObject
 			if(_state == Constant.PLAYING_STATE)
 			{
 				_timer ++;
-				trace("go here");
 				updateHeroPosition();
 				
 				/* Move player */ 
@@ -300,6 +299,10 @@ package object.inGameObject
 			this.addChild(enemyIMG);
 		}
 		
+		public function removeLockOnCorrect(index:Number):void{
+			this.deleteObject(index);
+		}
+		
 		private function setupPattern():void
 		{
 			var collection 		:Vector.<String>;
@@ -307,11 +310,11 @@ package object.inGameObject
 			var index			:Vector.<uint>;
 			var type			:Vector.<String>;
 			var pos				:uint;
-			
+			var i:uint;
 			switch(_screen){
 				case Constant.STORY_SCREEN_1:
 					collection 	= StoryConstant.STAGE1_COLLECTION;
-					for(var i:uint=0; i< collection.length; i++)
+					for(i=0; i< collection.length; i++)
 						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE1_INDEX;
 					type		= StoryConstant.STAGE1_TYPE;
@@ -321,7 +324,7 @@ package object.inGameObject
 					break;
 				case Constant.STORY_SCREEN_2:
 					collection 	= StoryConstant.STAGE2_COLLECTION;
-					for(var i:uint=0; i< collection.length; i++)
+					for(i=0; i< collection.length; i++)
 						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE2_INDEX;
 					type		= StoryConstant.STAGE2_TYPE;
@@ -331,7 +334,7 @@ package object.inGameObject
 					break;
 				case Constant.STORY_SCREEN_3:
 					collection 	= StoryConstant.STAGE3_COLLECTION;
-					for(var i:uint=0; i< collection.length; i++)
+					for(i=0; i< collection.length; i++)
 						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE3_INDEX;
 					type		= StoryConstant.STAGE3_TYPE;
@@ -342,7 +345,7 @@ package object.inGameObject
 					break;
 				case Constant.STORY_SCREEN_4:
 					collection 	= StoryConstant.STAGE4_COLLECTION;
-					for(var i:uint=0; i< collection.length; i++)
+					for(i=0; i< collection.length; i++)
 						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE4_INDEX;
 					type		= StoryConstant.STAGE4_TYPE;
@@ -353,12 +356,12 @@ package object.inGameObject
 					break;
 				case Constant.STORY_SCREEN_5:
 					collection 	= StoryConstant.STAGE5_COLLECTION;
-					for(var i:uint=0; i< collection.length; i++)
+					for(i=0; i< collection.length; i++)
 						imgCollection.push(new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(collection[i])));
 					index		= StoryConstant.STAGE5_INDEX;
 					type		= StoryConstant.STAGE5_TYPE;
 					pos			= StoryConstant.STAGE5_PLAYER_POS;
-					addObstaclesToBoard(imgCollection, index, type, null);
+					addObstaclesToBoard(imgCollection, index, type, StoryConstant.STAGE5_QNS);
 					createHero(pos);
 					break;
 				case Constant.PLAY_SCREEN:
@@ -377,15 +380,16 @@ package object.inGameObject
 		
 		private function addObstaclesToBoard(collection:Vector.<Image>, index:Vector.<uint>, type:Vector.<String>, qns:Vector.<Object>):void{
 			var pos		:Point;
+			var obstacles	:Obstacles;
 			this._obsList = new Vector.<Obstacles>();
 			for(var i:uint=0; i<collection.length; i++)
 			{
 				pos = indexToPoint(index[i]);
 				//Create a new obstacle
 				if(qns != null)
-					var obstacles	:Obstacles = new Obstacles(type[i], pos, collection[i], qns[i].gotQns, qns[i].qnsIndex);
+					obstacles	= new Obstacles(type[i], pos, collection[i], qns[i].gotQns, qns[i].qnsIndex);
 				else 
-					var obstacles	:Obstacles = new Obstacles(type[i], pos, collection[i]);
+					obstacles	= new Obstacles(type[i], pos, collection[i]);
 				
 				//Position it on screen
 				obstacles.x = pos.x;
@@ -1164,8 +1168,7 @@ package object.inGameObject
 							else if(obsList[i].type == Constant.TELE_OBS)
 								teleport();
 							else if(obsList[i].type == Constant.GOAL_OBS)
-								trace("finish");
-								//finishStage();
+								finishStage();
 							break;
 						}
 					}

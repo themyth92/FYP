@@ -211,7 +211,7 @@ package screen.subStoryScreen
 				GameData.setGameState(5);
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.STORY_SCREEN_5}, true));
 			}
-			if(isLost())
+			else if(isLost())
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
 		}
 		

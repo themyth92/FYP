@@ -129,7 +129,7 @@ package controller.ObjectController
 		public function updateAnswerStatus(isCorrect:Boolean):void{
 			this._isCorrect = isCorrect;
 			if(this._screen == Constant.STORY_SCREEN_5 && this._isCorrect)
-				this.notifyIndexBoardController("stage5RemoveLock");
+				this._indexBoard.removeLockOnCorrect(StoryConstant.STAGE5_QUESTION_POS);
 		}
 		
 		public function set gotPopUp(value:Boolean):void
@@ -441,7 +441,7 @@ package controller.ObjectController
 			switch(type)
 			{
 				case "stage5RemoveLock":
-					//this._indexBoardController.removeLockOnCorrect(StoryConstant.STAGE5_QUESTION_POS);
+					this._indexBoard.removeLockOnCorrect(StoryConstant.STAGE5_QUESTION_POS);
 					break;
 				default:
 					break;

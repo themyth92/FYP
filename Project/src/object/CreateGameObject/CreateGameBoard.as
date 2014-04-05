@@ -209,7 +209,6 @@ package object.CreateGameObject
 			//store Obstacles
 			//store Enemies
 			//store Player
-			
 		}
 		
 		//change the xindex and yindex inside the 2D array

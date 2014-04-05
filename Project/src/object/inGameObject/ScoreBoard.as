@@ -224,7 +224,7 @@ package object.inGameObject
 				var lifeEdit:TextInput = new TextInput();
 				lifeEdit.x = 70;
 				lifeEdit.width = 80;
-				
+				lifeEdit.height = 100;
 				lifeEdit.prompt = formatLeadingZero(_maxLife);
 				_panel.addChild(lifeEdit);
 				
@@ -303,13 +303,15 @@ package object.inGameObject
 				minuteText.x = 30;
 				minuteText.textEditorProperties.fontSize = 20;
 				minuteText.width = 75;
+				minuteText.height = 100;
 				var secondText:TextInput = new TextInput();
 				secondText.x = 125;
 				secondText.textEditorProperties.fontSize = 20;
 				secondText.width = 75;
+				secondText.height = 100;
 	
-				minuteText.text = formatLeadingZero(_minutesOn);
-				secondText.text = formatLeadingZero(_secondsOn);
+				minuteText.prompt = formatLeadingZero(_minutesOn);
+				secondText.prompt = formatLeadingZero(_secondsOn);
 				_panel.addChild(colonText);
 				_panel.addChild(minuteText);
 				_panel.addChild(secondText);
@@ -360,7 +362,7 @@ package object.inGameObject
 		
 		private function checkStage4Condition(minute:String, second:String):void
 		{
-			if(Number(minute) != StoryConstant.STAGE4_TIME_MIN && Number(second) != StoryConstant.STAGE4_TIME_SEC)
+			if(Number(minute) != StoryConstant.STAGE4_TIME_MIN || Number(second) != StoryConstant.STAGE4_TIME_SEC)
 				this._controller.showIncorrectDialouge("time");
 			else
 			{

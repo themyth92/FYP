@@ -26,8 +26,9 @@ package object.inGameObject
 	public class Question extends Sprite
 	{
 		private static const MCQ_QUESTION	:String = "Which continent does Singapore belongs to?";
-		private static const MCQ_CHOICES	:Array = new Array("Asia", "Europe", "Africa");
-		private static const MCQ_ANSWER		:Number = 0;
+		private static const MCQ_CHOICES	:Array = new Array({answer:"Asia"},{answer:"Europe"},{answer:"Africa"});
+		private static const MCQ_ANSWER		:String = "01";
+		private static const MCQ_HINT		:String = "It is in the same continent as China.";
 		
 		private var _questionDiv	:TextField;
 		private var _choicesDiv		:ToggleGroup;
@@ -63,7 +64,7 @@ package object.inGameObject
 			
 			this._mcqLayout = new VerticalLayout();
 			this._mcqLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
-			this._mcqLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
+			this._mcqLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_BOTTOM;
 			this._mcqLayout.gap = 20;
 				
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
@@ -73,9 +74,17 @@ package object.inGameObject
 		{
 			if(_isDisplayed)
 			{
+				if(this._controller.screen == Constant.STORY_SCREEN_5)
+				{
+					this._questionDiv.text = MCQ_QUESTION;
+					this._choices = MCQ_CHOICES;
+					this._hint = MCQ_HINT;
+					this._correctAns = MCQ_ANSWER;
+				}
 				displayQuestionArea();
 				displayQuestion();
 				displayStatus();
+				
 				PopUpManager.addPopUp(_questionArea);
 				this._isPoppedUp = true;
 			}
@@ -97,7 +106,7 @@ package object.inGameObject
 			{
 				var header:Header = new Header();
 				header.title = "Quiz";
-				header.y = -15;
+				header.y = -5;
 				return header;
 			}
 			_questionArea.layout = panelLayout;

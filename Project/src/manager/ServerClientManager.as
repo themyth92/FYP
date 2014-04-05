@@ -33,5 +33,10 @@ package manager
 		{
 			ExternalInterface.call('quitGame');	
 		}
+		
+		public function publishGame(returnData: Object):void
+		{
+			ExternalInterface.call('publish');
+		}
 	}
 }
