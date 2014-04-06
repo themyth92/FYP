@@ -175,8 +175,7 @@ package object.CreateGameObject
 				return;
 			}
 			
-			var droppedObject:ObstacleObj  		= new ObstacleObj(dataReturn.texture, dataReturn.isUserDefText, dataReturn.textureIndex);
-			droppedObject.obstacleType          = dataReturn.obstacleType;
+			var droppedObject:ObstacleObj  		= new ObstacleObj(dataReturn.texture, dataReturn.isUserDefText, dataReturn.textureIndex, null, dataReturn.obstacleType);
 			
 			//check out of index
 			if(xIndex < 11 && yIndex < 9){
@@ -247,7 +246,7 @@ package object.CreateGameObject
 					//check in range
 					if(xIndex < 11 && yIndex < 9){
 						this._curGridObjSelect			= this._gridObjects[xIndex][yIndex];
-	
+
 						if(this._curGridObjSelect.state == 1){
 							
 							this._state = 1;
@@ -256,7 +255,7 @@ package object.CreateGameObject
 							var optionPanelY: Number 		= yIndex*40;
 							var obstacleType: Number		= this._curGridObjSelect.getObstacle().obstacleType;
 
-							this._gridOptionPanel.changeStateGrid(2, optionPanelX, optionPanelY, this._curGridObjSelect.selectedIndex);
+							this._gridOptionPanel.changeStateGrid(obstacleType, optionPanelX, optionPanelY, this._curGridObjSelect.selectedIndex);
 						}
 					}
 				}
@@ -389,7 +388,7 @@ package object.CreateGameObject
 							//Found the tiles in the list
 							//Convert to Point for IndexBoard processing in game
 							var savedPt	:Number = xIndex + (yIndex*11)+1;
-							trace(savedPt);
+
 							if(this._enemy.type == "enemy1")
 								this._enemy1EndPts.push(savedPt);
 							else

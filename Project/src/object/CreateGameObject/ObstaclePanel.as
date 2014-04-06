@@ -87,7 +87,8 @@ package object.CreateGameObject
 													   Assets.getUserTexture()[j].textureIndex, 
 													   Assets.getUserTexture()[j].address, 
 													   Assets.getUserTexture()[j].type);
-
+				
+				
 				this._obstacleObjects.push(obj);
 				obj 				= null;
 				this.addChild(this._obstacleObjects[i]);

@@ -42,10 +42,9 @@ package object.CreateGameObject
 		
 		//change state of option depends on the type of object
 		public function changeStateGrid(type : Number, xPos:Number, yPos:Number, selectedIndex : Number):void{
-			
-			//if object is prize, 
-			//we allow them to put in the question
-			if(type == 1){
+					
+			//if other type we no need to allow them
+			if(type == 2){
 				
 				this.x						= xPos;
 				this.y 						= yPos;
@@ -57,13 +56,16 @@ package object.CreateGameObject
 				return;
 			}
 			else
-				if(type == 2)
+				//if object is prize, 
+				//we allow them to put in the question
+				if(type == 1)
 				{
 					this.x						= xPos;
 					this.y						= yPos;
 					this._list.visible 			= true;
 					this._deleteBtn.visible 	= true;
 					this._closeBtn.visible		= true;
+					this._list.selectedIndex	= selectedIndex;
 					return;
 				}
 				else{

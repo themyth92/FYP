@@ -34,6 +34,7 @@ package object.CreateGameObject
 			this._end    	 	= false;
 			this._walkable  	= true;
 			this._visited  		= false;
+			this._selectedIndex = -1;
 	
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}

@@ -46,6 +46,8 @@ package object.CreateGameObject
 			//the address of texture
 			//will be used for user defined texture
 			this._textureAddress	= textureAddres;
+			
+			this._obstacleType		= obstacleType;
 		}	
 		
 		public function get textureAddress():String
