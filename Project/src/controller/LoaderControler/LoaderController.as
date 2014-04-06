@@ -7,6 +7,7 @@
 package controller.LoaderControler 
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.Constant;
 	
@@ -79,6 +80,23 @@ package controller.LoaderControler
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
 				}
+				
+				if(this._serverData.pageID == SAVE_PAGE)
+				{
+//					PreviewGameInfo._gameID = this._serverData.id;
+//					PreviewGameInfo._gameScreen =
+					this._questionList 	= this.getQsList(this._serverData);
+					this._imgList	  	= this.getImgList(this._serverData);
+					this.loadUserTexture();
+				}
+				
+				if(this._serverData.pageID == PLAY_PAGE)
+				{
+					
+					this._questionList 	= this.getQsList(this._serverData);
+					this._imgList	  	= this.getImgList(this._serverData);
+					this.loadUserTexture();
+				}
 			}
 		}
 		
@@ -143,17 +161,17 @@ package controller.LoaderControler
 				var address 	: String = _imgList[_fileIndex].address;
 				
 				if(_imgList[_fileIndex].type == 'Obstacles'){
-					Assets.storeUserTexture(texture, title, 0, address, this._obstaclesTexIndex);
+					Assets.storeUserTexture(texture, title, 1, address, this._obstaclesTexIndex);
 					this._obstaclesTexIndex ++;
 				}
 				else{
 					if(_imgList[_fileIndex].type == 'Rewards'){
-						Assets.storeUserTexture(texture, title, 1, address, this._obstaclesTexIndex);
+						Assets.storeUserTexture(texture, title, 2, address, this._obstaclesTexIndex);
 						this._obstaclesTexIndex ++;
 					}	
 					else
 						if(_imgList[_fileIndex].type == 'Screen'){
-							Assets.storeUserScreenTexture(texture, 2, title, address, this._screenTexIndex);
+							Assets.storeUserScreenTexture(texture, 0, title, address, this._screenTexIndex);
 							this._screenTexIndex ++;
 						}
 				}		

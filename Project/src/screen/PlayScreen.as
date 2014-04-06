@@ -108,7 +108,7 @@ package screen
 				this._screen.height = 360;
 			}
 			else
-				this._screen	= new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture(PreviewGameInfo._gameScreen.textureIndex));
+				this._screen	= new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture("Stage"+PreviewGameInfo._gameScreen.textureIndex+"Screen"));
 			
 			this._frameIMG 		= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.FRAME_IMG));
 			this._dialogueIMG 	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.DIALOGUE_IMG));

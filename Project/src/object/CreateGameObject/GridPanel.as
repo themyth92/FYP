@@ -46,7 +46,7 @@ package object.CreateGameObject
 		private var _enemy1EndPts		: Vector.<Number>;
 		private var _enemy2EndPts		: Vector.<Number>;
 		private var _isChoosing			: Boolean = false;
-		private var _endPtAmount		: Number;
+		private var _endPtType			: String;
 		private var _currEndPt			: Object;
 		private var _endPtNotifier		: TextField;
 		
@@ -120,7 +120,7 @@ package object.CreateGameObject
 		override protected function initialize():void{
 			
 			//create a new quad background
-			this._background       = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('WaterScreen'));
+			this._background       = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage1Screen'));
 			this._indexBg          = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.GRID_IMG));
 			this.initGridObjects();
 			this._gridOptionPanel  = new GridOptionPanel(this._questionList);
@@ -131,6 +131,12 @@ package object.CreateGameObject
 			this.addChildAt(this._background, 0);
 			this.addChildAt(this._indexBg, 1);
 			this.addChild(this._gridOptionPanel);
+		}
+		
+		public function changeBackground(image:Image):void{
+			this.removeChildAt(0);
+			this._background = image;
+			this.addChildAt(this._background, 0);
 		}
 		
 		override protected function draw():void{
@@ -237,7 +243,7 @@ package object.CreateGameObject
 						return;
 						
 					//dont know why like this
-					var xPos:Number 					= touch.globalX - 40;
+					var xPos:Number 					= touch.globalX - 41;
 					var yPos:Number 					= touch.globalY - 57;
 
 					var xIndex	   	:int 	 			= int(xPos/40);
@@ -354,12 +360,16 @@ package object.CreateGameObject
 		{
 			this._endPtNotifier = new TextField(500, 100, null, "Grobold", 20, 0x111111, false);
 			this._endPtNotifier.y = 450;
+			if(data.option == "Circle")
+				this._endPtNotifier.text = "Please choose next end. Click on the enemy's position to end choosing.";
+			else(data.option == "Reverse")
+				this._endPtNotifier.text = "Please choose next end. Click on the last point to end choosing.";
 			this.addChild(this._endPtNotifier);
 			
 			var index :Number = data.pos;
 			setupForEndPtChoosing(index);
-			this._endPtAmount = data.option;
-			this._endPtNotifier.text = "Please choose end point No." + this._currEndPt;
+			this._endPtType = data.option;
+			
 			this.removeEventListener(TouchEvent.TOUCH, onTouch);
 			this.addEventListener(TouchEvent.TOUCH, onChoosingEndTouch);
 		}
@@ -372,7 +382,7 @@ package object.CreateGameObject
 			{	
 				if(touch.phase == TouchPhase.ENDED)
 				{
-					var xPos:Number 					= touch.globalX - 40;
+					var xPos:Number 					= touch.globalX - 41;
 					var yPos:Number 					= touch.globalY - 57;
 					
 					var xIndex	   	:int 	 			= int(xPos/40);
@@ -380,14 +390,38 @@ package object.CreateGameObject
 					
 					for(var i:uint = 0; i< this._chooseableList.length; i++)
 					{
+						var savedPt	:Number;
+						
 						//Check from the chooseable List
 						//If the touched tiles is in the list, save the tile
 						//Else error
 						if(xIndex == this._chooseableList[i].column && yIndex == this._chooseableList[i].row)
 						{
+							if(isEndChoosing(xIndex, yIndex))
+							{
+								savedPt	= xIndex + (yIndex*11)+1;
+								
+								if(this._enemy.type == "enemy1")
+									this._enemy1EndPts.push(savedPt);
+								else
+									this._enemy2EndPts.push(savedPt);
+								
+								clearQuad();
+								setOccupiedList(xIndex, yIndex);
+								highlightOccupiedTiles();
+								this.removeChild(this._endPtNotifier);
+								Alert.show("You've done choosing end points for enemy.", "Notification", new ListCollection(
+									[
+										{ label: "OK" }
+									]));
+								this.removeEventListener(TouchEvent.TOUCH, onChoosingEndTouch);
+								this.addEventListener(TouchEvent.TOUCH, onTouch);
+								return;
+							}
+							
 							//Found the tiles in the list
 							//Convert to Point for IndexBoard processing in game
-							var savedPt	:Number = xIndex + (yIndex*11)+1;
+							savedPt = xIndex + (yIndex*11)+1;
 
 							if(this._enemy.type == "enemy1")
 								this._enemy1EndPts.push(savedPt);
@@ -410,24 +444,6 @@ package object.CreateGameObject
 							this._currEndPt.column = xIndex;
 							this._currEndPt.row = yIndex;
 							this._currEndPt.counter ++;
-							
-							//If reached number of Points required, end
-							if(this._currEndPt.counter <= this._endPtAmount)
-								this._endPtNotifier.text = "Please choose end point No." + this._currEndPt.counter;
-							else
-							{
-								trace(this._enemy1EndPts);
-								clearQuad();
-								setOccupiedList(this._enemy.column, this._enemy.row);
-								highlightOccupiedTiles();
-								this.removeChild(this._endPtNotifier);
-								Alert.show("You've done choosing end points for enemy.", "Notification", new ListCollection(
-									[
-										{ label: "OK" }
-									]));
-								this.removeEventListener(TouchEvent.TOUCH, onChoosingEndTouch);
-								this.addEventListener(TouchEvent.TOUCH, onTouch);
-							}
 							return;
 						}
 					}
@@ -438,6 +454,16 @@ package object.CreateGameObject
 					return;
 				}
 			}
+		}
+		
+		private function isEndChoosing(xIndex:Number, yIndex:Number):Boolean{
+			if(this._endPtType == "Circle" && xIndex == this._enemy.column && yIndex == this._enemy.row)
+				return true;
+			else if(this._endPtType == "Reverse" && xIndex == this._currEndPt.column && yIndex == this._currEndPt.row)
+				return true;
+			else
+				return false;
+				
 		}
 		
 		private function setOccupiedList(xIndex:Number, yIndex:Number):void{
@@ -555,6 +581,16 @@ package object.CreateGameObject
 						break;
 				}
 			}
+			
+			if(this._endPtType == "Reverse")
+			{
+				savePt = new Object();
+				savePt.row = row;
+				savePt.column = column;
+				this._chooseableList.push(savePt);
+				this._gridObjects[column][row].setQuadAlpha(0.5);
+			}
+				
 		}
 		
 		private function setupForEndPtChoosing(index:Number):void
@@ -620,16 +656,6 @@ package object.CreateGameObject
 				else
 					break;
 			}
-		}
-		
-		private function setPatrolEnemyPoints():void
-		{
-			//If not return
-			//else take in the position (x,y)
-			//Check if x==enemy.x or y==enemy.y
-			//if not return
-			//else check if any object in between (check walkable)
-			
 		}
 	
 		private function indexToPoints(index:Number):Object

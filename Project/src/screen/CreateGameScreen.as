@@ -10,7 +10,9 @@ package screen
 	
 	import events.NavigationEvent;
 	
+	import feathers.controls.Alert;
 	import feathers.controls.Button;
+	import feathers.data.ListCollection;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.MetalWorksMobileTheme;
 	
@@ -66,6 +68,7 @@ package screen
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener('displayCharacters', onDisplayCharacter);
 			this.addEventListener('startChoosingEndPt', onChoosingEndPt);
+			this.addEventListener('GameFieldChanged', onGameFieldChange);
 		}
 		
 		private function onAddedToStage(event:Event):void{
@@ -152,6 +155,16 @@ package screen
 			this._publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
 		}
 		
+		private function onGameFieldChange(event:Event):void{
+			var bg	:Image;
+			if(event.data.isUserDef)
+				bg = new Image(Assets.getUserScreenTexture()[event.data.textureIndex].texture);
+			else
+				bg = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture("Stage"+event.data.textureIndex+"Screen"));
+			
+			this._gridPanel.changeBackground(bg);
+		}
+		
 		private function onDisplayCharacter(event:Event):void{
 			this._gridPanel.onShowCharacterEvent(event.data);
 		}
@@ -178,7 +191,47 @@ package screen
 		}
 		
 		private function onPreviewBtnTrigger(event:Event):void
-		{			
+		{	
+			/* Check invalid information */
+			/* Player does not have position */
+			/* Enemy got type but does not have position */
+			var alert : Alert;
+			if(this._componentPanel.getPlayerInfo().pos == 0)
+			{
+				alert = Alert.show("Please give Player a start position.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				alert.addEventListener(Event.CLOSE, function(e:Event):void{
+					_componentPanel.setPosFocus(0);
+				});
+				return;
+			}
+			if(this._componentPanel.getEnemyInfo()[0].type != "None" && this._componentPanel.getEnemyInfo()[0].pos == 0)
+			{
+				alert = Alert.show("Please give Enemy1 a start position.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				alert.addEventListener(Event.CLOSE, function(e:Event):void{
+					_componentPanel.setPosFocus(1);
+				});
+				return;
+			}
+			if(this._componentPanel.getEnemyInfo()[1].type != "None" && this._componentPanel.getEnemyInfo()[1].pos == 0)
+			{
+				alert = Alert.show("Please give Enemy 2 a start position.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				alert.addEventListener(Event.CLOSE, function(e:Event):void{
+					_componentPanel.setPosFocus(2);
+				});
+				return;
+			}
+			
+			PreviewGameInfo._gameScreen.isUserDef = this._scoreBoard.getScreen().isUserDef;
+			PreviewGameInfo._gameScreen.textureIndex = this._scoreBoard.getScreen().textureIndex;
 			PreviewGameInfo.storeObstaclesInfo(this._gridPanel.getObsList());
 			PreviewGameInfo.storePlayerInfo(this._componentPanel.getPlayerInfo());
 			PreviewGameInfo.storeScoreInfo(this._scoreBoard.getScoreBoardInfo());
@@ -188,10 +241,44 @@ package screen
 		
 		private function onPublishBtnTrigger(event:Event):void
 		{
-			//store ScoreBoard
-			//store Obstacles
-			//store Enemies
-			//store Player
+			/* Check invalid information */
+			/* Player does not have position */
+			/* Enemy got type but does not have position */
+			var alert : Alert;
+			if(this._componentPanel.getPlayerInfo().pos == 0)
+			{
+				alert = Alert.show("Please give Player a start position.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				alert.addEventListener(Event.CLOSE, function(e:Event):void{
+					_componentPanel.setPosFocus(0);
+				});
+				return;
+			}
+			if(this._componentPanel.getEnemyInfo()[0].type != "None" && this._componentPanel.getEnemyInfo()[0].pos == 0)
+			{
+				alert = Alert.show("Please give Enemy1 a start position.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				alert.addEventListener(Event.CLOSE, function(e:Event):void{
+					_componentPanel.setPosFocus(1);
+				});
+				return;
+			}
+			if(this._componentPanel.getEnemyInfo()[1].type != "None" && this._componentPanel.getEnemyInfo()[1].pos == 0)
+			{
+				alert = Alert.show("Please give Enemy 2 a start position.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				alert.addEventListener(Event.CLOSE, function(e:Event):void{
+					_componentPanel.setPosFocus(2);
+				});
+				return;
+			}
+			
 			var data:Object = new Object();
 			data.id 		= null;
 			data.title 		= this._componentPanel.getTitle();
