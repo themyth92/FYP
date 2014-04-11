@@ -4,15 +4,18 @@ package object.CreateGameObject
 	
 	import constant.Constant;
 	
+	import feathers.controls.Button;
 	import feathers.controls.Header;
 	import feathers.controls.List;
 	import feathers.controls.Panel;
-	import feathers.controls.PickerList;
+	import feathers.controls.Radio;
+	import feathers.controls.Scroller;
 	import feathers.controls.TextInput;
 	import feathers.controls.renderers.DefaultListItemRenderer;
 	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.core.PopUpManager;
 	import feathers.data.ListCollection;
+	import feathers.layout.TiledRowsLayout;
 	import feathers.themes.MetalWorksMobileTheme;
 	
 	import flash.geom.Point;
@@ -24,6 +27,10 @@ package object.CreateGameObject
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
+	import starling.filters.BlurFilter;
 	import starling.text.TextField;
 	
 	public class CreateGameScoreBoard extends Sprite
@@ -42,8 +49,8 @@ package object.CreateGameObject
 		private var _timeText		:TextField;
 		
 		private var _coinIMG		:Image;
-		private var _lifeIMG		:Button;
-		private var _timeIMG		:Button;
+		private var _lifeIMG		:starling.display.Button;
+		private var _timeIMG		:starling.display.Button;
 		
 		private var _maxCoin		:int = 0;
 		private var _maxLife		:int = 1;
@@ -52,7 +59,11 @@ package object.CreateGameObject
 		private var _secStart		:int = 30;
 		
 		private var _popUpPanel		:Panel;
-		private var _screenSelect  :PickerList;
+		private var _screenSelect  	:Panel;
+		private var _screenImg		:Vector.<Image>;
+		private var _screenList		:Vector.<Object>;
+		private var _selectedScreen	:Object = {isUserDef:false, textureIndex:1};
+		private var _screenSelectBtn:feathers.controls.Button;
 				
 		public function CreateGameScoreBoard()
 		{
@@ -69,8 +80,8 @@ package object.CreateGameObject
 			return scoreBoard;
 		}
 		
-		public function getScreen():Number{
-			return this._screenSelect.selectedIndex;
+		public function getScreen():Object{
+			return this._selectedScreen;
 		}
 		
 		public function get maxCoin():int{
@@ -116,42 +127,15 @@ package object.CreateGameObject
 			this._lifeIMG.y  = LIFE_IMG_POS.y;
 			
 			//screen select choice
-			this._screenSelect				= new PickerList();
-			this._screenSelect.prompt		= 'Add screen';
-			this._screenSelect.typicalItem	= 'Add screen';
-			
-			//list all the user defined screen
-			//and add in title
-			var screenList:ListCollection	= new ListCollection();
-			for(var i:uint = 0 ; i < Assets.getUserScreenTexture().length ;i++){
-				screenList.push({text : Assets.getUserScreenTexture()[i].title});
-			}
-			
-			this._screenSelect.dataProvider 	= screenList;
-			this._screenSelect.selectedIndex 	= -1;
-			
-			this._screenSelect.typicalItem 		= { text: "Screen Select" };
-			this._screenSelect.labelField 		= "text";
-			
-			this._screenSelect.listFactory = function():List
-			{
-				var list:List = new List();
-				
-				list.typicalItem = { text: "Screen Select" };
-				list.itemRendererFactory = function():IListItemRenderer
-				{
-					var renderer:DefaultListItemRenderer = new DefaultListItemRenderer();
-					renderer.labelField = "text";
-					return renderer;
-				};
-				return list;
-			};
-			
-			this._screenSelect.x 		= 400;
-			this._screenSelect.y		= 5;
-			this._screenSelect.width 	= 140;
-			this._screenSelect.height 	= 40;
-			this._screenSelect.useHandCursor = true;
+			this._screenSelectBtn = new feathers.controls.Button();
+			this._screenSelectBtn.x = 400;
+			this._screenSelectBtn.y		= 5;
+			this._screenSelectBtn.width 	= 140;
+			this._screenSelectBtn.height 	= 40;
+			this._screenSelectBtn.addEventListener(Event.TRIGGERED, showScreenSelection);
+			this._screenSelectBtn.label = "Screen";
+			this._screenList = new Vector.<Object>();
+			this._screenImg = new Vector.<Image>();
 			
 			this.addChild(this._coinText);
 			this.addChild(this._lifeText);
@@ -159,11 +143,111 @@ package object.CreateGameObject
 			this.addChild(this._coinIMG);
 			this.addChild(this._timeIMG);
 			this.addChild(this._lifeIMG);
-			this.addChild(this._screenSelect);
+			this.addChild(this._screenSelectBtn);
 			
 			this._timeIMG.addEventListener(Event.TRIGGERED, onTimeClicked);
 			this._lifeIMG.addEventListener(Event.TRIGGERED, onLifeClicked);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		private function showScreenSelection(event:Event):void{
+			this.removeEventListener(Event.TRIGGERED, showScreenSelection);
+			_screenSelect				= new Panel();
+			_screenSelect.x = 50;
+			_screenSelect.y = 50;
+			_screenSelect.width = 700;
+			_screenSelect.height = 500; 
+			_screenSelect.verticalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
+			_screenSelect.scrollBarDisplayMode = Scroller.SCROLL_BAR_DISPLAY_MODE_FIXED;
+			//layout default value from feathers
+			const layout:TiledRowsLayout  		= new TiledRowsLayout();
+			layout.paging                		= TiledRowsLayout.PAGING_NONE;
+			layout.gap							= 20;
+			layout.padding						= 20;
+			layout.horizontalAlign         	 	= TiledRowsLayout.HORIZONTAL_ALIGN_LEFT;
+			layout.verticalAlign            	= TiledRowsLayout.VERTICAL_ALIGN_TOP;
+			layout.tileHorizontalAlign  	    = TiledRowsLayout.TILE_HORIZONTAL_ALIGN_LEFT;
+			layout.tileVerticalAlign  	      	= TiledRowsLayout.TILE_VERTICAL_ALIGN_TOP;
+			layout.manageVisibility 			= true;
+			_screenSelect.layout                = layout;
+			_screenSelect.snapToPages 					= true;
+			_screenSelect.snapScrollPositionsToPixels 	= true;
+			var field	:Image;
+			var screenObj	:Object;
+			for(var i:uint=1; i<6; i++)
+			{
+				field = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture("Stage"+i+"Screen"));
+				field.width = 200;
+				field.height = 180;
+				screenObj = new Object();
+				screenObj.textureIndex = i;
+				screenObj.isUserDef = false;
+				this._screenImg.push(field);
+				this._screenList.push(screenObj);
+			}
+			for(var j:uint=0; j<Assets.getUserScreenTexture().length; j++)
+			{
+				field = new Image(Assets.getUserScreenTexture()[j].texture);
+				field.width = 200;
+				field.height = 180;
+				screenObj = new Object();
+				screenObj.textureIndex = j;
+				screenObj.isUserDef = true;
+				this._screenImg.push(field);
+				this._screenList.push(screenObj);
+			}
+			
+			for(var k:uint=0; k<this._screenImg.length;k++)
+				this._screenSelect.addChildAt(this._screenImg[k],k);
+			
+			this._screenSelect.addEventListener(TouchEvent.TOUCH, onScreenTouch);
+			this.addChild(_screenSelect);
+		}
+		
+		private function onScreenTouch(e:TouchEvent):void
+		{
+			var glow	:BlurFilter = BlurFilter.createGlow();
+			var touch:Touch = e.getTouch(this._screenSelect, TouchPhase.ENDED);
+			
+			if(touch)
+			{
+				if(touch.tapCount == 1)
+				{
+					clearGlowEffect();
+					touch.target.filter = glow;
+					return;
+				}
+				if(touch.tapCount == 2)
+				{
+					doneScreenSelection();
+					return;
+				}
+			}
+		}
+		
+		private function clearGlowEffect():void
+		{
+			for(var i:uint=0; i<this._screenSelect.numChildren; i++)	
+				this._screenSelect.getChildAt(i).filter = null;
+		}
+		
+		private function doneScreenSelection():void
+		{
+			for(var i:uint=0; i<this._screenSelect.numChildren; i++)
+			{
+				if(this._screenSelect.getChildAt(i).filter != null)
+				{
+					this._selectedScreen.isUserDef = this._screenList[i].isUserDef;
+					this._selectedScreen.textureIndex = this._screenList[i].textureIndex;
+					this._screenSelect.removeChildren();
+					this.removeChild(this._screenSelect);
+					this._screenSelectBtn.addEventListener(Event.TRIGGERED, showScreenSelection);
+					this._screenImg.length = 0;
+					this._screenList.length = 0;
+					this.dispatchEventWith('GameFieldChanged', true, this._selectedScreen);
+					break;
+				}
+			}
 		}
 		
 		private function onRemoveFromStage(event:Event):void

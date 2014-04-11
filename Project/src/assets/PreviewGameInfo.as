@@ -10,6 +10,7 @@ package assets
 	{
 		public static var _gameTitle	:String = "Test Title";
 		public static var _gameScreen	:Object = {isUserDef:true, textureIndex:0};
+		public static var _gameID		:String;
 		
 		public static var _playerPos	:uint;
 		public static var _playerGender	:String;
@@ -87,7 +88,7 @@ package assets
 				_obsType.push(formatLeadingZero(obsObj[i].type));
 				
 				//Store obstacles' question
-				if(obsObj[i].qnsIndex != null)
+				if(obsObj[i].qnsIndex != -1)
 				{
 					var qns 	 = new Object();
 					qns.gotQns	 = true;

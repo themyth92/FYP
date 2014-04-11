@@ -94,21 +94,7 @@ package object.inGameObject
 
 		//AI PATH FINDING VARIABLES
 		private var _tileVector : Vector.<Object>;
-		private var _path	: Vector.<Point>;
-		private var _startPoint1 : Point;
-		private var _startPoint2 : Point;
-		private var _endPoint1	: Point;
-		private var _endPointPatrol1	: Vector.<Point>;
-		private var _endPointPatrol2	: Vector.<Point>;
-		private var _currPoint1	: Point;
-		private var _currPoint2	: Point;
-		private var _timer		: Number = 0;
-		private var _enemyGo	: Boolean = false;
-		private var _enemy1Found : Boolean = false;
-		private var _currEnd1 : Number = 0;
-		private var _currEnd2 : Number = 0;
-		private var _distanceToEnd1 : Number;
-		private var _distanceToEnd2 : Number;
+		private var _endPoint	: Point;
 		
 		/** Constructor **/
 		public function IndexBoard(controller:MainController)
@@ -242,9 +228,9 @@ package object.inGameObject
 		{
 			if(_state == Constant.PLAYING_STATE)
 			{
-				_timer ++;
 				this._hitCounter ++;
-				updateHeroPosition();
+				if(_gotFollow)
+					updateHeroPosition();
 				
 				/* Move player */ 
 				this._player.x += this._player.moveX;
@@ -261,9 +247,15 @@ package object.inGameObject
 				if(_gotFollow)
 				{
 					if(_enemy1 != null &&_enemy1.type == Constant.FOLLOW_TYPE)
+					{
+						_enemy1.increaseCounter();
 						enemyFollow(_enemy1);
+					}
 					if(_enemy2 != null && _enemy2.type == Constant.FOLLOW_TYPE)
+					{
+						_enemy2.increaseCounter();
 						enemyFollow(_enemy2);
+					}
 				}
 				
 				if(_gotPatrol)
@@ -476,11 +468,8 @@ package object.inGameObject
 						{
 							if((_tileVector[k][j].x == _enemy1.x) && (_tileVector[k][j].y == _enemy1.y))
 							{
-								_tileVector[k][j].start1  = true;
 								_tileVector[k][j].visited1 = true;
-								_startPoint1 = new Point(_tileVector[k][j].x, _tileVector[k][j].y);
-								_path        = new Vector.<Point>();
-								_currPoint1  = new Point(_startPoint1.x, _startPoint1.y);
+								_enemy1.currPoint = new Point(_tileVector[k][j].x, _tileVector[k][j].y);
 								break;
 							}
 						}
@@ -497,17 +486,40 @@ package object.inGameObject
 			{
 				pos = new Array(indexToPoint(PreviewGameInfo._enemyPos[1]).x, indexToPoint(PreviewGameInfo._enemyPos[1]).y)
 				speed = PreviewGameInfo._enemySpd[1];
-				img	= PreviewGameInfo._enemyImg[1];
-				if(PreviewGameInfo._enemyType[1] == "Patrol Enemy")
-				{
-					this._enemy2 = new Enemies(this._controller, pos[0], pos[1], PreviewGameInfo._enemyType[1], speed, img, 2);
-					this._gotPatrol = true;
-				}
-				else if(PreviewGameInfo._enemyType[1] == "Follow Enemy")
-					this._gotFollow = true;
+				img = PreviewGameInfo._enemyImg[1];
+				this._enemy2 = new Enemies(this._controller, pos[0], pos[1], PreviewGameInfo._enemyType[1], speed, img, 1);
 				
 				this._enemy2.x = pos[0];
 				this._enemy2.y = pos[1];
+				
+				if(PreviewGameInfo._enemyType[1] == "Patrol Enemy")
+				{
+					this._enemy2.setEndPoints(indexToPoint(PreviewGameInfo._enemyPos[1]));
+					for(var m:uint=0; m<PreviewGameInfo._enemy2EndPts.length ;m++)
+					{
+						this._enemy2.setEndPoints(indexToPoint(PreviewGameInfo._enemy2EndPts[m]));
+					}
+					this._gotPatrol = true;
+				}
+				else if(PreviewGameInfo._enemyType[1] == "Follow Enemy")
+				{
+					_controller.updateUnits(null, _enemy2, null);
+					
+					for(var n:Number=0; n<11; n++)
+					{
+						for(var l:Number=0; l<9; l++)
+						{
+							if((_tileVector[n][l].x == _enemy2.x) && (_tileVector[n][l].y == _enemy2.y))
+							{
+								_tileVector[n][l].visited2 = true;
+								_enemy2.currPoint = new Point(_tileVector[n][l].x, _tileVector[n][l].y);
+								break;
+							}
+						}
+					}
+					this._gotFollow = true;
+				}
+				
 				this._enemyList.push(_enemy2);
 				this.addChild(_enemy2);
 			}
@@ -728,10 +740,9 @@ package object.inGameObject
 				_controller.updateUnits(null,null,_player);
 					
 				_tileVector[columnIndex][rowIndex].end = true;
-				_endPoint1  = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+				_endPoint  = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 				_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 				
-				_enemyGo = true;
 				return true;
 			}
 			else
@@ -811,10 +822,9 @@ package object.inGameObject
 				_controller.updateUnits(null,null,_player);
 				
 				_tileVector[columnIndex][rowIndex].end = true;					
-				_endPoint1 = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
+				_endPoint = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 				_playerPos = new Point(_tileVector[columnIndex][rowIndex].x, _tileVector[columnIndex][rowIndex].y);
 				
-				_enemyGo = true;
 				return;
 			}
 		}
@@ -849,11 +859,9 @@ package object.inGameObject
 					_tileVector[i][j] 	= new Object();
 					_tileVector[i][j].x = x;
 					_tileVector[i][j].y	= y;
-					_tileVector[i][j].start1 	= false;
-					_tileVector[i][j].start2 	= false;
-					_tileVector[i][j].end 		= false;
 					_tileVector[i][j].walkable 	= true;
-					_tileVector[i][j].visited 	= false;
+					_tileVector[i][j].visited1 	= false;
+					_tileVector[i][j].visited2 	= false;
 					y += 40;
 				}
 				x += 40;
@@ -863,9 +871,12 @@ package object.inGameObject
 		private function updateHeroPosition():void
 		{
 			clearVisitedTiles();
-			_enemy1Found = false;
-			_endPoint1.x = int(this._player.x / 40) * 40;
-			_endPoint1.y = int(this._player.y / 40) * 40;
+			if(_enemy1 != null)
+				_enemy1.playerFound = false;
+			if(_enemy2 != null)
+				_enemy2.playerFound = false;
+			_endPoint.x = int(this._player.x / 40) * 40;
+			_endPoint.y = int(this._player.y / 40) * 40;
 		}
 		
 		private function clearVisitedTiles():void
@@ -874,12 +885,14 @@ package object.inGameObject
 			var y :Number = int(this._player.y / 40);
 			for(var j:Number=0; j<9 ; j++)
 			{
-				_tileVector[x][j].visited = false;
+				_tileVector[x][j].visited1 = false;
+				_tileVector[x][j].visited2 = false;
 			}
 			
 			for(var i:Number=0; i<11 ; i++)
 			{
-				_tileVector[i][y].visited = false;
+				_tileVector[i][y].visited1 = false;
+				_tileVector[i][y].visited2 = false;
 			}
 		}
 
@@ -891,7 +904,7 @@ package object.inGameObject
 		
 		private function manhattan(p:Point):Number
 		{
-			return (Math.abs(p.x - _endPoint1.x) + Math.abs(p.y - _endPoint1.y));
+			return (Math.abs(p.x - _endPoint.x) + Math.abs(p.y - _endPoint.y));
 		}
 		
 		private function insideField(p:Point,n1:Number,n2:Number):Boolean 
@@ -907,33 +920,36 @@ package object.inGameObject
 		-------------------------------------------------------------------------*/
 		private function enemyFollow(enemy:Enemies):void
 		{
-			if(!_enemy1Found)
+			if(!enemy.playerFound)
 			{
-				if(_timer == 30)
+				if(enemy.counter >= 30)
 				{
-					if(_enemy1.isReachedTarget)
+					if(enemy.isReachedTarget)
 					{
-						_enemy1.isReachedTarget = false;
+						enemy.isReachedTarget = false;
 						var savedPoint: Point;
 						var minF:Number = 10000;
 						
 						for (var i:Number=-40; i<=40; i+=40) {
 							for (var j:Number=-40; j<=40; j+=40) {
 								if ((i!=0 && j==0)||(i==0 && j!=0)) {
-									if(insideField(_currPoint1, i, j))
+									if(insideField(enemy.currPoint, i, j))
 									{
-										var o:Number = (_currPoint1.x + i) / 40;
-										var u:Number = (_currPoint1.y + j) / 40;
+										var o:Number = (enemy.currPoint.x + i) / 40;
+										var u:Number = (enemy.currPoint.y + j) / 40;
 										
-										if((_tileVector[o][u].walkable) && (_tileVector[o][u].visited == false))
+										if(_tileVector[o][u].walkable)
 										{
-											var g:Number = getG(i,j);
-											var h:Number = manhattan(new Point((_currPoint1.x) + i,(_currPoint1.y) + j));
-											var f:Number = g + h;
-											if(f < minF)
+											if((_tileVector[o][u].visited1 == false && enemy.id == 1) || (_tileVector[o][u].visited2 == false && enemy.id == 2))
 											{
-												minF = f;
-												savedPoint = new Point((_currPoint1.x) + i,(_currPoint1.y) + j);
+												var g:Number = getG(i,j);
+												var h:Number = manhattan(new Point((enemy.currPoint.x) + i,(enemy.currPoint.y) + j));
+												var f:Number = g + h;
+												if(f < minF)
+												{
+													minF = f;
+													savedPoint = new Point((enemy.currPoint.x) + i,(enemy.currPoint.y) + j);
+												}
 											}
 										}
 									}
@@ -943,36 +959,37 @@ package object.inGameObject
 						
 						if(savedPoint)
 						{
-							if((savedPoint.x != _endPoint1.x) || (savedPoint.y != _endPoint1.y))
+							if((savedPoint.x != _endPoint.x) || (savedPoint.y != _endPoint.y))
 							{
-								_enemy1.targetPt = savedPoint;
+								enemy.targetPt = savedPoint;
 								var m:Number = savedPoint.x / 40;
 								var n:Number = savedPoint.y / 40;
-								_tileVector[m][n].visited = true;	
+								if(enemy.id == 1)
+									_tileVector[m][n].visited1 = true;
+								else if(enemy.id == 2)
+									_tileVector[m][n].visited2 = true;
 							}
-							_currPoint1 = savedPoint;
-							_path.push(_currPoint1);
+							enemy.currPoint = savedPoint;
+							enemy.path.push(enemy.currPoint);
 							
-							if((savedPoint.x == _endPoint1.x) && (savedPoint.y == _endPoint1.y))
-							{
-								_enemy1Found = true;
-							}
+							if((savedPoint.x == _endPoint.x) && (savedPoint.y == _endPoint.y))
+								enemy.playerFound = true;
 						}
 						else
 						{
-							if(_path.length > 1)
+							if(enemy.path.length > 1)
 							{
-								_currPoint1 = _path[_path.length - 2];
-								_enemy1.targetPt = _currPoint1;
-								_path.pop();
+								enemy.currPoint = enemy.path[enemy.path.length - 2];
+								enemy.targetPt = enemy.currPoint;
+								enemy.path.pop();
 							}
 							else
 							{
 								trace("Can't be solved");
 							}
 						}
-						_timer = 0;
 					}	
+					enemy.counter = 0;
 				}
 			}
 		}
@@ -985,6 +1002,7 @@ package object.inGameObject
 			var moveX:Number;
 			var moveY:Number;
 			var distance:Number;
+			
 			if(enemy.enemyX == enemy.endPoints[enemy.currEndPt].x && enemy.enemyY == enemy.endPoints[enemy.currEndPt].y)
 			{
 				enemy.moveX = 0;
@@ -1002,14 +1020,14 @@ package object.inGameObject
 					if(enemy.enemyY > enemy.endPoints[enemy.currEndPt].y)
 						moveY = -(enemy.enemyY - enemy.endPoints[enemy.currEndPt].y);
 					else
-						moveY = distance * enemy.speed;						
+						moveY = distance * (enemy.speed/100);						
 				}
 				else if (distance < 0)
 				{
 					if(enemy.enemyY < enemy.endPoints[enemy.currEndPt].y)
 						moveY = -(enemy.enemyY - enemy.endPoints[enemy.currEndPt].y);
 					else
-						moveY = distance * enemy.speed;	
+						moveY = distance * (enemy.speed/100);	
 				}
 				enemy.moveX = moveX;
 				enemy.moveY = moveY;
@@ -1025,14 +1043,14 @@ package object.inGameObject
 					if(enemy.enemyX > enemy.endPoints[enemy.currEndPt].x)
 						moveX = -(enemy.enemyX - enemy.endPoints[enemy.currEndPt].x);
 					else
-						moveX = distance * enemy.speed;						
+						moveX = distance * (enemy.speed/100);						
 				}
 				else if (distance < 0)
 				{
 					if(enemy.enemyX < enemy.endPoints[enemy.currEndPt].x)
 						moveX = -(enemy.enemyX - enemy.endPoints[enemy.currEndPt].x);
 					else
-						moveX = distance * enemy.speed;	
+						moveX = distance * (enemy.speed/100);	
 				}
 				enemy.moveX = moveX;
 				enemy.moveY = moveY;
@@ -1186,7 +1204,7 @@ package object.inGameObject
 									this._player.x -= overlapX;
 							}
 							
-							if(obsList[i].type == Constant.DAMEGE_OBS)
+							if(obsList[i].type == Constant.DAMAGE_OBS)
 								takeDamage();
 							else if(obsList[i].type == Constant.TELE_OBS)
 								teleport();

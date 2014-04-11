@@ -30,6 +30,12 @@ package object.inGameObject
 		private var _speed			:Number;
 		private var _type			:String;
 		private var _state			:String;
+		private var _patrolType		:String;
+		private var _isReversed		:Boolean = false;
+		private var _playerFound	:Boolean = false;
+		private var _counter		:Number = 0;
+		private var _path			:Vector.<Point>;
+		private var _currPoint		:Point;
 		
 		//For Follow Enemy
 		private var _currPt			:Point;
@@ -57,12 +63,47 @@ package object.inGameObject
 			if(this._type == Constant.PATROL_TYPE)
 				this._endPoints = new Vector.<Point>();
 			if(this._type == Constant.FOLLOW_TYPE)
+			{
 				this._currPt = new Point(x,y);
+				this._currPoint = new Point(x,y);
+				this._path = new Vector.<Point>();
+			}
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
+		public function get path():Vector.<Point>{
+			return this._path;
+		}
+		
+		public function get counter():Number{
+			return this._counter;
+		}
+		
+		public function set counter(value:Number):void{
+			this._counter = value;
+		}
+		
+		public function increaseCounter():void{
+			this._counter += this._speed;
+		}
+		
+		public function get currPoint():Point{
+			return this._currPoint;
+		}
+		
+		public function set currPoint(value:Point):void{
+			this._currPoint = value;
+		}
+		
+		public function get playerFound():Boolean{
+			return this._playerFound;
+		}
+		
+		public function set playerFound(value:Boolean):void{
+			this._playerFound = value;
+		}
 		
 		public function get isReachedTarget():Boolean
 		{
@@ -95,11 +136,31 @@ package object.inGameObject
 			this._currStartPt ++;
 			if(this._endPoints != null)
 			{
-				if(this._currEndPt == this._endPoints.length)
-					this._currEndPt = 0;
-				
-				if(this._currStartPt == this._endPoints.length)
-					this._currStartPt = 0;
+				if(this._patrolType == "Circle")
+				{
+					if(this._currEndPt == this._endPoints.length)
+						this._currEndPt = 0;
+					
+					if(this._currStartPt == this._endPoints.length)
+						this._currStartPt = 0;
+				}
+				else if(this._patrolType == "Reverse")
+				{
+					if(this._currEndPt == this._endPoints.length)
+						this._isReversed = true;
+					else if(this._currEndPt == 1 && this._isReversed)
+					{
+						this._isReversed = false;
+						this._currEndPt = 1;
+						this._currStartPt = 0;
+					}
+					
+					if(this._isReversed)
+					{
+						this._currEndPt -= 2;
+						this._currStartPt = this._currEndPt + 1;
+					}
+				}
 			}
 		}
 		
@@ -182,7 +243,16 @@ package object.inGameObject
 		{
 			
 			this._image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_' + _imageNo.toString()));
-		
+			if(this._type == "Patrol Enemy")
+			{
+				if(this._endPoints[this._endPoints.length-1].equals(this._endPoints[0]))
+					this._patrolType = "Circle";
+				else
+					this._patrolType = "Reverse";
+				
+				this._endPoints.pop();
+			}
+				
 			this.addChild(this._image);
 			
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -226,14 +296,14 @@ package object.inGameObject
 					if(this._x > this._targetPt.x)
 						this._moveX = -(this._x - this._targetPt.x);
 					else
-						this._moveX = distance * this._speed;						
+						this._moveX = distance * (this._speed/100);						
 				}
 				else if (distance < 0)
 				{
 					if(this._x < this._targetPt.x)
 						this._moveX = -(this._x - this._targetPt.x);
 					else
-						this._moveX = distance * this._speed;	
+						this._moveX = distance * (this._speed/100);	
 				}
 				return;
 			}
@@ -247,14 +317,14 @@ package object.inGameObject
 					if(this._y > this._targetPt.y)
 						this._moveY = -(this._y - this._targetPt.y);
 					else
-						this._moveY = distance * this._speed;						
+						this._moveY = distance * (this._speed/100);						
 				}
 				else if (distance < 0)
 				{
 					if(this._y < this._targetPt.y)
 						this._moveY = -(this._y - this._targetPt.y);
 					else
-						this._moveY = distance * this._speed;	
+						this._moveY = distance * (this._speed/100);	
 				}
 				return;
 			}

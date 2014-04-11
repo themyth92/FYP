@@ -7,6 +7,7 @@
 package controller.LoaderControler 
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.Constant;
 	
@@ -75,6 +76,23 @@ package controller.LoaderControler
 					if(this._serverData.storyStage)
 						Assets.userCurrentStoryStage	=	this._serverData.storyStage;
 						
+					this._questionList 	= this.getQsList(this._serverData);
+					this._imgList	  	= this.getImgList(this._serverData);
+					this.loadUserTexture();
+				}
+				
+				if(this._serverData.pageID == SAVE_PAGE)
+				{
+//					PreviewGameInfo._gameID = this._serverData.id;
+//					PreviewGameInfo._gameScreen =
+					this._questionList 	= this.getQsList(this._serverData);
+					this._imgList	  	= this.getImgList(this._serverData);
+					this.loadUserTexture();
+				}
+				
+				if(this._serverData.pageID == PLAY_PAGE)
+				{
+					
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();

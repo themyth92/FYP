@@ -143,7 +143,7 @@ package constant
 		 * ====================================================================**/
 		public static const BLOCK_OBS		:String = "01";
 		public static const COLLECT_OBS		:String = "02";
-		public static const DAMEGE_OBS		:String = "03";
+		public static const DAMAGE_OBS		:String = "03";
 		public static const	TELE_OBS		:String = "04";
 		public static const GOAL_OBS		:String = "05";
 		

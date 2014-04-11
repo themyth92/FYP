@@ -176,7 +176,7 @@ package object.inGameObject
 			closeButton.addEventListener(Event.TRIGGERED, onCloseQuestionWindow);
 			buttonGroup.addChild(closeButton);
 			
-			this._questionArea.addChild(buttonGroup);
+			this._questionArea.addChildAt(buttonGroup, 4);
 			this.addChild(_questionArea);
 		}
 		
@@ -184,6 +184,14 @@ package object.inGameObject
 			_isCorrect = checkAnswer(this._choicesDiv.selectedIndex);
 			this._controller.updateAnswerStatus(this._isCorrect);
 			displayResult(_isCorrect);
+			this._questionArea.removeChildAt(4);
+			var closeButton :Button = new Button();
+			closeButton.label = "Exit";
+			closeButton.height = 50;
+			closeButton.width = 150;
+			closeButton.x = 275;
+			closeButton.addEventListener(Event.TRIGGERED, onCloseQuestionWindow);
+			this._questionArea.addChildAt(closeButton, 4);
 		}
 		
 		private function checkAnswer(mcqAnswer:int):Boolean
