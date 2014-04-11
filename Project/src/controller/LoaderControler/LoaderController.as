@@ -72,8 +72,8 @@ package controller.LoaderControler
 				if(this._serverData.pageID == STORY_PAGE){
 					
 					//set the current story stage for user
-					if(this._serverData.userStage)
-						Assets.userCurrentStoryStage	=	this._serverData.userStage;
+					if(this._serverData.storyStage)
+						Assets.userCurrentStoryStage	=	this._serverData.storyStage;
 						
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
@@ -143,17 +143,17 @@ package controller.LoaderControler
 				var address 	: String = _imgList[_fileIndex].address;
 				
 				if(_imgList[_fileIndex].type == 'Obstacles'){
-					Assets.storeUserTexture(texture, title, 0, address, this._obstaclesTexIndex);
+					Assets.storeUserTexture(texture, title, 1, address, this._obstaclesTexIndex);
 					this._obstaclesTexIndex ++;
 				}
 				else{
 					if(_imgList[_fileIndex].type == 'Rewards'){
-						Assets.storeUserTexture(texture, title, 1, address, this._obstaclesTexIndex);
+						Assets.storeUserTexture(texture, title, 2, address, this._obstaclesTexIndex);
 						this._obstaclesTexIndex ++;
 					}	
 					else
 						if(_imgList[_fileIndex].type == 'Screen'){
-							Assets.storeUserScreenTexture(texture, 2, title, address, this._screenTexIndex);
+							Assets.storeUserScreenTexture(texture, 0, title, address, this._screenTexIndex);
 							this._screenTexIndex ++;
 						}
 				}		

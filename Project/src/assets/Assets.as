@@ -96,11 +96,22 @@ package assets
 		
 		//keep track the page from server user access to this swf
 		private static var _pageID 				: Number= 1;
+		private static var _gameID				: String=null;
 		
 		/*
 		used to get and set user current story stage so that user
 		does not need to play again the stage that he plays
 		*/
+
+		public static function get gameID():String
+		{
+			return _gameID;
+		}
+
+		public static function set gameID(value:String):void
+		{
+			_gameID = value;
+		}
 
 		public static function get pageID():Number
 		{
