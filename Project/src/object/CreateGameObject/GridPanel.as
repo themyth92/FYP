@@ -1,6 +1,7 @@
 package object.CreateGameObject
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.Constant;
 	
@@ -120,12 +121,30 @@ package object.CreateGameObject
 		override protected function initialize():void{
 			
 			//create a new quad background
-			this._background       = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage1Screen'));
 			this._indexBg          = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.GRID_IMG));
-			this.initGridObjects();
 			this._gridOptionPanel  = new GridOptionPanel(this._questionList);
 			this._state				= 0;
+
+			if(!PreviewGameInfo._isSaved)
+			{
+				this._background       = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage1Screen'));
+				this.initGridObjects();
+			}
+			else
+			{
+				if(PreviewGameInfo._gameScreen.isUserDef)
+					this._background = new Image(Assets.getUserScreenTexture()[PreviewGameInfo._gameScreen.textureIndex].texture);
+				else
+					this._background = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._gameScreen.textureIndex+'Screen');
+				
+				this._state				= 0;
+				this.loadGridObjects();
+				this.loadPlayer();
+				this.loadEnemy();
+			}
 			
+			this._currEndPt = new Object();
+			this._enemy = new Object();
 			
 			//add child to display
 			this.addChildAt(this._background, 0);
@@ -161,6 +180,82 @@ package object.CreateGameObject
 		
 		private function onDragExit(event:DragDropEvent, dragData:DragData):void
 		{
+		}
+		
+		private function loadGridObjects():void{
+			var obsListLength	:Number = PreviewGameInfo._obsCollection.length;
+			var droppedObject	:ObstacleObj;
+			var xIndex			:int;
+			var yIndex			:int;
+			for(var i:uint=0; i<obsListLength; i++)
+			{
+				droppedObject = new ObstacleObj(PreviewGameInfo._obsCollection[i], PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, PreviewGameInfo._obsType[i]);
+				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
+				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;
+				this._gridObjects[xIndex][yIndex].changeStateToObstacle(droppedObject);
+			}
+		}
+		
+		private function loadPlayer():void{
+			var location	:uint	= PreviewGameInfo._playerPos;
+			var xIndex		:Number;
+			var yIndex		:Number;
+			if(location != 0)
+			{
+				var gender 	:String = PreviewGameInfo._playerGender;
+				if(gender == "Male")
+					this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Male/male_down_01"));
+				else if(gender == "Female")
+					this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Female/female_down_01"));
+				
+				yIndex = Math.ceil(location/11)-1;
+				xIndex = location - yIndex*11 -1;
+				
+				this._playerImg.x = xIndex*40;
+				this._playerImg.y = yIndex*40;
+				this.addChild(this._playerImg);
+			}
+		}
+		
+		private function loadEnemy():void{
+			var enemyType	:Array = PreviewGameInfo._enemyType;
+			var enemyAmount	:Number = enemyType.length;
+			if(enemyAmount != 0)
+			{
+				var enemyImg	:Array = PreviewGameInfo._enemyImg;
+				var enemyPos	:Array = PreviewGameInfo._enemyPos;
+				var xIndex		:Number;
+				var yIndex		:Number;
+				for(var i:uint=0; i<enemyAmount; i++)
+				{
+					if(enemyType[i] != "None")
+					{
+						if(i==0)
+						{
+							this.removeChild(this._enemy1Img);
+							this._enemy1Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + enemyImg[i]));
+							
+							yIndex = Math.ceil(enemyPos[i]/11)-1;
+							xIndex = enemyPos[i] - yIndex*11 -1;
+							this._enemy1Img.x = xIndex*40;
+							this._enemy1Img.y = yIndex*40;
+							
+							this.addChild(this._enemy1Img);
+						}
+						else if (i == 1)
+						{
+							this.removeChild(this._enemy2Img);
+							this._enemy2Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + enemyImg[i]));
+							yIndex = Math.ceil(enemyPos[i]/11)-1;
+							xIndex = enemyPos[i] - yIndex*11 -1;
+							this._enemy2Img.x = xIndex*40;
+							this._enemy2Img.y = yIndex*40;
+							
+							this.addChild(this._enemy2Img);
+						}
+					}
+				}
+			}
 		}
 		
 		//event happen when the object is dropped inside the drop range
@@ -244,7 +339,7 @@ package object.CreateGameObject
 						
 					//dont know why like this
 					var xPos:Number 					= touch.globalX - 41;
-					var yPos:Number 					= touch.globalY - 57;
+					var yPos:Number 					= touch.globalY - 97;
 
 					var xIndex	   	:int 	 			= int(xPos/40);
 					var yIndex		:int   				= int(yPos/40);
@@ -306,15 +401,6 @@ package object.CreateGameObject
 					this._enemy1Img.x = xIndex*40;
 					this._enemy1Img.y = yIndex*40;
 					
-					this._currEndPt = new Object();
-					this._currEndPt.row = yIndex;
-					this._currEndPt.column = xIndex;
-					this._currEndPt.counter = 1;
-					
-					this._enemy = new Object();
-					this._enemy.row = yIndex;
-					this._enemy.column = xIndex;
-					this._enemy.type = "enemy1";
 					this.addChild(this._enemy1Img);
 				}
 				else if(data.id == "enemy2")
@@ -325,15 +411,6 @@ package object.CreateGameObject
 					this._enemy2Img.y = yIndex*40;
 					this._enemy2EndPts.push(data.pos);
 					
-					this._currEndPt = new Object();
-					this._currEndPt.row = yIndex;
-					this._currEndPt.column = xIndex;
-					this._currEndPt.counter = 1;
-					
-					this._enemy = new Object();
-					this._enemy.row = yIndex;
-					this._enemy.column = xIndex;
-					this._enemy.type = "enemy2";
 					this.addChild(this._enemy2Img);
 				}
 				else
@@ -358,13 +435,31 @@ package object.CreateGameObject
 		
 		public function startChoosingEndPt(data:Object):void
 		{
-			this._endPtNotifier = new TextField(500, 100, null, "Grobold", 20, 0x111111, false);
+			this._endPtNotifier = new TextField(440, 25, null, "Grobold", 13, 0xffffff, false);
 			this._endPtNotifier.y = 450;
 			if(data.option == "Circle")
 				this._endPtNotifier.text = "Please choose next end. Click on the enemy's position to end choosing.";
-			else(data.option == "Reverse")
+			else if(data.option == "Reverse")
 				this._endPtNotifier.text = "Please choose next end. Click on the last point to end choosing.";
 			this.addChild(this._endPtNotifier);
+			
+			if(data.id == "enemy1")
+			{
+				this._currEndPt.row 	= this._enemy1Img.y / 40;
+				this._currEndPt.column 	= this._enemy1Img.x / 40;
+				this._enemy.row 		= this._enemy1Img.y / 40;
+				this._enemy.column 		= this._enemy1Img.x / 40;
+				this._enemy.type 		= "enemy1";
+			}
+			else if(data.id == "enemy2")
+			{
+				this._currEndPt.row 	= this._enemy2Img.y / 40;
+				this._currEndPt.column 	= this._enemy2Img.x / 40;
+				this._enemy.row 		= this._enemy2Img.y / 40;
+				this._enemy.column 		= this._enemy2Img.x / 40;
+				this._enemy.type 		= "enemy2";
+			}
+			this._currEndPt.counter = 1;
 			
 			var index :Number = data.pos;
 			setupForEndPtChoosing(index);
@@ -383,7 +478,7 @@ package object.CreateGameObject
 				if(touch.phase == TouchPhase.ENDED)
 				{
 					var xPos:Number 					= touch.globalX - 41;
-					var yPos:Number 					= touch.globalY - 57;
+					var yPos:Number 					= touch.globalY - 97;
 					
 					var xIndex	   	:int 	 			= int(xPos/40);
 					var yIndex		:int   				= int(yPos/40);

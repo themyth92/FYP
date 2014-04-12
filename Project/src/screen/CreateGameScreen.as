@@ -12,6 +12,7 @@ package screen
 	
 	import feathers.controls.Alert;
 	import feathers.controls.Button;
+	import feathers.controls.ScreenNavigatorItem;
 	import feathers.data.ListCollection;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.MetalWorksMobileTheme;
@@ -31,12 +32,14 @@ package screen
 	
 	import starling.core.RenderSupport;
 	import starling.core.Starling;
+	import starling.display.Button;
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.display.Stage;
 	import starling.events.Event;
+	import starling.filters.BlurFilter;
 	
 	public class CreateGameScreen extends Sprite
 	{	
@@ -51,9 +54,12 @@ package screen
 		private var _data				:Object;
 		
 		//button
-		private var _saveBtn 			:Button;
-		private var _previewBtn     	:Button;
-		private var _publishBtn     	:Button;
+		private var _saveBtn 			:feathers.controls.Button;
+		private var _previewBtn     	:feathers.controls.Button;
+		private var _publishBtn     	:feathers.controls.Button;
+		private var _gameInfoBtn		:starling.display.Button;
+		private var _charactersInfoBtn	:starling.display.Button;
+		private var _glow				:BlurFilter	= BlurFilter.createGlow();
 		
 		//sound
 		private var _soundObject		: SoundObject;
@@ -69,6 +75,16 @@ package screen
 			this.addEventListener('displayCharacters', onDisplayCharacter);
 			this.addEventListener('startChoosingEndPt', onChoosingEndPt);
 			this.addEventListener('GameFieldChanged', onGameFieldChange);
+			this.addEventListener('popUpDisplay', onPopUpDisplayed);
+			this.addEventListener('popUpClose', onPopUpClosed);
+		}
+		
+		private function onPopUpDisplayed(event:Event):void{
+			this.broadcastEventWith('gotPopUp');
+		}
+		
+		private function onPopUpClosed(event:Event):void{
+			this.broadcastEventWith('closedPopUp');
 		}
 		
 		private function onAddedToStage(event:Event):void{
@@ -84,7 +100,7 @@ package screen
 			this._obstaclePanel.width  	= 216;
 			this._obstaclePanel.height 	= 190;
 			this._obstaclePanel.x      	= Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x + 10; 
-			this._obstaclePanel.y      	= Constant.INFOBOARD_POS.y + Constant.OBSBOARD_POS.y;
+			this._obstaclePanel.y      	= Constant.INFOBOARD_POS.y + 100;
 			
 			//index grid panel
 			this._gridPanel            	= new GridPanel(DRAG_FORMAT);
@@ -100,9 +116,18 @@ package screen
 			this._componentPanel.x 		= Constant.INFOBOARD_POS.x;
 			this._componentPanel.y		= 0;
 			
+			this._gameInfoBtn = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('Obstacles'));
+			this._gameInfoBtn.x = Constant.INFOBOARD_POS.x + 18;
+			this._gameInfoBtn.y = 17;
+			this._gameInfoBtn.filter = this._glow;
+			
+			this._charactersInfoBtn = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('Characters'));
+			this._charactersInfoBtn.x  = Constant.INFOBOARD_POS.x + 145;
+			this._charactersInfoBtn.y = 17;
+			
 			//background
-			var background:Image 		= new Image(Assets.getAtlas(Constant.LOADING_SCREEN).getTexture('background'));
-			var gridFrame :Image      	= new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.FRAME_IMG));	
+			var background:Image 		= new Image(Assets.getAtlas(Constant.BACKGROUND_SPRITE).getTexture('CreateBackground'));
+			var gridFrame :Image      	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('CreateFrame'));	
 			var rightBox  :Image      	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.INFO_BOARD));
 			
 			gridFrame.x                 = Constant.FRAME_CREATE_POS.x;
@@ -111,7 +136,7 @@ package screen
 			rightBox.y 					= 0;
 			
 			//button
-			this._saveBtn   		    = new Button();
+			this._saveBtn   		    = new feathers.controls.Button();
 			this._saveBtn.useHandCursor	= true;
 			this._saveBtn.x		 		= Constant.STARTB_POS.x;
 			this._saveBtn.y 			= Constant.STARTB_POS.y;
@@ -119,7 +144,7 @@ package screen
 			this._saveBtn.width			= 130;
 			this._saveBtn.label			= 'Save';
 			
-			this._previewBtn			= new Button();
+			this._previewBtn			= new feathers.controls.Button();
 			this._previewBtn.useHandCursor	= true;
 			this._previewBtn.x 			= Constant.PREVIEWB_POS.x;
 			this._previewBtn.y 			= Constant.PREVIEWB_POS.y;
@@ -127,7 +152,7 @@ package screen
 			this._previewBtn.width    	= 130;
 			this._previewBtn.label    	= 'Preview';
 			
-			this._publishBtn			= new Button();
+			this._publishBtn			= new feathers.controls.Button();
 			this._publishBtn.useHandCursor	= true;
 			this._publishBtn.x 			= Constant.PUBLISHB_POS.x;
 			this._publishBtn.y 			= Constant.PUBLISHB_POS.y; 
@@ -141,6 +166,8 @@ package screen
 			this.addChild(background);
 			this.addChild(gridFrame);
 			this.addChild(rightBox);
+			this.addChild(this._gameInfoBtn);
+			this.addChild(this._charactersInfoBtn);
 			this.addChild(this._saveBtn);
 			this.addChild(this._previewBtn);
 			this.addChild(this._publishBtn);
@@ -148,14 +175,41 @@ package screen
 			this.addChild(this._obstaclePanel);
 			this.addChild(this._gridPanel);
 			this.addChild(this._scoreBoard);
-			this.addChild(this._soundObject);
 			
+			this._componentPanel.alpha = 0;
+			this._componentPanel.disableInput();
+			
+			this.addEventListener(Event.TRIGGERED, onChangeMenu);
 			this._saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
 			this._previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
 			this._publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
 		}
 		
-		private function onGameFieldChange(event:Event):void{
+		private function onChangeMenu(event:Event):void
+		{
+			var target	:starling.display.Button = event.target as starling.display.Button;
+			if(target == this._gameInfoBtn)
+			{
+				this._gameInfoBtn.filter = this._glow;
+				this._charactersInfoBtn.filter = null;
+				this._obstaclePanel.alpha = 1;
+				this._componentPanel.alpha = 0;
+				this._componentPanel.disableInput();
+				this._obstaclePanel.enableInput();
+			}
+			else if(target == this._charactersInfoBtn)
+			{
+				this._gameInfoBtn.filter = null;
+				this._charactersInfoBtn.filter = this._glow;
+				this._obstaclePanel.alpha = 0;
+				this._componentPanel.alpha = 1;
+				this._obstaclePanel.disableInput();
+				this._componentPanel.enableInput();
+			}
+		}
+		
+		private function onGameFieldChange(event:Event):void
+		{
 			var bg	:Image;
 			if(event.data.isUserDef)
 				bg = new Image(Assets.getUserScreenTexture()[event.data.textureIndex].texture);

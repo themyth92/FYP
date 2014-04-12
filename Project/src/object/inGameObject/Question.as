@@ -27,25 +27,25 @@ package object.inGameObject
 	{
 		private static const MCQ_QUESTION	:String = "Which continent does Singapore belongs to?";
 		private static const MCQ_CHOICES	:Array = new Array({answer:"Asia"},{answer:"Europe"},{answer:"Africa"});
-		private static const MCQ_ANSWER		:String = "01";
-		private static const MCQ_HINT		:String = "It is in the same continent as China.";
+		private static const MCQ_ANSWER	:String = "01";
+		private static const MCQ_HINT	:String = "It is in the same continent as China.";
 		
 		private var _questionDiv	:TextField;
-		private var _choicesDiv		:ToggleGroup;
-		private var _statusDiv		:TextField;
-		private var _hintDiv		:TextField;
+		private var _choicesDiv	:ToggleGroup;
+		private var _statusDiv	:TextField;
+		private var _hintDiv	:TextField;
 		
 		//Provided information
-		private var _correctAns		:String;
-		private var _hint			:String;
-		private var _choices		:Array;
+		private var _correctAns	:String;
+		private var _hint	:String;
+		private var _choices	:Array;
 		
 		private var _questionArea	:Panel;
 		private var _isDisplayed	:Boolean = false;
-		private var _isPoppedUp		:Boolean = false;
-		private var _isCorrect		:Boolean;
-		private var _mcqLayout		:VerticalLayout;
-		private var _controller		:MainController;
+		private var _isPoppedUp	:Boolean = false;
+		private var _isCorrect	:Boolean;
+		private var _mcqLayout	:VerticalLayout;
+		private var _controller	:MainController;
 		
 		public function Question(controller:MainController, index:Number)
 		{
@@ -66,7 +66,7 @@ package object.inGameObject
 			this._mcqLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
 			this._mcqLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_BOTTOM;
 			this._mcqLayout.gap = 20;
-				
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
 		}
 		
@@ -89,7 +89,7 @@ package object.inGameObject
 				this._isPoppedUp = true;
 			}
 		}
-				
+		
 		private function displayQuestionArea():void
 		{
 			var panelLayout	:VerticalLayout = new VerticalLayout();
@@ -100,7 +100,7 @@ package object.inGameObject
 			_questionArea = new Panel();
 			_questionArea.x = 50;
 			_questionArea.y = 50;
-			_questionArea.width  = 700;
+			_questionArea.width = 700;
 			_questionArea.height = 500;
 			_questionArea.headerFactory = function():Header
 			{
@@ -123,7 +123,7 @@ package object.inGameObject
 		}
 		
 		private function displayChoices():void
-		{		
+		{	
 			this._choicesDiv = new ToggleGroup();
 			
 			var radioContainer:ScrollContainer = new ScrollContainer();
@@ -177,6 +177,7 @@ package object.inGameObject
 			buttonGroup.addChild(closeButton);
 			
 			this._questionArea.addChildAt(buttonGroup, 4);
+			this.dispatchEventWith('doingQuiz', true);
 			this.addChild(_questionArea);
 		}
 		
@@ -197,7 +198,7 @@ package object.inGameObject
 		private function checkAnswer(mcqAnswer:int):Boolean
 		{
 			var result :Boolean;
-		
+			
 			if(mcqAnswer+1 == Number(this._correctAns))
 				result = true;
 			else
@@ -220,6 +221,7 @@ package object.inGameObject
 		
 		private function onCloseQuestionWindow(event:Event):void
 		{
+			this.dispatchEventWith('doneQuiz', true);
 			PopUpManager.removePopUp(_questionArea, true );
 			_isPoppedUp = false;
 		}

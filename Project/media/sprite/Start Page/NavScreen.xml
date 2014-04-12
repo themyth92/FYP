@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:195fa17f2165956942e62441862ff336:1/1$ -->
+<TextureAtlas imagePath="NavScreen.png">
+    <SubTexture name="About" x="2" y="2" width="217" height="29"/>
+    <SubTexture name="Create_Mode" x="221" y="2" width="217" height="29"/>
+    <SubTexture name="Story_Mode" x="440" y="2" width="217" height="29"/>
+    <SubTexture name="background" x="2" y="33" width="800" height="600"/>
+    <SubTexture name="title" x="2" y="635" width="800" height="600"/>
+</TextureAtlas>

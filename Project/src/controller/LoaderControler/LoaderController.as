@@ -83,16 +83,26 @@ package controller.LoaderControler
 				
 				if(this._serverData.pageID == SAVE_PAGE)
 				{
-//					PreviewGameInfo._gameID = this._serverData.id;
-//					PreviewGameInfo._gameScreen =
-					this._questionList 	= this.getQsList(this._serverData);
+					PreviewGameInfo._isSaved = true;
+					PreviewGameInfo._gameID 	= this._serverData._id;
+					PreviewGameInfo._gameScreen = this._serverData.screen;
+					PreviewGameInfo._gameTitle 	= this._serverData.title;
+					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
+					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
+					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
+					this._questionList 	= this.getQsList (this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
 				}
 				
 				if(this._serverData.pageID == PLAY_PAGE)
 				{
-					
+					PreviewGameInfo._gameID 	= this._serverData._id;
+					PreviewGameInfo._gameScreen = this._serverData.screen;
+					PreviewGameInfo._gameTitle 	= this._serverData.title;
+					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
+					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
+					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();

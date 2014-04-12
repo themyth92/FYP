@@ -43,9 +43,7 @@ package object.CreateGameObject
 			this._dragFormat = dragFormat;
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.addEventListener(TouchEvent.TOUCH, onTouch);
-			this.addEventListener(DragDropEvent.DRAG_START, onDragStart);
-			this.addEventListener(DragDropEvent.DRAG_COMPLETE, onDragComplete);
+			this.enableInput();
 		}
 		
 		private function initPanel():void{
@@ -141,6 +139,22 @@ package object.CreateGameObject
 		
 		private function onDragComplete(event:DragDropEvent, dragData:DragData):void{
 
+		}
+		
+		public function disableInput():void
+		{
+			this.touchable = false;
+			this.removeEventListener(TouchEvent.TOUCH, onTouch);
+			this.removeEventListener(DragDropEvent.DRAG_START, onDragStart);
+			this.removeEventListener(DragDropEvent.DRAG_COMPLETE, onDragComplete);
+		}
+		
+		public function enableInput():void
+		{
+			this.touchable = true;
+			this.addEventListener(TouchEvent.TOUCH, onTouch);
+			this.addEventListener(DragDropEvent.DRAG_START, onDragStart);
+			this.addEventListener(DragDropEvent.DRAG_COMPLETE, onDragComplete);
 		}
 	}
 }

@@ -19,21 +19,18 @@ package assets
 		[Embed(source = '../media/font/GROBOLD.ttf', embedAsCFF = 'false', fontFamily = 'Grobold')]
 		private static const GroboldFont:Class;
 		
-		[Embed(source="../media/sprite/GameOver/GameOverScreen.png")]
+		[Embed(source="../media/sprite/GameOver/GameOver.jpg")]
 		private static const GameOverScreen	:Class;
-		
-		[Embed(source="../media/sprite/GameOver/GameOver.png")]
-		private static const GameOverText	:Class;
 		
 		//embed the loading page sprite sheet
 		[Embed(source = '../media/sprite/loadingPage/preLoader.png')]
 		private static const AtlasTextureLoadingPage:Class;
 		
 		//embed the start game page
-		[Embed(source = '../media/sprite/Start Page/StartGameSpriteSheet.png')]
+		[Embed(source = '../media/sprite/Start Page/NavScreen.png')]
 		private static const AtlasTextureMain:Class;
 		
-		[Embed(source = '../media/sprite/Start Page/StartGameSpriteSheet.xml', mimeType = 'application/octet-stream')]
+		[Embed(source = '../media/sprite/Start Page/NavScreen.xml', mimeType = 'application/octet-stream')]
 		private static const AtlasXmlMain    :Class;
 		
 		//embed the start game page

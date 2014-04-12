@@ -19,8 +19,8 @@ package constant
 		 * |	                        SCREENS     			              | *
 		 * ====================================================================**/
 		public static const LOADING_SCREEN				:String = 'loadingScreen';
-		public static const FIRST_CHAPTER_SCREEN			:String = 'firstChapScreen';
-		public static const NAVIGATION_SCREEN				:String = 'navigationScreen';
+		public static const FIRST_CHAPTER_SCREEN		:String = 'firstChapScreen';
+		public static const NAVIGATION_SCREEN			:String = 'navigationScreen';
 		public static const CREATE_GAME_SCREEN			:String	= 'createScreen';
 		public static const QUIT_SCREEN					:String	= 'quitScreen';
 		public static const STORY_SCREEN_1				:String	= 'storyStage1';
@@ -28,10 +28,10 @@ package constant
 		public static const STORY_SCREEN_3				:String	= 'storyStage3';
 		public static const STORY_SCREEN_4				:String	= 'storyStage4';
 		public static const STORY_SCREEN_5				:String	= 'storyStage5';
-		public static const GAME_OVER_SCREEN				:String	= 'gameOver';
+		public static const GAME_OVER_SCREEN			:String	= 'gameOver';
 		public static const PLAY_SCREEN					:String = 'playScreen';
 		public static const PREVIEW_LOADER				:String = 'previewLoader';
-		public static const STORY_SCREEN					:String = 'storyScreen';
+		public static const STORY_SCREEN				:String = 'storyScreen';
 		public static const MENU_SCREEN					:String = 'menuScreen';
 		
 		/**====================================================================
@@ -69,16 +69,16 @@ package constant
 		/**====================================================================
 		 * |	                    IMAGE POSITION   			              | *
 		 * ====================================================================**/
-		public static const FRAME_CREATE_POS	:Point		= new Point(30 , 50);
+		public static const FRAME_CREATE_POS	:Point		= new Point(1 , 58);
 		public static const FRAME_STORY_POS		:Point		= new Point(160, 50);
 		public static const CONSOLE_CREATE_POS	:Point		= new Point(525, 50);
 		public static const CONSOLE_PLAY_POS	:Point		= new Point(640, 70);
-		public static const GRID_CREATE_POS		:Point		= new Point(41 , 57);
+		public static const GRID_CREATE_POS		:Point		= new Point(41 , 97);
 		public static const GRID_STORY_POS		:Point		= new Point(171 , 57);
-		public static const INFOBOARD_POS		:Point		= new Point(545, 0);
-		public static const PREVIEWB_POS		:Point		= new Point(30 , 450);
-		public static const STARTB_POS			:Point		= new Point(190, 450);
-		public static const PUBLISHB_POS		:Point		= new Point(360, 450);
+		public static const INFOBOARD_POS		:Point		= new Point(515, 0);
+		public static const PREVIEWB_POS		:Point		= new Point(30 , 510);
+		public static const STARTB_POS			:Point		= new Point(190, 510);
+		public static const PUBLISHB_POS		:Point		= new Point(360, 510);
 		public static const DIALOGUE_POS		:Point		= new Point(60 , 450);
 		public static const OBSBOARD_POS		:Point		= new Point(15, 145);
 		public static const GUIDER_POS			:Point		= new Point(10, 470);

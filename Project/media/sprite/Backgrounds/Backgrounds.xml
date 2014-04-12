@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:51fbe9a0ca1362a20ec4e9cc7d0bad41:1/1$ -->
+<!-- $TexturePacker:SmartUpdate:9443b69f3fa440fe419be99d80e44082:1/1$ -->
 <TextureAtlas imagePath="Backgrounds.png">
-    <SubTexture name="Background_Create" x="2" y="2" width="800" height="600"/>
-    <SubTexture name="Background_Stage1" x="804" y="2" width="800" height="600"/>
-    <SubTexture name="Background_Stage2" x="2" y="604" width="800" height="600"/>
-    <SubTexture name="Background_Stage3" x="804" y="604" width="800" height="600"/>
-    <SubTexture name="Background_Stage4" x="2" y="1206" width="800" height="600"/>
-    <SubTexture name="Background_Stage5" x="804" y="1206" width="800" height="600"/>
+    <SubTexture name="Background_Stage1" x="2" y="2" width="800" height="600"/>
+    <SubTexture name="Background_Stage2" x="804" y="2" width="800" height="600"/>
+    <SubTexture name="Background_Stage3" x="2" y="604" width="800" height="600"/>
+    <SubTexture name="Background_Stage4" x="804" y="604" width="800" height="600"/>
+    <SubTexture name="Background_Stage5" x="2" y="1206" width="800" height="600"/>
+    <SubTexture name="CreateBackground" x="804" y="1206" width="800" height="600"/>
 </TextureAtlas>

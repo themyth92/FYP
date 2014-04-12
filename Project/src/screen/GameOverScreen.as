@@ -21,7 +21,6 @@ package screen
 		private static const GAME_OVER_EVENT			: String = 'GameOverEvent';
 		
 		private var _background 	:Image;
-		private var _gameOverText	:Image;
 		private var _fromScreen	:String;
 		private var _quitBtn		:Button;
 		private var _retryBtn		:Button;
@@ -36,9 +35,7 @@ package screen
 		private function onAddedToStage(event:Event):void
 		{
 			this._background 		= new Image(Assets.getTexture("GameOverScreen"));
-			this._gameOverText 		= new Image(Assets.getTexture("GameOverText"));
 			this.addChild(this._background);
-			this.addChild(this._gameOverText);
 			
 			//check the screen which call the game over screen
 			switch(this._fromScreen){
@@ -74,10 +71,8 @@ package screen
 		private function onRemoveFromStage(event:Event):void
 		{
 			this.removeChild(this._background);
-			this.removeChild(this._gameOverText);
 			
 			this._background 	= null;
-			this._gameOverText 	= null;
 		
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);			
 		}

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:4cbd6817543a1c29311182e1b40023df:1/1$ -->
+<!-- $TexturePacker:SmartUpdate:5404ba23dceb113c240dceabfcdb0950:1/1$ -->
 <TextureAtlas imagePath="CommonAssets.png">
-    <SubTexture name="Clock" x="2" y="2" width="40" height="40"/>
-    <SubTexture name="Coin" x="44" y="2" width="40" height="40"/>
-    <SubTexture name="Dialogue" x="86" y="2" width="631" height="139"/>
-    <SubTexture name="GameGuider" x="719" y="2" width="120" height="120"/>
-    <SubTexture name="InformationBoard" x="2" y="143" width="255" height="600"/>
-    <SubTexture name="Life" x="259" y="143" width="40" height="40"/>
-    <SubTexture name="escButton" x="301" y="143" width="50" height="50"/>
-    <SubTexture name="helpButton" x="353" y="143" width="50" height="50"/>
-    <SubTexture name="mainFrame" x="405" y="143" width="463" height="373"/>
-    <SubTexture name="warningSign" x="870" y="143" width="21" height="27"/>
+    <SubTexture name="Characters" x="2" y="2" width="123" height="54"/>
+    <SubTexture name="Clock" x="127" y="2" width="40" height="40"/>
+    <SubTexture name="Coin" x="169" y="2" width="40" height="40"/>
+    <SubTexture name="CreateFrame" x="211" y="2" width="517" height="437"/>
+    <SubTexture name="Dialogue" x="2" y="441" width="631" height="139"/>
+    <SubTexture name="GameGuider" x="635" y="441" width="120" height="120"/>
+    <SubTexture name="InformationBoard" x="2" y="582" width="285" height="600"/>
+    <SubTexture name="Life" x="289" y="582" width="40" height="40"/>
+    <SubTexture name="Obstacles" x="331" y="582" width="123" height="54"/>
+    <SubTexture name="escButton" x="456" y="582" width="50" height="50"/>
+    <SubTexture name="helpButton" x="508" y="582" width="50" height="50"/>
+    <SubTexture name="mainFrame" x="2" y="1184" width="463" height="373"/>
+    <SubTexture name="warningSign" x="467" y="1184" width="21" height="27"/>
 </TextureAtlas>

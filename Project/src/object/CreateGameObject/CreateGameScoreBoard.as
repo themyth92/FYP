@@ -1,6 +1,7 @@
 package object.CreateGameObject
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.Constant;
 	
@@ -32,6 +33,7 @@ package object.CreateGameObject
 	import starling.events.TouchPhase;
 	import starling.filters.BlurFilter;
 	import starling.text.TextField;
+	import starling.utils.HAlign;
 	
 	public class CreateGameScoreBoard extends Sprite
 	{
@@ -63,7 +65,7 @@ package object.CreateGameObject
 		private var _screenImg		:Vector.<Image>;
 		private var _screenList		:Vector.<Object>;
 		private var _selectedScreen	:Object = {isUserDef:false, textureIndex:1};
-		private var _screenSelectBtn:feathers.controls.Button;
+		private var _screenSelectBtn:TextField;
 				
 		public function CreateGameScoreBoard()
 		{
@@ -127,13 +129,12 @@ package object.CreateGameObject
 			this._lifeIMG.y  = LIFE_IMG_POS.y;
 			
 			//screen select choice
-			this._screenSelectBtn = new feathers.controls.Button();
+			this._screenSelectBtn = new TextField(100, 30,"+Screen", "Verdana", 20, 0x00ffe4, false);
+			this._screenSelectBtn.underline = true;
+			this._screenSelectBtn.hAlign = starling.utils.HAlign.LEFT; 
 			this._screenSelectBtn.x = 400;
-			this._screenSelectBtn.y		= 5;
-			this._screenSelectBtn.width 	= 140;
-			this._screenSelectBtn.height 	= 40;
-			this._screenSelectBtn.addEventListener(Event.TRIGGERED, showScreenSelection);
-			this._screenSelectBtn.label = "Screen";
+			this._screenSelectBtn.y	= 10;
+			this._screenSelectBtn.addEventListener(TouchEvent.TOUCH, showScreenSelection);
 			this._screenList = new Vector.<Object>();
 			this._screenImg = new Vector.<Image>();
 			
@@ -148,60 +149,77 @@ package object.CreateGameObject
 			this._timeIMG.addEventListener(Event.TRIGGERED, onTimeClicked);
 			this._lifeIMG.addEventListener(Event.TRIGGERED, onLifeClicked);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			
+			if(PreviewGameInfo._isSaved)
+				this.initializeScore();
 		}
 		
-		private function showScreenSelection(event:Event):void{
-			this.removeEventListener(Event.TRIGGERED, showScreenSelection);
-			_screenSelect				= new Panel();
-			_screenSelect.x = 50;
-			_screenSelect.y = 50;
-			_screenSelect.width = 700;
-			_screenSelect.height = 500; 
-			_screenSelect.verticalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
-			_screenSelect.scrollBarDisplayMode = Scroller.SCROLL_BAR_DISPLAY_MODE_FIXED;
-			//layout default value from feathers
-			const layout:TiledRowsLayout  		= new TiledRowsLayout();
-			layout.paging                		= TiledRowsLayout.PAGING_NONE;
-			layout.gap							= 20;
-			layout.padding						= 20;
-			layout.horizontalAlign         	 	= TiledRowsLayout.HORIZONTAL_ALIGN_LEFT;
-			layout.verticalAlign            	= TiledRowsLayout.VERTICAL_ALIGN_TOP;
-			layout.tileHorizontalAlign  	    = TiledRowsLayout.TILE_HORIZONTAL_ALIGN_LEFT;
-			layout.tileVerticalAlign  	      	= TiledRowsLayout.TILE_VERTICAL_ALIGN_TOP;
-			layout.manageVisibility 			= true;
-			_screenSelect.layout                = layout;
-			_screenSelect.snapToPages 					= true;
-			_screenSelect.snapScrollPositionsToPixels 	= true;
-			var field	:Image;
-			var screenObj	:Object;
-			for(var i:uint=1; i<6; i++)
+		private function initializeScore():void{
+			this._maxLife = PreviewGameInfo._maxLife;
+			this._maxCoin = PreviewGameInfo._maxCoin;
+			this._minStart = PreviewGameInfo._minStart;
+			this._secStart = PreviewGameInfo._secStart;
+			this.reviewTime();
+			this.reviewLife();
+		}
+		
+		private function showScreenSelection(e:TouchEvent):void{
+			var touch	:Touch = e.getTouch(this._screenSelectBtn, TouchPhase.ENDED);
+			if(touch)
 			{
-				field = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture("Stage"+i+"Screen"));
-				field.width = 200;
-				field.height = 180;
-				screenObj = new Object();
-				screenObj.textureIndex = i;
-				screenObj.isUserDef = false;
-				this._screenImg.push(field);
-				this._screenList.push(screenObj);
+				this._screenSelectBtn.removeEventListener(TouchEvent.TOUCH, showScreenSelection);
+				_screenSelect				= new Panel();
+				_screenSelect.x = 50;
+				_screenSelect.y = 50;
+				_screenSelect.width = 700;
+				_screenSelect.height = 500; 
+				_screenSelect.verticalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
+				_screenSelect.scrollBarDisplayMode = Scroller.SCROLL_BAR_DISPLAY_MODE_FIXED;
+				
+				//layout default value from feathers
+				const layout:TiledRowsLayout  		= new TiledRowsLayout();
+				layout.paging                		= TiledRowsLayout.PAGING_NONE;
+				layout.gap							= 20;
+				layout.padding						= 20;
+				layout.horizontalAlign         	 	= TiledRowsLayout.HORIZONTAL_ALIGN_LEFT;
+				layout.verticalAlign            	= TiledRowsLayout.VERTICAL_ALIGN_TOP;
+				layout.tileHorizontalAlign  	    = TiledRowsLayout.TILE_HORIZONTAL_ALIGN_LEFT;
+				layout.tileVerticalAlign  	      	= TiledRowsLayout.TILE_VERTICAL_ALIGN_TOP;
+				layout.manageVisibility 			= true;
+				_screenSelect.layout                = layout;
+				_screenSelect.snapToPages 					= true;
+				_screenSelect.snapScrollPositionsToPixels 	= true;
+				var field	:Image;
+				var screenObj	:Object;
+				for(var i:uint=1; i<6; i++)
+				{
+					field = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture("Stage"+i+"Screen"));
+					field.width = 200;
+					field.height = 180;
+					screenObj = new Object();
+					screenObj.textureIndex = i;
+					screenObj.isUserDef = false;
+					this._screenImg.push(field);
+					this._screenList.push(screenObj);
+				}
+				for(var j:uint=0; j<Assets.getUserScreenTexture().length; j++)
+				{
+					field = new Image(Assets.getUserScreenTexture()[j].texture);
+					field.width = 200;
+					field.height = 180;
+					screenObj = new Object();
+					screenObj.textureIndex = j;
+					screenObj.isUserDef = true;
+					this._screenImg.push(field);
+					this._screenList.push(screenObj);
+				}
+				
+				for(var k:uint=0; k<this._screenImg.length;k++)
+					this._screenSelect.addChildAt(this._screenImg[k],k);
+				
+				this._screenSelect.addEventListener(TouchEvent.TOUCH, onScreenTouch);
+				this.addChild(_screenSelect);
 			}
-			for(var j:uint=0; j<Assets.getUserScreenTexture().length; j++)
-			{
-				field = new Image(Assets.getUserScreenTexture()[j].texture);
-				field.width = 200;
-				field.height = 180;
-				screenObj = new Object();
-				screenObj.textureIndex = j;
-				screenObj.isUserDef = true;
-				this._screenImg.push(field);
-				this._screenList.push(screenObj);
-			}
-			
-			for(var k:uint=0; k<this._screenImg.length;k++)
-				this._screenSelect.addChildAt(this._screenImg[k],k);
-			
-			this._screenSelect.addEventListener(TouchEvent.TOUCH, onScreenTouch);
-			this.addChild(_screenSelect);
 		}
 		
 		private function onScreenTouch(e:TouchEvent):void

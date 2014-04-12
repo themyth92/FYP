@@ -1,6 +1,7 @@
 package object.CreateGameObject
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.Constant;
 	
@@ -9,6 +10,7 @@ package object.CreateGameObject
 	import feathers.controls.Callout;
 	import feathers.controls.Header;
 	import feathers.controls.Label;
+	import feathers.controls.LayoutGroup;
 	import feathers.controls.Panel;
 	import feathers.controls.PickerList;
 	import feathers.controls.Radio;
@@ -36,6 +38,7 @@ package object.CreateGameObject
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextField;
+	import starling.utils.HAlign;
 	
 	public class ComponentPanel extends Sprite
 	{
@@ -70,13 +73,127 @@ package object.CreateGameObject
 		private var _enemy2InputImage	:PickerList;
 		private var _message:Label;		
 		private var _callout	:Callout;
+		private var _alert		:Alert;
 		
 		public function ComponentPanel()
 		{
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener('gotPopUp', onGotPopUp);
+			this.addEventListener('closedPopUp', onClosedPopUp);
 		}
 		
-		//return the title of the input
+		private function onAlertClosed(event:Event):void{
+			this.dispatchEventWith('popUpClose', true);
+			this.removeEventListener(Event.CLOSE, onAlertClosed);
+		}
+		
+		public function disableInput():void
+		{
+			this._playerPosInput.clearFocus();
+			this._enemy1InputPos.clearFocus();
+			this._enemy1InputSpeed.clearFocus();
+			this._enemy2InputPos.clearFocus();
+			this._enemy2InputSpeed.clearFocus();
+			
+			this._playerPosInput.touchable = false;
+			this._genderInput.touchable = false;
+			this._enemy1InputType.touchable = false;
+			this._enemy1InputPos.touchable = false;
+			this._enemy1InputSpeed.touchable = false;
+			this._enemy1InputImage.touchable = false;
+			this._enemy2InputType.touchable = false;
+			this._enemy2InputPos.touchable = false;
+			this._enemy2InputSpeed.touchable = false;
+			this._enemy2InputImage.touchable = false;
+			
+			this._playerPosInput.isEnabled = false;
+			this._genderInput.isEnabled = false;
+			this._enemy1InputType.isEnabled = false;
+			this._enemy1InputPos.isEnabled = false;
+			this._enemy1InputSpeed.isEnabled = false;
+			this._enemy1InputImage.isEnabled = false;
+			this._enemy2InputType.isEnabled = false;
+			this._enemy2InputPos.isEnabled = false;
+			this._enemy2InputSpeed.isEnabled = false;
+			this._enemy2InputImage.isEnabled = false;
+			
+			this._playerPosInput.isFocusEnabled = false;
+			this._enemy1InputPos.isFocusEnabled = false;
+			this._enemy1InputSpeed.isFocusEnabled = false;
+			this._enemy2InputPos.isFocusEnabled = false;
+			this._enemy2InputSpeed.isFocusEnabled = false;
+			
+			this._playerPosInput.removeEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
+			this._playerPosInput.removeEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
+			this._genderInput.removeEventListener	 (Event.CHANGE, 				onSwitch);
+			
+			this._enemy1InputType.removeEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
+			this._enemy1InputPos.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
+			this._enemy1InputPos.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
+			this._enemy1InputSpeed.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
+			this._enemy1InputSpeed.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
+			this._enemy1InputImage.removeEventListener (Event.CHANGE,				 onEnemy1ImgChange);
+			
+			this._enemy2InputType.removeEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
+			this._enemy2InputPos.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
+			this._enemy2InputPos.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
+			this._enemy2InputSpeed.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
+			this._enemy2InputSpeed.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
+			this._enemy2InputImage.removeEventListener (Event.CHANGE,				 onEnemy2ImgChange);
+		}
+		
+		public function enableInput():void
+		{
+			this._playerPosInput.touchable = true;
+			this._genderInput.touchable = true;
+			this._enemy1InputType.touchable = true;
+			this._enemy1InputPos.touchable = true;
+			this._enemy1InputSpeed.touchable = true;
+			this._enemy1InputImage.touchable = true;
+			this._enemy2InputType.touchable = true;
+			this._enemy2InputPos.touchable = true;
+			this._enemy2InputSpeed.touchable = true;
+			this._enemy2InputImage.touchable = true;
+			
+			this._playerPosInput.isEnabled = true;
+			this._genderInput.isEnabled = true;
+			this._enemy1InputType.isEnabled = true;
+			this._enemy1InputPos.isEnabled = true;
+			this._enemy1InputSpeed.isEnabled = true;
+			this._enemy1InputImage.isEnabled = true;
+			this._enemy2InputType.isEnabled = true;
+			this._enemy2InputPos.isEnabled = true;
+			this._enemy2InputSpeed.isEnabled = true;
+			this._enemy2InputImage.isEnabled = true;
+			
+			this._playerPosInput.isFocusEnabled = true;
+			this._enemy1InputPos.isFocusEnabled = true;
+			this._enemy1InputSpeed.isFocusEnabled = true;
+			this._enemy2InputPos.isFocusEnabled = true;
+			this._enemy2InputSpeed.isFocusEnabled = true;
+			
+			this._playerPosInput.addEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
+			this._playerPosInput.addEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
+			this._genderInput.addEventListener	 (Event.CHANGE, 				onSwitch);
+			
+			this._enemy1InputType.addEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
+			this._enemy1InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
+			this._enemy1InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
+			this._enemy1InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
+			this._enemy1InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
+			this._enemy1InputImage.addEventListener (Event.CHANGE,				 onEnemy1ImgChange);
+			
+			this._enemy2InputType.addEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
+			this._enemy2InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
+			this._enemy2InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
+			this._enemy2InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
+			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
+			this._enemy2InputImage.addEventListener (Event.CHANGE,				 onEnemy2ImgChange);
+		}
+		
+		/**====================================================================
+		 * |	              GET INFORMATION FOR SAVING		              | *
+		 * ====================================================================**/
 		public function getTitle():String{
 			return this._titleInput.text;
 		}
@@ -127,6 +244,9 @@ package object.CreateGameObject
 				this._enemy2InputPos.setFocus();
 		}
 		
+		/**====================================================================
+		 * |	                     EVENT HANDLERS			                  | *
+		 * ====================================================================**/
 		private function onAddedToStage(event:Event):void
 		{
 			/* Get title for the game */
@@ -144,44 +264,41 @@ package object.CreateGameObject
 			this._titleInput.width = 220;
 			this._titleInput.height = 50;
 			
+			var text	:TextField;
+			
+			/* Setup layout for the whole information board */
+			var infoGetter	:LayoutGroup = new LayoutGroup();
+			var infoLayout	:VerticalLayout = new VerticalLayout();
+			infoLayout.gap = 5;
+			infoLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
+			infoGetter.layout = infoLayout;
+			
+			text = new TextField(150, 30,"Player:", "Verdana", 24, 0x304bbd, true);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			infoGetter.addChild(text);
+			
+			/* Setup layout for each information */
+			var layout	:HorizontalLayout = new HorizontalLayout();
+			layout.gap = 50;
+			layout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_LEFT;
+			
 			//debugger to notify error to user
 			this._notiPanel        	= new ScrollText();
 			
 			/* Get player information */
 			this._playerPosInput 	= new TextInput();
-			this._genderInput		= new ToggleSwitch();
-			
-			this._playerPosInput.addEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
-			this._playerPosInput.addEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
-			this._genderInput.addEventListener	 (Event.CHANGE, 				onSwitch);
-			
-			/* Get enemies information */
-			this._enemy1InputType 	= new PickerList();
-			this._enemy1InputPos	= new TextInput();
-			this._enemy1InputSpeed	= new TextInput();
-			this._enemy1InputImage	= new PickerList();
-			this._enemy1InputType.addEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
-			this._enemy1InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
-			this._enemy1InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
-			this._enemy1InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
-			this._enemy1InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
-			this._enemy1InputImage.addEventListener (Event.CHANGE,				 onEnemy1ImgChange);
-			
-			this._enemy2InputType 	= new PickerList();
-			this._enemy2InputPos	= new TextInput();
-			this._enemy2InputSpeed	= new TextInput();
-			this._enemy2InputImage	= new PickerList();
-			this._enemy2InputType.addEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
-			this._enemy2InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
-			this._enemy2InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
-			this._enemy2InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
-			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
-			this._enemy2InputImage.addEventListener (Event.CHANGE,				 onEnemy2ImgChange);
-			
-			/* Place them on the correct position on the screen */
 			this._playerPosInput.x 		= 196;	this._playerPosInput.y 		= 365;
 			this._playerPosInput.width 	= 55; 	this._playerPosInput.height = 30;
 			this._playerPosInput.textEditorProperties.fontSize = 10;
+			text = new TextField(150, 30,"Position:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputPos :LayoutGroup = new LayoutGroup();
+			inputPos.layout = layout;
+			inputPos.addChild(text);
+			inputPos.addChild(this._playerPosInput);
+			infoGetter.addChild(inputPos);
+			
+			this._genderInput		= new ToggleSwitch();
 			this._genderInput.x 		= 70;	this._genderInput.y 		= 365;
 			this._genderInput.isSelected = false;
 			this._genderInput.offText = "F";
@@ -189,14 +306,28 @@ package object.CreateGameObject
 			this._genderInput.setSize(60, 30);
 			this._genderInput.thumbProperties.@height = 30;
 			this._genderInput.thumbProperties.@width = 30;
+			text = new TextField(150, 30,"Gender:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputGender :LayoutGroup = new LayoutGroup();
+			inputGender.layout = layout;
+			inputGender.addChild(text);
+			inputGender.addChild(this._genderInput);
+			infoGetter.addChild(inputGender);
 			
-
+			/* Add eventlistener for player info input */
+			this._playerPosInput.addEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
+			this._playerPosInput.addEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
+			this._genderInput.addEventListener	 (Event.CHANGE, 				onSwitch);
+			
+			/* Get enemies information */
+			this._enemy1InputType 	= new PickerList();
 			var enemyType	:Array = new Array(Constant.FOLLOW_TYPE, Constant.PATROL_TYPE, "None");
 			this._enemy1InputType.dataProvider = new ListCollection(enemyType);
 			this._enemy1InputType.selectedIndex = 2;
-			this._enemy2InputType.dataProvider = new ListCollection(enemyType);
-			this._enemy2InputType.selectedIndex = 2;
-		
+			
+			this._enemy1InputPos	= new TextInput();
+			this._enemy1InputSpeed	= new TextInput();
+			this._enemy1InputImage	= new PickerList();
 			var enemyImg	:Array = [];
 			
 			for(var i:uint=0; i<Constant.ENEMY_SPRITE_TEXTURE.length; i++)
@@ -223,6 +354,19 @@ package object.CreateGameObject
 				return renderer;
 			};
 			this._enemy1InputImage.selectedIndex = 0;
+			this._enemy1InputType.addEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
+			this._enemy1InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
+			this._enemy1InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
+			this._enemy1InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
+			this._enemy1InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
+			this._enemy1InputImage.addEventListener (Event.CHANGE,				 onEnemy1ImgChange);
+			
+			this._enemy2InputType 	= new PickerList();
+			this._enemy2InputType.dataProvider = new ListCollection(enemyType);
+			this._enemy2InputType.selectedIndex = 2;
+			this._enemy2InputPos	= new TextInput();
+			this._enemy2InputSpeed	= new TextInput();
+			this._enemy2InputImage	= new PickerList();
 			
 			this._enemy2InputImage.dataProvider = new ListCollection(
 				[
@@ -243,23 +387,23 @@ package object.CreateGameObject
 				return renderer;
 			};
 			this._enemy2InputImage.selectedIndex = 0;
+
+			this._enemy2InputType.addEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
+			this._enemy2InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
+			this._enemy2InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
+			this._enemy2InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
+			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
+			this._enemy2InputImage.addEventListener (Event.CHANGE,				 onEnemy2ImgChange);
 			
-			this._enemy1InputType.x 	= 70; 	this._enemy1InputType.y 	= 425;
+			
 			this._enemy1InputType.width = 40;	this._enemy1InputType.height= 40;
-			this._enemy1InputPos.x 		= 196; 	this._enemy1InputPos.y 		= 425;
 			this._enemy1InputPos.width = 55;	this._enemy1InputPos.height = 30;
-			this._enemy1InputSpeed.x 	= 70; 	this._enemy1InputSpeed.y 	= 467;
 			this._enemy1InputSpeed.width = 55;	this._enemy1InputSpeed.height= 30;
-			this._enemy1InputImage.x 	= 196; 	this._enemy1InputImage.y	= 455;
 			this._enemy1InputImage.width = 40;	this._enemy1InputImage.height= 40;
 			
-			this._enemy2InputType.x 	= 70; 	this._enemy2InputType.y 	= 517;
 			this._enemy2InputType.width = 40;	this._enemy2InputType.height= 40;
-			this._enemy2InputPos.x 		= 196; 	this._enemy2InputPos.y 	 	= 517;
 			this._enemy2InputPos.width = 55;	this._enemy2InputPos.height= 30;
-			this._enemy2InputSpeed.x 	= 70; 	this._enemy2InputSpeed.y 	= 559;
 			this._enemy2InputSpeed.width = 55;	this._enemy2InputSpeed.height= 30;
-			this._enemy2InputImage.x	= 196; 	this._enemy2InputImage.y 	= 547;
 			this._enemy2InputImage.width = 40;	this._enemy2InputImage.height= 40;
 			
 			/* Restrict user input to numberic or alphabet */
@@ -281,18 +425,132 @@ package object.CreateGameObject
 			this._enemy2InputPos.maxChars 	= 2;
 			this._enemy2InputSpeed.maxChars = 5;
 			
+			text = new TextField(150, 30,"Enemy 1:", "Verdana", 24, 0x304bbd, true);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			infoGetter.addChild(text);
+			
+			text = new TextField(150, 30,"Type:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE1Type :LayoutGroup = new LayoutGroup();
+			inputE1Type.layout = layout;
+			inputE1Type.addChild(text);
+			inputE1Type.addChild(this._enemy1InputType);
+			infoGetter.addChild(inputE1Type);
+			
+			text = new TextField(150, 30,"Position:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE1Pos :LayoutGroup = new LayoutGroup();
+			inputE1Pos.layout = layout;
+			inputE1Pos.addChild(text);
+			inputE1Pos.addChild(this._enemy1InputPos);
+			infoGetter.addChild(inputE1Pos);
+			
+			text = new TextField(150, 30,"Speed:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE1Spd :LayoutGroup = new LayoutGroup();
+			inputE1Spd.layout = layout;
+			inputE1Spd.addChild(text);
+			inputE1Spd.addChild(this._enemy1InputSpeed);
+			infoGetter.addChild(inputE1Spd);
+			
+			text = new TextField(150, 30,"Image:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE1Img :LayoutGroup = new LayoutGroup();
+			inputE1Img.layout = layout;
+			inputE1Img.addChild(text);
+			inputE1Img.addChild(this._enemy1InputImage);
+			infoGetter.addChild(inputE1Img);
+			
+			text = new TextField(150, 30,"Enemy 2:", "Verdana", 24, 0x304bbd, true);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			infoGetter.addChild(text);
+			
+			text = new TextField(150, 30,"Type:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE2Type :LayoutGroup = new LayoutGroup();
+			inputE2Type.layout = layout;
+			inputE2Type.addChild(text);
+			inputE2Type.addChild(this._enemy2InputType);
+			infoGetter.addChild(inputE2Type);
+			
+			text = new TextField(150, 30,"Position:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE2Pos :LayoutGroup = new LayoutGroup();
+			inputE2Pos.layout = layout;
+			inputE2Pos.addChild(text);
+			inputE2Pos.addChild(this._enemy2InputPos);
+			infoGetter.addChild(inputE2Pos);
+			
+			text = new TextField(150, 30,"Speed:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE2Spd :LayoutGroup = new LayoutGroup();
+			inputE2Spd.layout = layout;
+			inputE2Spd.addChild(text);
+			inputE2Spd.addChild(this._enemy2InputSpeed);
+			infoGetter.addChild(inputE2Spd);
+			
+			text = new TextField(150, 30,"Image:", "Verdana", 20, 0xffffff, false);
+			text.hAlign = starling.utils.HAlign.LEFT;
+			var inputE2Img :LayoutGroup = new LayoutGroup();
+			inputE2Img.layout = layout;
+			inputE2Img.addChild(text);
+			inputE2Img.addChild(this._enemy2InputImage);
+			infoGetter.addChild(inputE2Img);
+			
 			/* Add Information Box to display */
-			this.addChild(this._titleInput);
-			this.addChild(this._playerPosInput);
-			this.addChild(this._genderInput);
-			this.addChild(this._enemy1InputType);
-			this.addChild(this._enemy1InputPos);
-			this.addChild(this._enemy1InputSpeed);
-			this.addChild(this._enemy1InputImage);
-			this.addChild(this._enemy2InputType);
-			this.addChild(this._enemy2InputPos);
-			this.addChild(this._enemy2InputSpeed);
-			this.addChild(this._enemy2InputImage);
+			infoGetter.x = 10;
+			infoGetter.y = 100;
+			this.addChild(infoGetter);
+			if(PreviewGameInfo._isSaved)
+				this.initializeInfo();
+		}
+		
+		private function initializeInfo():void
+		{
+			this.initializePlayerInfo();
+			this.initializeEnemyInfo();
+		}
+		
+		private function initializePlayerInfo():void
+		{
+			var pos	:uint = PreviewGameInfo._playerPos;
+			var gender :String = PreviewGameInfo._playerGender;
+			
+			if(pos != 0)
+				this._playerPosInput.text = pos;
+			if(gender == "Male")
+				this._genderInput.isSelected = true;
+			else(gender == "Female")
+				this._genderInput.isSelected = false;
+		}
+		
+		private function initializeEnemyInfo():void
+		{
+			var type	:Array = PreviewGameInfo._enemyType;
+			var pos		:Array = PreviewGameInfo._enemyPos;
+			var spd		:Array = PreviewGameInfo._enemySpd;
+			var img		:Array = PreviewGameInfo._enemyImg;
+			
+			if(type[0] == "None")
+				this._enemy1InputType.selectedIndex = 2;
+			else if(type[0] == "Patrol Enemy")
+				this._enemy1InputType.selectedIndex = 1;
+			else 
+				this._enemy1InputType.selectedIndex = 0;
+			
+			if(type[1] == "None")
+				this._enemy2InputType.selectedIndex = 2;
+			else if(type[1] == "Patrol Enemy")
+				this._enemy2InputType.selectedIndex = 1;
+			else 
+				this._enemy2InputType.selectedIndex = 0;
+			
+			this._enemy1InputPos.text = pos[0];
+			this._enemy2InputPos.text = pos[1];
+			this._enemy1InputSpeed.text = spd[0];
+			this._enemy2InputSpeed.text = spd[1];
+			this._enemy1InputImage.selectedIndex = img[0] - 1;
+			this._enemy2InputImage.selectedIndex = img[1] - 1;
 		}
 		
 		/**====================================================================
@@ -322,11 +580,12 @@ package object.CreateGameObject
 		
 		private function posFillInNotify(id:Number):void
 		{
-			var alert	:Alert = Alert.show("Please give your Patrol Enemy a start position.", "Notification", new ListCollection(
+			this._alert = Alert.show("Please give your Patrol Enemy a start position.", "Notification", new ListCollection(
 				[
 					{ label: "OK" }
 				]));
-			alert.addEventListener(Event.CLOSE, function(e:Event):void{
+			this.dispatchEventWith('gotPopUp', true);
+			this._alert.addEventListener(Event.CLOSE, function(e:Event):void{
 				if(id == 1)
 					_enemy1InputPos.setFocus();
 				else if(id == 2)
@@ -346,7 +605,7 @@ package object.CreateGameObject
 			panelLayout.gap = 75;
 			_endPtChoosePanel.layout = panelLayout;
 			
-			var notifyMsg	:TextField = new TextField(500, 100, "You chose enemy as Patrol type.\nThe enemy will start at the indicated position. You can choose either to have 1 or 3 more points to patrol. Please indicate your choice below.", "Grobold", 18, 0xfa0000, false);
+			var notifyMsg	:TextField = new TextField(500, 100, "You chose enemy as Patrol type.\nThe enemy will start at the indicated position. It can patrol in 'Reverse' or 'Circle' mode. Please indicate your choice below.", "Grobold", 18, 0xfa0000, false);
 			_endPtChoosePanel.addChild(notifyMsg);
 			
 			var typeChoice	:ToggleGroup = new ToggleGroup(); 
@@ -426,11 +685,13 @@ package object.CreateGameObject
 		{
 			if(Number(this._enemy2InputSpeed.text) > 9 || Number(this._enemy2InputSpeed.text) < 1)
 			{
-				Alert.show("Enemy's speed should be from 1 to 9", "Error", new ListCollection(
+				this._alert = Alert.show("Enemy's speed should be from 1 to 9", "Error", new ListCollection(
 					[
 						{ label: "OK" }
 					]));				
 				this._enemy2InputSpeed.text = "";
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else
 			{
@@ -452,19 +713,23 @@ package object.CreateGameObject
 		{
 			if(Number(this._enemy2InputPos.text) == 0)
 			{
-				Alert.show("Enemy No.2's position can only be from 1 to 99.", "Error", new ListCollection(
+				this._alert = Alert.show("Enemy No.2's position can only be from 1 to 99.", "Error", new ListCollection(
 					[
 						{ label: "OK" }
 					]));				
-				this._enemy2InputPos.text = "";	
+				this._enemy2InputPos.text = "";
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else if(Number(this._playerPosInput.text) == Number(this._enemy2InputPos.text) || Number(this._enemy1InputPos.text) == Number(this._enemy2InputPos.text))
 			{
-				Alert.show("Position occupied.", "Error", new ListCollection(
+				this._alert = Alert.show("Position occupied.", "Error", new ListCollection(
 					[
 						{ label: "OK" }
 					]));				
 				this._enemy2InputPos.text = "";	
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else
 			{
@@ -495,11 +760,13 @@ package object.CreateGameObject
 		{
 			if(Number(this._enemy1InputSpeed.text) > 9 || Number(this._enemy1InputSpeed.text) < 1)
 			{
-				Alert.show("Enemy's speed should be from 1 to 9", "Error", new ListCollection(
+				this._alert = Alert.show("Enemy's speed should be from 1 to 9", "Error", new ListCollection(
 					[
 						{ label: "OK" }
 					]));				
 				this._enemy1InputSpeed.text = "";
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else
 			{
@@ -521,19 +788,23 @@ package object.CreateGameObject
 		{
 			if(Number(this._enemy1InputPos.text) == 0)
 			{
-				Alert.show("Enemy No.1's position can only be from 1 to 99.", "Error", new ListCollection(
+				this._alert = Alert.show("Enemy No.1's position can only be from 1 to 99.", "Error", new ListCollection(
 					[
 						{ label: "OK" }
 					]));				
-				this._enemy1InputPos.text = "";		
+				this._enemy1InputPos.text = "";
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else if(Number(this._playerPosInput.text) == Number(this._enemy1InputPos.text) || Number(this._enemy1InputPos.text) == Number(this._enemy2InputPos.text))
 			{
-				Alert.show("Position occupied.", "Error", new ListCollection(
+				this._alert = Alert.show("Position occupied.", "Error", new ListCollection(
 					[
 						{ label: "OK" }
 					]));				
-				this._enemy1InputPos.text = "";	
+				this._enemy1InputPos.text = "";
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else
 			{
@@ -567,19 +838,23 @@ package object.CreateGameObject
 		{
 			if(Number(this._playerPosInput.text) == 0)
 			{
-				Alert.show("Player's position can only be from 1 to 99.", "Error", new ListCollection(
+				this._alert = Alert.show("Player's position can only be from 1 to 99.", "Error", new ListCollection(
 					[
 						{ label: "OK" }
 					]));				
-				this._playerPosInput.text = "";	
+				this._playerPosInput.text = "";
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else if(Number(this._playerPosInput.text) == Number(this._enemy1InputPos.text) || Number(this._playerPosInput.text) == Number(this._enemy2InputPos.text))
 			{
-				Alert.show("Position occupied.", "Error", new ListCollection(
+				this._alert = Alert.show("Position occupied.", "Error", new ListCollection(
 					[
 						{ label: "OK" }
-					]));				
-				this._playerPosInput.text = "";	
+					]));
+				this._playerPosInput.text = "";
+				this.dispatchEventWith('gotPopUp', true);
+				this._alert.addEventListener(Event.CLOSE, onAlertClosed);
 			}
 			else
 			{
@@ -593,6 +868,14 @@ package object.CreateGameObject
 		{
 			if(Number(this._playerPosInput.text) !=0)
 				this.dispatchEventWith('displayCharacters', true, {id:"player", gender:this._genderInput.isSelected, pos:Number(this._playerPosInput.text)});
+		}
+		
+		private function onGotPopUp(event:Event):void{
+			this.disableInput();
+		}
+		
+		private function onClosedPopUp(event:Event):void{
+			this.enableInput();
 		}
 	}
 }

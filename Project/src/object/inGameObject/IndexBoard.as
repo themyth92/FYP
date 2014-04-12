@@ -183,7 +183,19 @@ package object.inGameObject
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			this.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			this.addEventListener('doingQuiz', onDoingQuiz);
+			this.addEventListener('doneQuiz', onFinishQuiz);
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+		
+		private function onDoingQuiz(event:Event):void{
+			this._controller.changeState(Constant.PAUSE_STATE);
+			this.removeEventListener('doingQuiz', onDoingQuiz);
+		}
+		
+		private function onFinishQuiz(event:Event):void{
+			this._controller.changeState(Constant.PLAYING_STATE);
+			this.removeEventListener('doneQuiz', onFinishQuiz);
 		}
 		
 		/*-----------------------------------------------------------------------
@@ -539,6 +551,8 @@ package object.inGameObject
 			this._enemy2.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY2_POS));
 			this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY1_END));
 			this._enemy2.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY2_END));
+			this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY1_POS));
+			this._enemy2.setEndPoints(indexToPoint(StoryConstant.STAGE3_ENEMY2_POS));
 			
 			this._enemyList = new Vector.<Enemies>;
 			this._enemy1.x = enemy1_pos[0];
@@ -569,6 +583,8 @@ package object.inGameObject
 			{
 				this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE4_ENEMY_PATH[i]));
 			}
+			this._enemy1.setEndPoints(indexToPoint(StoryConstant.STAGE4_ENEMY_POS));
+
 			this._gotPatrol = true;
 			this._enemyList.push(_enemy1);
 			this.addChild(_enemy1);
