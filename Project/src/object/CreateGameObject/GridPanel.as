@@ -135,7 +135,7 @@ package object.CreateGameObject
 				if(PreviewGameInfo._gameScreen.isUserDef)
 					this._background = new Image(Assets.getUserScreenTexture()[PreviewGameInfo._gameScreen.textureIndex].texture);
 				else
-					this._background = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._gameScreen.textureIndex+'Screen');
+					this._background = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._gameScreen.textureIndex+'Screen'));
 				
 				this._state				= 0;
 				this.loadGridObjects();
@@ -187,9 +187,15 @@ package object.CreateGameObject
 			var droppedObject	:ObstacleObj;
 			var xIndex			:int;
 			var yIndex			:int;
+			var texture			:Texture;
 			for(var i:uint=0; i<obsListLength; i++)
 			{
-				droppedObject = new ObstacleObj(PreviewGameInfo._obsCollection[i], PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, PreviewGameInfo._obsType[i]);
+				if(PreviewGameInfo._obsTexture[i].isUserDef)
+					texture = Assets.getUserTexture()[PreviewGameInfo._obsTexture[i].textureIndex];
+				else
+					texture = Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._obsTexture[i].textureIndex+'Screen');
+				
+				droppedObject = new ObstacleObj(texture, PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, Number(PreviewGameInfo._obsType[i]));
 				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
 				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;
 				this._gridObjects[xIndex][yIndex].changeStateToObstacle(droppedObject);
@@ -396,34 +402,51 @@ package object.CreateGameObject
 				
 				if(data.id == "enemy1")
 				{
-					this.removeChild(this._enemy1Img);
-					this._enemy1Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
-					this._enemy1Img.x = xIndex*40;
-					this._enemy1Img.y = yIndex*40;
-					
-					this.addChild(this._enemy1Img);
+					if(this._gridObjects[xIndex][yIndex].getObstacle() != null)
+					{
+						this.removeChild(this._enemy1Img);
+						this._enemy1Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
+						this._enemy1Img.x = xIndex*40;
+						this._enemy1Img.y = yIndex*40;
+						
+						this.addChild(this._enemy1Img);
+						return;
+					}
+					else
+						return;
 				}
 				else if(data.id == "enemy2")
 				{
-					this.removeChild(this._enemy2Img);
-					this._enemy2Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
-					this._enemy2Img.x = xIndex*40;
-					this._enemy2Img.y = yIndex*40;
-					this._enemy2EndPts.push(data.pos);
-					
-					this.addChild(this._enemy2Img);
+					if(this._gridObjects[xIndex][yIndex].getObstacle() != null)
+					{
+						this.removeChild(this._enemy2Img);
+						this._enemy2Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
+						this._enemy2Img.x = xIndex*40;
+						this._enemy2Img.y = yIndex*40;
+						this._enemy2EndPts.push(data.pos);
+						
+						this.addChild(this._enemy2Img);
+						return;
+					}
+					else
+						return;
 				}
 				else
 				{
-					this.removeChild(this._playerImg);
-					if(data.gender)
-						this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Male/male_down_01"));
+					if(this._gridObjects[xIndex][yIndex].getObstacle() != null)
+					{
+						this.removeChild(this._playerImg);
+						if(data.gender)
+							this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Male/male_down_01"));
+						else
+							this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Female/female_down_01"));
+						
+						this._playerImg.x = xIndex*40;
+						this._playerImg.y = yIndex*40;
+						this.addChild(this._playerImg);
+					}
 					else
-						this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Female/female_down_01"));
-					
-					this._playerImg.x = xIndex*40;
-					this._playerImg.y = yIndex*40;
-					this.addChild(this._playerImg);
+						return;
 				}
 				
 				var occupiedPt :Object = new Object();
@@ -511,6 +534,7 @@ package object.CreateGameObject
 									]));
 								this.removeEventListener(TouchEvent.TOUCH, onChoosingEndTouch);
 								this.addEventListener(TouchEvent.TOUCH, onTouch);
+								this.dispatchEventWith("popUpClose", true);
 								return;
 							}
 							

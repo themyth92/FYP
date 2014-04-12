@@ -45,11 +45,9 @@ package screen
 		
 		public function LoadingScreen()
 		{
-			
 			super();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE,  	onAddedToStage);
-			this.addEventListener(Event.ENTER_FRAME, 	 	onEnterFrame);
 			this.addEventListener(Event.REMOVED_FROM_STAGE,	onRemoveFromStage);
 			this.addEventListener(LOAD_COMPLETE, 		 	onLoadComplete);
 		}
@@ -60,7 +58,6 @@ package screen
 		
 		private function onAddedToStage(event:Event):void
 		{
-			
 			new MetalWorksMobileTheme();
 			
 			this._progress 								= new ProgressBar();
@@ -83,6 +80,7 @@ package screen
 			var serverObj:Object 						= this._serverClientManager.initCallServer();
 			
 			this._loadController						= new LoaderController(serverObj);
+			this.addEventListener(Event.ENTER_FRAME, 	 	onEnterFrame);
 		}
 		
 		private function onLoadComplete(event:Event):void

@@ -84,7 +84,7 @@ package controller.LoaderControler
 				if(this._serverData.pageID == SAVE_PAGE)
 				{
 					PreviewGameInfo._isSaved = true;
-					PreviewGameInfo._gameID 	= this._serverData._id;
+					PreviewGameInfo._gameID 	= this._serverData.id;
 					PreviewGameInfo._gameScreen = this._serverData.screen;
 					PreviewGameInfo._gameTitle 	= this._serverData.title;
 					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
@@ -97,7 +97,7 @@ package controller.LoaderControler
 				
 				if(this._serverData.pageID == PLAY_PAGE)
 				{
-					PreviewGameInfo._gameID 	= this._serverData._id;
+					PreviewGameInfo._gameID 	= this._serverData.id;
 					PreviewGameInfo._gameScreen = this._serverData.screen;
 					PreviewGameInfo._gameTitle 	= this._serverData.title;
 					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
@@ -124,7 +124,6 @@ package controller.LoaderControler
 				loadEachTexure();	
 			}
 			else{
-				
 				//dispatch event when load complete
 				this.dispatchEventWith(LOAD_COMPLETE, true, {pageID : this._serverData.pageID});
 			}
