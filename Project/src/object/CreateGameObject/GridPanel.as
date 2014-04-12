@@ -136,7 +136,7 @@ package object.CreateGameObject
 					this._background = new Image(Assets.getUserScreenTexture()[PreviewGameInfo._gameScreen.textureIndex].texture);
 				else
 					this._background = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._gameScreen.textureIndex+'Screen'));
-				
+				this.initGridObjects();
 				this._state				= 0;
 				this.loadGridObjects();
 				this.loadPlayer();
@@ -193,8 +193,7 @@ package object.CreateGameObject
 				if(PreviewGameInfo._obsTexture[i].isUserDef)
 					texture = Assets.getUserTexture()[PreviewGameInfo._obsTexture[i].textureIndex];
 				else
-					texture = Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._obsTexture[i].textureIndex+'Screen');
-				
+					texture = Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture("Stage"+PreviewGameInfo._obsTexture[i].textureIndex+"Screen");
 				droppedObject = new ObstacleObj(texture, PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, Number(PreviewGameInfo._obsType[i]));
 				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
 				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;
