@@ -49,7 +49,6 @@ package screen
 			super();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE,  	onAddedToStage);
-			this.addEventListener(Event.ENTER_FRAME, 	 	onEnterFrame);
 			this.addEventListener(Event.REMOVED_FROM_STAGE,	onRemoveFromStage);
 			this.addEventListener(LOAD_COMPLETE, 		 	onLoadComplete);
 		}
@@ -83,22 +82,36 @@ package screen
 			var serverObj:Object 						= this._serverClientManager.initCallServer();
 			
 			this._loadController						= new LoaderController(serverObj);
+			
+			this.addEventListener(Event.ENTER_FRAME, 	 	onEnterFrame);
 		}
 		
 		private function onLoadComplete(event:Event):void
 		{
+
 			//rely on the pageID from server
 			//route the user to specific page
 			//if page ID == story page then route to navigation page
 			//if page ID == repair page then route to create game page 
 			//if page ID == play gmae page the route to play game page
-			if(event.data.pageID == STORY_PAGE){
+			if(event.data.pageID == STORY_PAGE)
+			{
 				
 				//for some reason
 				//this can not pass event to the game object
 				//therefore use current starling stage instead
 				Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.LOADING_SCREEN, to :Constant.NAVIGATION_SCREEN}, true));
-			}		
+			}
+			
+			else if(event.data.pageID == SAVE_PAGE){
+				
+				Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.LOADING_SCREEN, to :Constant.CREATE_GAME_SCREEN}, true));
+			}
+			
+			else if(event.data.pageID == PLAY_PAGE){
+				
+				Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.LOADING_SCREEN, to :Constant.PLAY_SCREEN}, true));
+			}
 		}
 		
 		private function onRemoveFromStage(event:Event):void

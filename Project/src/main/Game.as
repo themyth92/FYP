@@ -49,11 +49,14 @@ package main
 			
 			//use starling stage to pass the navigation event instead
 			//for some reason can not use the current object to listen to the event
+
+			stage.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
+
 			
 			this._loadingScreen 			= new LoadingScreen();
 			this.addChild(this._loadingScreen);
 			
-			stage.addEventListener(NavigationEvent.CHANGE_SCREEN, onChangeScreen);
+			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		

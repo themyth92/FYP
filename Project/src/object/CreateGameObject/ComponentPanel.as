@@ -517,7 +517,7 @@ package object.CreateGameObject
 			var gender :String = PreviewGameInfo._playerGender;
 			
 			if(pos != 0)
-				this._playerPosInput.text = pos;
+				this._playerPosInput.text = pos.toString();
 			if(gender == "Male")
 				this._genderInput.isSelected = true;
 			else(gender == "Female")
@@ -545,10 +545,10 @@ package object.CreateGameObject
 			else 
 				this._enemy2InputType.selectedIndex = 0;
 			
-			this._enemy1InputPos.text = pos[0];
-			this._enemy2InputPos.text = pos[1];
-			this._enemy1InputSpeed.text = spd[0];
-			this._enemy2InputSpeed.text = spd[1];
+			this._enemy1InputPos.text = pos[0].toString();
+			this._enemy2InputPos.text = pos[1].toString();
+			this._enemy1InputSpeed.text = spd[0].toString();
+			this._enemy2InputSpeed.text = spd[1].toString();
 			this._enemy1InputImage.selectedIndex = img[0] - 1;
 			this._enemy2InputImage.selectedIndex = img[1] - 1;
 		}

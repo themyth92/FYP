@@ -81,7 +81,7 @@ package controller.LoaderControler
 					this.loadUserTexture();
 				}
 				
-				if(this._serverData.pageID == SAVE_PAGE)
+				else if(this._serverData.pageID == SAVE_PAGE)
 				{
 					PreviewGameInfo._isSaved = true;
 					PreviewGameInfo._gameID 	= this._serverData._id;
@@ -90,12 +90,13 @@ package controller.LoaderControler
 					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
 					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
 					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
+					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
 					this._questionList 	= this.getQsList (this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
 				}
 				
-				if(this._serverData.pageID == PLAY_PAGE)
+				else if(this._serverData.pageID == PLAY_PAGE)
 				{
 					PreviewGameInfo._gameID 	= this._serverData._id;
 					PreviewGameInfo._gameScreen = this._serverData.screen;
@@ -124,9 +125,9 @@ package controller.LoaderControler
 				loadEachTexure();	
 			}
 			else{
-				
+				this._loadedPcent = 100;
 				//dispatch event when load complete
-				this.dispatchEventWith(LOAD_COMPLETE, true, {pageID : this._serverData.pageID});
+				this.dispatchEventWith(LOAD_COMPLETE, false, {pageID : this._serverData.pageID});
 			}
 		}
 		
@@ -202,7 +203,6 @@ package controller.LoaderControler
 				
 				//when load complete
 				this.dispatchEventWith(LOAD_COMPLETE, false, {pageID : this._serverData.pageID});
-				//this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.LOADING_SCREEN, to :Constant.NAVIGATION_SCREEN}, true)); 
 			}
 		}
 		
