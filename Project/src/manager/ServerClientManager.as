@@ -14,10 +14,16 @@ package manager
 			ExternalInterface.call('saveUserIngameState', userIngameState);
 		}
 		
-		public function saveUserGameCreation(returnData: Object):void
+		public function saveUserGameCreation(returnData: Object, callBack : Function):void
 		{
 			
 			ExternalInterface.call('saveGameCreation', returnData);
+			
+		}
+		
+		public function registerSaveGameCallBack(callBack: Function):void
+		{
+			ExternalInterface.addCallback('waitForServerRespondSavedGame', callBack);
 		}
 		
 		public function initCallServer():Object

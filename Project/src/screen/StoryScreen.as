@@ -8,6 +8,8 @@ package screen
 	
 	import feathers.controls.Button;
 	
+	import manager.ServerClientManager;
+	
 	import object.SoundObject;
 	
 	import screen.subStoryScreen.StoryStage1;
@@ -35,16 +37,17 @@ package screen
 		private static const STORY_STAGE_4 			: uint = 4;
 		private static const STORY_STAGE_5 			: uint = 5;
 		
-		private var _storyStage1  	: StoryStage1;
-		private var _storyStage2  	: StoryStage2;
-		private var _storyStage3  	: StoryStage3;
-		private var _storyStage4  	: StoryStage4;
-		private var _storyStage5  	: StoryStage5;
-		private var _currentStage 	: Screen;
-		private var _menuButton	: Button;
-		private var _menuScreen	: MenuScreen;
-		private var _gameOverScreen: GameOverScreen;
-		private var _soundObject	: SoundObject;
+		private var _storyStage1  			: StoryStage1;
+		private var _storyStage2  			: StoryStage2;
+		private var _storyStage3  			: StoryStage3;
+		private var _storyStage4  			: StoryStage4;
+		private var _storyStage5  			: StoryStage5;
+		private var _currentStage 			: Screen;
+		private var _menuButton			: Button;
+		private var _menuScreen			: MenuScreen;
+		private var _gameOverScreen		: GameOverScreen;
+		private var _soundObject			: SoundObject;
+		private var _serverClientManager 	: ServerClientManager;
 		
 		public function StoryScreen()
 		{
@@ -55,7 +58,6 @@ package screen
 		{
 			//if first time load 
 			if(this._currentStage == null){
-				
 				//this variable keep track of the current stage from user
 				//firstly it will be loaded by server
 				//the we use it to store the current stage of user in flash
@@ -95,6 +97,8 @@ package screen
 			this._menuButton.x				= 30;
 			this._menuButton.y				= 30;
 			
+			this._serverClientManager		= new ServerClientManager();
+			
 			this.addChild(this._currentStage);
 			this.addChild(this._menuButton);
 			
@@ -122,6 +126,7 @@ package screen
 			this._storyStage4				= null;
 			this._storyStage5				= null;
 			this._gameOverScreen			= null;
+			this._serverClientManager		= null;
 			
 			this.removeEventListener(MENU_EVENT, 						onMenuTrigger);
 			this.removeEventListener(GAME_OVER_EVENT,					onGameOverTrigger);
@@ -156,6 +161,8 @@ package screen
 					this._storyStage2 				= new StoryStage2();
 					this._currentStage				= this._storyStage2;
 					this._storyStage1				= null;
+					
+					this._serverClientManager.saveUserIngameState(STORY_STAGE_2);
 					break;
 				
 				case Constant.STORY_SCREEN_3:
@@ -166,6 +173,8 @@ package screen
 					this._storyStage3 				= new StoryStage3();
 					this._currentStage				= this._storyStage3;
 					this._storyStage2				= null;
+					
+					this._serverClientManager.saveUserIngameState(STORY_STAGE_3);
 					break;
 				
 				case Constant.STORY_SCREEN_4:
@@ -176,6 +185,8 @@ package screen
 					this._storyStage4 				= new StoryStage4();
 					this._currentStage				= this._storyStage4;
 					this._storyStage3				= null;
+					
+					this._serverClientManager.saveUserIngameState(STORY_STAGE_4);
 					break;
 				
 				case Constant.STORY_SCREEN_5:
@@ -186,6 +197,8 @@ package screen
 					this._storyStage5 				= new StoryStage5();
 					this._currentStage				= this._storyStage5;
 					this._storyStage4				= null;
+					
+					this._serverClientManager.saveUserIngameState(STORY_STAGE_5);
 					break;
 				
 				default:
@@ -231,7 +244,7 @@ package screen
 					
 					//reset everything
 					//reset the current stage to stage 1
-					Assets.userCurrentStoryStage	= 1;
+					Assets.userCurrentStoryStage	= STORY_STAGE_1;
 					//remove current stage
 					this.removeChild(this._currentStage);
 					this.removeChild(this._menuScreen);
@@ -250,6 +263,7 @@ package screen
 					this.addChild(this._currentStage);
 					this.addChild(this._menuButton);
 					
+					this._serverClientManager.saveUserIngameState(STORY_STAGE_1);
 					break;
 				case QUIT_GAME_EVENT:
 					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.STORY_SCREEN, to :Constant.NAVIGATION_SCREEN}, true));

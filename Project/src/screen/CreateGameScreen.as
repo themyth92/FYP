@@ -92,6 +92,7 @@ package screen
 			new MetalWorksMobileTheme();
 			
 			this._com					= new ServerClientManager();
+			this._com.registerSaveGameCallBack(this.onSaveButtonTriggerCallBack);
 			
 			this._scoreBoard			= new CreateGameScoreBoard();
 			
@@ -230,7 +231,7 @@ package screen
 		private function onSaveBtnTrigger(event:Event):void
 		{
 			var data:Object = new Object();
-			data.id 		= null;
+			data.id 		= Assets.gameID;
 			data.title 		= this._componentPanel.getTitle();
 			data.player		= this._componentPanel.getPlayerInfo();
 			data.enemy		= this._componentPanel.getEnemyInfo();
@@ -241,7 +242,12 @@ package screen
 			
 			//send to server this information whenever the 
 			//save game button is clicked, all the information will be stored on server
-			this._com.saveUserGameCreation(data);
+			this._com.saveUserGameCreation(data, onSaveButtonTriggerCallBack);
+		}
+		
+		private function onSaveButtonTriggerCallBack(data: String):void
+		{
+			Assets.gameID	= data;
 		}
 		
 		private function onPreviewBtnTrigger(event:Event):void

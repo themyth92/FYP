@@ -73,8 +73,8 @@ package controller.LoaderControler
 				if(this._serverData.pageID == STORY_PAGE){
 					
 					//set the current story stage for user
-					if(this._serverData.userStage)
-						Assets.userCurrentStoryStage	=	this._serverData.userStage;
+					if(this._serverData.storyStage)
+						Assets.userCurrentStoryStage	=	this._serverData.storyStage;
 						
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
