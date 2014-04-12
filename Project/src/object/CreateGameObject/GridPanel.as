@@ -132,12 +132,12 @@ package object.CreateGameObject
 			}
 			else
 			{
+				trace("saved");
 				if(PreviewGameInfo._gameScreen.isUserDef)
 					this._background = new Image(Assets.getUserScreenTexture()[PreviewGameInfo._gameScreen.textureIndex].texture);
 				else
 					this._background = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._gameScreen.textureIndex+'Screen'));
 				this.initGridObjects();
-				this._state				= 0;
 				this.loadGridObjects();
 				this.loadPlayer();
 				this.loadEnemy();
@@ -193,7 +193,7 @@ package object.CreateGameObject
 				if(PreviewGameInfo._obsTexture[i].isUserDef)
 					texture = Assets.getUserTexture()[PreviewGameInfo._obsTexture[i].textureIndex];
 				else
-					texture = Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture("Stage"+PreviewGameInfo._obsTexture[i].textureIndex+"Screen");
+					texture = Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("pattern_"+formatLeadingZero(PreviewGameInfo._obsTexture[i].textureIndex));
 				droppedObject = new ObstacleObj(texture, PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, Number(PreviewGameInfo._obsType[i]));
 				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
 				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;
@@ -401,7 +401,7 @@ package object.CreateGameObject
 				
 				if(data.id == "enemy1")
 				{
-					if(this._gridObjects[xIndex][yIndex].getObstacle() != null)
+					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
 						this.removeChild(this._enemy1Img);
 						this._enemy1Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
@@ -412,11 +412,17 @@ package object.CreateGameObject
 						return;
 					}
 					else
+					{
+						Alert.show("Tile is occupied.", "Error", new ListCollection(
+							[
+								{ label: "OK" }
+							]));
 						return;
+					}
 				}
 				else if(data.id == "enemy2")
 				{
-					if(this._gridObjects[xIndex][yIndex].getObstacle() != null)
+					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
 						this.removeChild(this._enemy2Img);
 						this._enemy2Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
@@ -428,11 +434,17 @@ package object.CreateGameObject
 						return;
 					}
 					else
+					{
+						Alert.show("Tile is occupied.", "Error", new ListCollection(
+							[
+								{ label: "OK" }
+							]));
 						return;
+					}
 				}
 				else
 				{
-					if(this._gridObjects[xIndex][yIndex].getObstacle() != null)
+					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
 						this.removeChild(this._playerImg);
 						if(data.gender)
@@ -445,7 +457,13 @@ package object.CreateGameObject
 						this.addChild(this._playerImg);
 					}
 					else
+					{
+						Alert.show("Tile is occupied.", "Error", new ListCollection(
+							[
+								{ label: "OK" }
+							]));
 						return;
+					}
 				}
 				
 				var occupiedPt :Object = new Object();
@@ -794,6 +812,10 @@ package object.CreateGameObject
 					return false;
 			}
 			return true;
+		}
+		
+		private static function formatLeadingZero(value:Number):String{
+			return (value < 10) ? "0" + value.toString() : value.toString();
 		}
 	}
 }
