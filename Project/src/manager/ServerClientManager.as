@@ -10,15 +10,12 @@ package manager
 		
 		public function saveUserIngameState(userIngameState : uint):void
 		{
-			
 			ExternalInterface.call('saveUserIngameState', userIngameState);
 		}
 		
 		public function saveUserGameCreation(returnData: Object, callBack : Function):void
 		{
-			
 			ExternalInterface.call('saveGameCreation', returnData);
-			
 		}
 		
 		public function registerSaveGameCallBack(callBack: Function):void
@@ -43,6 +40,11 @@ package manager
 		public function publishGame(returnData: Object):void
 		{
 			ExternalInterface.call('publishGame', returnData);
+		}
+		
+		public function sendQnsStats(returnData: Object):void
+		{
+			ExternalInterface.call('updateQuestionPoll', returnData);
 		}
 	}
 }
