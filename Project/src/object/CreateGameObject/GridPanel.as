@@ -157,6 +157,16 @@ package object.CreateGameObject
 			this.addChildAt(this._background, 0);
 		}
 		
+		public function reset():void
+		{
+			this.clearQuad();
+			this.initGridObjects();
+			this.removeChild(this._playerImg);
+			this.removeChild(this._enemy1Img);
+			this.removeChild(this._enemy2Img);
+			this._occupiedList.length = 0;
+		}
+		
 		override protected function draw():void{
 			
 			super.draw();
@@ -694,7 +704,10 @@ package object.CreateGameObject
 			for(var k:Number=0; k<11; k++)
 			{
 				for(var j:Number=0; j<9;j++)
+				{
+					this._gridObjects[k][j].setQuadColor(0xffffff);
 					this._gridObjects[k][j].setQuadAlpha(0);
+				}
 			}
 		}
 		

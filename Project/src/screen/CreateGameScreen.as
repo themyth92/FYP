@@ -16,6 +16,7 @@ package screen
 	import feathers.controls.Panel;
 	import feathers.controls.ScreenNavigatorItem;
 	import feathers.controls.TextInput;
+	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.MetalWorksMobileTheme;
@@ -46,7 +47,11 @@ package screen
 	
 	public class CreateGameScreen extends Sprite
 	{	
-		private static const DRAG_FORMAT:String = 'draggableQuad';
+		private static const DRAG_FORMAT				: String = 'draggableQuad';
+		private static const RESUME_GAME_EVENT		: String = 'OptionMenuResumeButtonTrigger';		
+		private static const QUIT_GAME_EVENT			: String = 'QuitButtonTrigger';
+		private static const RESET_GAME_CREATION_EVENT: String = 'Reset game creation';		
+		private static const MENU_EVENT				: String = 'MenuEvent';
 		
 		private var _obstaclePanel  	:ObstaclePanel;
 		private var _gridPanel      	:GridPanel;
@@ -63,6 +68,8 @@ package screen
 		private var _gameInfoBtn		:starling.display.Button;
 		private var _charactersInfoBtn	:starling.display.Button;
 		private var _glow				:BlurFilter	= BlurFilter.createGlow();
+		private var _menuButton		:feathers.controls.Button;
+		private var _menuScreen		: MenuScreen;
 		
 		//sound
 		private var _soundObject		: SoundObject;
@@ -80,6 +87,47 @@ package screen
 			this.addEventListener('GameFieldChanged', onGameFieldChange);
 			this.addEventListener('popUpDisplay', onPopUpDisplayed);
 			this.addEventListener('popUpClose', onPopUpClosed);
+			this.addEventListener(MENU_EVENT, onMenuEvent);
+		}
+		
+		//dispose the screen when wanna quit this create game screen
+		//the reason that can not use remove from stage
+		//because we must keep this screen for the preview
+		//therefore we remove it whenever we quit to main menu
+		public function disposeScreen():void
+		{
+			this.removeChild(this._obstaclePanel);
+			this.removeChild(this._gridPanel);
+			this.removeChild(this._componentPanel);
+			this.removeChild(this._scoreBoard);
+			this.removeChild(this._saveBtn);			
+			this.removeChild(this._previewBtn);
+			this.removeChild(this._publishBtn);
+			this.removeChild(this._gameInfoBtn);
+			this.removeChild(this._charactersInfoBtn);
+			this.removeChild(this._menuButton);
+			this.removeChild(this._menuScreen);
+			
+			this._obstaclePanel		= null;
+			this._gridPanel  		= null;
+			this._componentPanel	= null;
+			this._scoreBoard		= null;
+			this._saveBtn			= null;
+			this._previewBtn		= null;
+			this._publishBtn		= null;
+			this._gameInfoBtn		= null;
+			this._charactersInfoBtn	= null;
+			this._menuButton		= null;
+			this._menuScreen		= null;
+			
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.removeEventListener('displayCharacters', onDisplayCharacter);
+			this.removeEventListener('startChoosingEndPt', onChoosingEndPt);
+			this.removeEventListener('GameFieldChanged', onGameFieldChange);
+			this.removeEventListener('popUpDisplay', onPopUpDisplayed);
+			this.removeEventListener('popUpClose', onPopUpClosed);
+			this.removeEventListener(MENU_EVENT, onMenuEvent);
+			this.removeEventListener(Event.TRIGGERED, onChangeMenu);
 		}
 		
 		private function onPopUpDisplayed(event:Event):void{
@@ -167,6 +215,13 @@ package screen
 			this._soundObject			= new SoundObject();
 			this._soundObject.playBackgroundMusic(Constant.CREATE_GAME_SCREEN);
 			
+			this._menuButton				= new feathers.controls.Button();
+			this._menuButton.label			= 'Option';
+			this._menuButton.width			= 50;
+			this._menuButton.height			= 50;
+			this._menuButton.x				= 2;
+			this._menuButton.y				= 2;
+			
 			this.addChild(background);
 			this.addChild(gridFrame);
 			this.addChild(rightBox);
@@ -179,6 +234,7 @@ package screen
 			this.addChild(this._componentPanel);
 			this.addChild(this._obstaclePanel);
 			this.addChild(this._scoreBoard);
+			this.addChild(this._menuButton);
 			
 			this._componentPanel.alpha = 0;
 			this._componentPanel.disableInput();
@@ -187,6 +243,7 @@ package screen
 			this._saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
 			this._previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
 			this._publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
+			this._menuButton.addEventListener(Event.TRIGGERED, onMenuBtnTrigger);
 			PreviewGameInfo._isSaved = false;
 		}
 		
@@ -246,9 +303,10 @@ package screen
 			data.screen		= this._scoreBoard.getScreen();
 			data.scoreboard	= this._scoreBoard.getScoreBoardInfo();
 			data.screenShot = this.takeScreenShot(DisplayObject(this._gridPanel));
-			
+
 			//send to server this information whenever the 
 			//save game button is clicked, all the information will be stored on server
+			
 			this._com.saveUserGameCreation(data, onSaveButtonTriggerCallBack);
 		}
 		
@@ -426,6 +484,37 @@ package screen
 			base64.encodeBytes(PNGEncoder.encode(bitmap));
 			
 			return base64.toString();
+		}
+		
+		private function onMenuBtnTrigger(event:Event):void
+		{
+			//create a new menu screen each time press 
+			//show menu button
+			this._menuScreen	=	new MenuScreen(Constant.CREATE_GAME_SCREEN);
+			this.addChild(this._menuScreen);	
+		}
+		
+		private function onMenuEvent(event:Event):void
+		{
+			switch(event.data.event){
+				case RESUME_GAME_EVENT:
+					this.removeChild(this._menuScreen);
+					this._menuScreen	= null;
+					break;
+				case QUIT_GAME_EVENT:
+					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.CREATE_GAME_SCREEN, to :Constant.NAVIGATION_SCREEN}, true));
+					break;
+				case RESET_GAME_CREATION_EVENT:
+					resetGameCreation();
+					break;
+			}
+		}
+		
+		private function resetGameCreation():void
+		{
+			this._componentPanel.reset();
+			this._gridPanel.reset();
+			this._scoreBoard.reset();
 		}
 	}
 }

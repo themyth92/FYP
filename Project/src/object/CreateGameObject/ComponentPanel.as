@@ -87,6 +87,20 @@ package object.CreateGameObject
 			this.removeEventListener(Event.CLOSE, onAlertClosed);
 		}
 		
+		public function reset():void{
+			this._playerPosInput.text = "";
+			this._genderInput.isSelected = false;
+			this._enemy1InputImage.selectedIndex = 0;
+			this._enemy1InputPos.text = "";
+			this._enemy1InputSpeed.text = "";
+			this._enemy1InputType.selectedIndex = 2;
+			
+			this._enemy2InputImage.selectedIndex = 0;
+			this._enemy2InputPos.text = "";
+			this._enemy2InputSpeed.text = "";
+			this._enemy2InputType.selectedIndex = 2;
+		}
+		
 		public function disableInput():void
 		{
 			this._playerPosInput.clearFocus();

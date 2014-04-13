@@ -64,6 +64,7 @@ package controller.LoaderControler
 		
 		private function processDataFromServer():void
 		{
+
 			if(this._serverData && this._serverData.pageID){
 				
 				//keep the pageID somewhere
@@ -80,6 +81,7 @@ package controller.LoaderControler
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
 				}
+				
 				
 				else if(this._serverData.pageID == SAVE_PAGE)
 				{

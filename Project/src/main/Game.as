@@ -116,6 +116,7 @@ package main
 					
 					//remove rubbish
 					this.removeChild(this._createGameScreen);
+					this._createGameScreen.disposeScreen();
 					this._createGameScreen 	= null;
 					break;
 				case Constant.STORY_SCREEN:

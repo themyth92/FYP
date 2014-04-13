@@ -1,5 +1,7 @@
 package screen
 {
+	import assets.Assets;
+	
 	import constant.Constant;
 	
 	import feathers.controls.Button;
@@ -35,11 +37,17 @@ package screen
 	//without creating a common menu screen in game class
 	public class MenuScreen extends PanelScreen
 	{
+		private static const STORY_PAGE 	: int = 1;
+		private static const SAVE_PAGE  	: int = 2;
+		private static const PLAY_PAGE  	: int = 3;
+		
 		private static const RESET_CURRENT_LEVEL_EVENT: String = 'ResetLevelButtonTrigger';
 		private static const RESET_STORY_EVENT		: String = 'OptionMenuResetStoryButtonTrigger';
 		private static const RESUME_GAME_EVENT		: String = 'OptionMenuResumeButtonTrigger';
 		private static const QUIT_GAME_EVENT			: String = 'QuitButtonTrigger';
 		private static const MENU_EVENT				: String = 'MenuEvent';
+		private static const RESET_GAME_CREATION_EVENT: String = 'Reset game creation';
+		
 		
 		private var _buttonGroup	: ButtonGroup;
 		private var _bg        	: Quad;
@@ -73,6 +81,27 @@ package screen
 							{label : 'Reset story'				, triggered : 	onResetStoryBtnTrigger},
 							{label : 'Quit game'				, triggered : 	onQuitBtnTrigger}
 						])
+					break;
+				case Constant.CREATE_GAME_SCREEN:
+					
+					//check where use come from on website
+					//story page or directly to repair game screen
+					if(Assets.pageID == STORY_PAGE){
+						this._buttonGroup.dataProvider = new ListCollection(
+							[
+								{label : 'Resume your game'		, triggered : 	onResumeBtnTrigger},
+								{label : 'Reset your creation'	, triggered	:	onResetGameCreationTrigger},
+								{label : 'Quit to main menu'		, triggered : 	onQuitBtnTrigger}
+							])
+					}
+					else 
+						if(Assets.pageID == SAVE_PAGE){
+							this._buttonGroup.dataProvider = new ListCollection(
+								[
+									{label : 'Resume your game'		, triggered : 	onResumeBtnTrigger},
+									{label : 'Reset your creation'	, triggered	:	onResetGameCreationTrigger}
+								])
+						}
 					break;
 				default:
 					break;
@@ -125,6 +154,11 @@ package screen
 		private function onResetLevelBtnTrigger(event:Event):void
 		{
 			this.dispatchEventWith(MENU_EVENT, true, {event : RESET_CURRENT_LEVEL_EVENT});
+		}
+		
+		private function onResetGameCreationTrigger(event:Event):void
+		{
+			this.dispatchEventWith(MENU_EVENT, true, {event : RESET_GAME_CREATION_EVENT});
 		}
 	}
 }

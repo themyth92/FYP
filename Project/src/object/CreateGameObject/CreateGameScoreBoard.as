@@ -82,6 +82,16 @@ package object.CreateGameObject
 			return scoreBoard;
 		}
 		
+		public function reset():void
+		{
+			this._maxCoin = 0;
+			this._maxLife = 1;
+			this._minStart = 1;
+			this._secStart = 30;
+			this.reviewLife();
+			this.reviewTime();
+		}
+		
 		public function getScreen():Object{
 			return this._selectedScreen;
 		}
