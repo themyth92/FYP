@@ -21,6 +21,9 @@ package assets
 		
 		[Embed(source="../media/sprite/GameOver/GameOver.jpg")]
 		private static const GameOverScreen	:Class;
+	
+		[Embed(source="../media/sprite/GameOver/Congratulation.png")]
+		private static const WinScreen	:Class;
 		
 		//embed the loading page sprite sheet
 		[Embed(source = '../media/sprite/loadingPage/preLoader.png')]
