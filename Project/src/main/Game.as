@@ -202,7 +202,6 @@ package main
 					//must not remove the create game screen object here
 					//because later we will resume it when user want to come back
 					//to continue create their game
-					this._createGameScreen	= new CreateGameScreen();
 					this.addChild(this._createGameScreen);
 					//must create something to retrieve all 
 					//the event in create game screen	

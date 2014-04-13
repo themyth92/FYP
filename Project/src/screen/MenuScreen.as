@@ -47,7 +47,8 @@ package screen
 		private static const QUIT_GAME_EVENT			: String = 'QuitButtonTrigger';
 		private static const MENU_EVENT				: String = 'MenuEvent';
 		private static const RESET_GAME_CREATION_EVENT: String = 'Reset game creation';
-		
+		private static const RESET_PLAY_GAME_EVENT	: String = 'Reset play game';
+		private static const QUIT_PREVIEW_GAME_EVENT	: String = 'Quit preview';	
 		
 		private var _buttonGroup	: ButtonGroup;
 		private var _bg        	: Quad;
@@ -103,6 +104,23 @@ package screen
 								])
 						}
 					break;
+				case Constant.PLAY_SCREEN:
+					if(Assets.pageID == STORY_PAGE || Assets.pageID == SAVE_PAGE){
+						this._buttonGroup.dataProvider = new ListCollection(
+							[
+								{label : 'Resume your game'			, triggered : 	onResumeBtnTrigger},
+								{label : 'Reset your game'			, triggered	:	onResetPlayGameTrigger},
+								{label : 'Return to your creation'	, triggered : 	onQuitPreviewGameTrigger}
+							])
+					}
+					else 
+						if(Assets.pageID == PLAY_PAGE){
+							this._buttonGroup.dataProvider = new ListCollection(
+								[
+									{label : 'Resume your game'		, triggered : 	onResumeBtnTrigger},
+									{label : 'Reset your game'		, triggered	:	onResetPlayGameTrigger}
+								])
+						}
 				default:
 					break;
 			}
@@ -159,6 +177,16 @@ package screen
 		private function onResetGameCreationTrigger(event:Event):void
 		{
 			this.dispatchEventWith(MENU_EVENT, true, {event : RESET_GAME_CREATION_EVENT});
+		}
+		
+		private function onResetPlayGameTrigger(event:Event):void
+		{
+			this.dispatchEventWith(MENU_EVENT, true , {event : RESET_PLAY_GAME_EVENT});
+		}
+		
+		private function onQuitPreviewGameTrigger(event:Event):void
+		{
+			this.dispatchEventWith(MENU_EVENT, true ,{event : QUIT_PREVIEW_GAME_EVENT});
 		}
 	}
 }

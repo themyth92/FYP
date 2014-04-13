@@ -43,15 +43,15 @@ package object.CreateGameObject
 		//change state of option depends on the type of object
 		public function changeStateGrid(type : Number, xPos:Number, yPos:Number, selectedIndex : Number):void{
 					
-			//if other type we no need to allow them
-			if(type == 2){
+			//if the type is obstacle or goal
+			if(type == 2 || type == 5){
 				
 				this.x						= xPos;
 				this.y 						= yPos;
 				this._list.visible 			= false;
 				this._deleteBtn.visible 	= true;
-				this._deleteBtn.x			= 0;
 				this._deleteBtn.y			= 0;
+				this._closeBtn.y			= 47;
 				this._closeBtn.visible		= true;
 				return;
 			}
@@ -65,6 +65,8 @@ package object.CreateGameObject
 					this._list.visible 			= true;
 					this._deleteBtn.visible 	= true;
 					this._closeBtn.visible		= true;
+					this._deleteBtn.y			= 48;
+					this._closeBtn.y 			= 95;
 					this._list.selectedIndex	= selectedIndex;
 					return;
 				}
