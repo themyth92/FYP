@@ -295,6 +295,7 @@ package screen
 			var enemy:Array = this._componentPanel.getEnemyInfo();
 			enemy[0].endPts = [].concat(this._gridPanel.Enemy1EndPts);
 			enemy[1].endPts = [].concat(this._gridPanel.Enemy2EndPts);
+			
 			data.id 		= Assets.gameID;
 			data.title 		= this._componentPanel.getTitle();
 			data.player		= this._componentPanel.getPlayerInfo();
@@ -438,6 +439,7 @@ package screen
 			var enemy:Array = this._componentPanel.getEnemyInfo();
 			enemy[0].endPts = [].concat(this._gridPanel.Enemy1EndPts);
 			enemy[1].endPts = [].concat(this._gridPanel.Enemy2EndPts);
+			
 			data.id 		= Assets.gameID;
 			data.title 		= title;
 			data.player		= this._componentPanel.getPlayerInfo();

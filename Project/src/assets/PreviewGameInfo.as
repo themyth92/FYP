@@ -60,18 +60,16 @@ package assets
 			_enemyPos 		= new Array(enemyObj[0].pos, enemyObj[1].pos);
 			_enemyImg 		= new Array(enemyObj[0].textureIndex, enemyObj[1].textureIndex);
 			_enemySpd 		= new Array(enemyObj[0].speed, enemyObj[1].speed);
-			if(!_isSaved)
-			{
-				if(endPoint1 != null)
-					_enemy1EndPts = endPoint1;	
-				if(endPoint2 != null)
-					_enemy2EndPts = endPoint2;
-			}
+			
+			if(endPoint1 != null)
+				_enemy1EndPts = endPoint1;	
+			else 
+				_enemy1EndPts = Vector.<Number>(enemyObj[0].endPts);
+				
+			if(endPoint2 != null)
+				_enemy2EndPts = endPoint2;
 			else
-			{
-				_enemy1EndPts = Vector.<Number>(enemyObj[0].endPts);	
 				_enemy2EndPts = Vector.<Number>(enemyObj[1].endPts);
-			}
 		}
 		
 		public static function storePlayerInfo(playerObj:Object):void

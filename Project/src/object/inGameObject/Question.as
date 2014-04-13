@@ -1,6 +1,7 @@
 package object.inGameObject
 {
 	import assets.Assets;
+	import assets.PreviewGameInfo;
 	
 	import constant.Constant;
 	
@@ -16,6 +17,8 @@ package object.inGameObject
 	import feathers.core.ToggleGroup;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalLayout;
+	
+	import manager.ServerClientManager;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -46,6 +49,8 @@ package object.inGameObject
 		private var _isCorrect	:Boolean;
 		private var _mcqLayout	:VerticalLayout;
 		private var _controller	:MainController;
+		private var _index		:Number;
+		private var _serverClient	:ServerClientManager;
 		
 		public function Question(controller:MainController, index:Number)
 		{
@@ -60,12 +65,15 @@ package object.inGameObject
 				this._choices = Assets.getUserQuestion()[index].answers;
 				this._hint = Assets.getUserQuestion()[index].hint;
 				this._correctAns = Assets.getUserQuestion()[index].select;
+				this._index = index;
 			}
 			
 			this._mcqLayout = new VerticalLayout();
 			this._mcqLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
 			this._mcqLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_BOTTOM;
 			this._mcqLayout.gap = 20;
+			
+			this._serverClient = new ServerClientManager();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
 		}
@@ -212,6 +220,13 @@ package object.inGameObject
 				this._statusDiv.text = "Congratulation! You are correct!";
 			else
 				this._statusDiv.text = "Sorry. Your answer is not correct.";
+			
+			var returnData	:Object = new Object();
+			returnData.gameID = PreviewGameInfo._gameID;
+			returnData.questionIndex = this._index;
+			returnData.correct = isCorrect;
+			
+			this._serverClient.sendQnsStats(returnData);
 		}
 		
 		private function showHint(event:Event):void
