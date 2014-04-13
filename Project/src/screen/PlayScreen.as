@@ -223,22 +223,22 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon()){
-				//If won
-				//Display "Congratulation"
-				//Replay Or Quit
+				
 			}
 			if(isLost())
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: Constant.GAME_OVER_SCREEN}, true));
+			{
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.GAME_OVER_SCREEN}, true));
+			}
 		}
 		
 		private function isWon():Boolean
 		{
-			return _controller.isWon;
+			return this._controller.isWon;
 		}
 		
 		private function isLost():Boolean
 		{
-			return _controller.isLost;
+			return this._controller.isLost;
 		}
 		
 		private function onMenuEvent(event:Event):void

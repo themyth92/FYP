@@ -70,14 +70,22 @@ package object.CreateGameObject
 			//initialize the vector whenever added to stage
 			this._obstacleObjects = new Vector.<ObstacleObj>();
 			
-			for(var i:uint = 0 ; i < 4 ; i++){
+			for(var i:uint = 0 ; i < 17 ; i++){
 				
-				var obj:ObstacleObj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + '0' + i), false, i);
+				var obj:ObstacleObj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + formatLeadingZero(i)), false, i);
 				
 				this._obstacleObjects.push(obj);
+				if(i == 3)
+					obj.obstacleType = 1;
+				else 
+					obj.obstacleType = 2;
 				obj = null;
 				this.addChild(this._obstacleObjects[i]);
 			}
+			
+			var obj:ObstacleObj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("Goal"), false, 5);
+			this._obstacleObjects.push(obj);
+			this.addChild(obj);
 			
 			for(var j:uint = 0 ; j < Assets.getUserTexture().length ; j++){
 				
@@ -155,6 +163,10 @@ package object.CreateGameObject
 			this.addEventListener(TouchEvent.TOUCH, onTouch);
 			this.addEventListener(DragDropEvent.DRAG_START, onDragStart);
 			this.addEventListener(DragDropEvent.DRAG_COMPLETE, onDragComplete);
+		}
+		
+		private function formatLeadingZero(value:Number):String{
+			return (value < 10) ? "0" + value.toString() : value.toString();
 		}
 	}
 }
