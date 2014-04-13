@@ -124,27 +124,26 @@ package object.CreateGameObject
 			this._indexBg          = new Image(Assets.getAtlas(Constant.CREATE_GAME_SCREEN).getTexture(Constant.GRID_IMG));
 			this._gridOptionPanel  = new GridOptionPanel(this._questionList);
 			this._state				= 0;
-
+			this.initGridObjects();
+			this._currEndPt = new Object();
+			this._enemy = new Object();
+			
 			if(!PreviewGameInfo._isSaved)
 			{
 				this._background       = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage1Screen'));
-				this.initGridObjects();
 			}
 			else
 			{
-				trace("saved");
 				if(PreviewGameInfo._gameScreen.isUserDef)
 					this._background = new Image(Assets.getUserScreenTexture()[PreviewGameInfo._gameScreen.textureIndex].texture);
 				else
 					this._background = new Image(Assets.getAtlas(Constant.SCREEN_SPRITE).getTexture('Stage'+PreviewGameInfo._gameScreen.textureIndex+'Screen'));
-				this.initGridObjects();
 				this.loadGridObjects();
 				this.loadPlayer();
 				this.loadEnemy();
+				this.loadOccupiedList();
+				this.highlightOccupiedTiles();
 			}
-			
-			this._currEndPt = new Object();
-			this._enemy = new Object();
 			
 			//add child to display
 			this.addChildAt(this._background, 0);
@@ -219,6 +218,11 @@ package object.CreateGameObject
 				this._playerImg.x = xIndex*40;
 				this._playerImg.y = yIndex*40;
 				this.addChild(this._playerImg);
+				
+				var occupiedPt :Object = new Object();
+				occupiedPt.row = yIndex;
+				occupiedPt.column = xIndex;
+				this._occupiedList.push(occupiedPt);
 			}
 		}
 		
@@ -258,9 +262,56 @@ package object.CreateGameObject
 							
 							this.addChild(this._enemy2Img);
 						}
+						var occupiedPt :Object = new Object();
+						occupiedPt.row = yIndex;
+						occupiedPt.column = xIndex;
+						this._occupiedList.push(occupiedPt);
 					}
 				}
 			}
+		}
+		
+		private function loadOccupiedList():void
+		{
+			var endPts1Length :Number;
+			var endPts2Length :Number;
+			
+			if(PreviewGameInfo._enemy1EndPts != null)
+				endPts1Length = PreviewGameInfo._enemy1EndPts.length;
+			else
+				endPts1Length = 0;
+			if(PreviewGameInfo._enemy2EndPts != null)
+				endPts2Length = PreviewGameInfo._enemy2EndPts.length;
+			else
+				endPts2Length = 0;
+			var occupiedPt 		:Object;
+			
+			for(var i:uint=0; i<endPts1Length-1; i++)
+			{
+				occupiedPt = new Object();
+				occupiedPt.row = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).row;
+				occupiedPt.column = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).column;
+				this._occupiedList.push(occupiedPt);
+				this._currEndPt.row = occupiedPt.row;
+				this._currEndPt.column = occupiedPt.column;
+				setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).row);
+			}
+			
+			this._enemy1EndPts = PreviewGameInfo._enemy1EndPts;
+			
+			this._currEndPt = new Object();
+			for(var j:uint=0; j<endPts2Length-1; j++)
+			{
+				occupiedPt = new Object();
+				occupiedPt.row = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).row;
+				occupiedPt.column = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).column;
+				this._occupiedList.push(occupiedPt);
+				this._currEndPt.row = occupiedPt.row;
+				this._currEndPt.column = occupiedPt.column;
+				setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).row);
+			}
+			this._enemy2EndPts = PreviewGameInfo._enemy2EndPts;
+			this._currEndPt = new Object();
 		}
 		
 		//event happen when the object is dropped inside the drop range

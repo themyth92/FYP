@@ -12,7 +12,10 @@ package screen
 	
 	import feathers.controls.Alert;
 	import feathers.controls.Button;
+	import feathers.controls.Header;
+	import feathers.controls.Panel;
 	import feathers.controls.ScreenNavigatorItem;
+	import feathers.controls.TextInput;
 	import feathers.data.ListCollection;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.MetalWorksMobileTheme;
@@ -172,9 +175,9 @@ package screen
 			this.addChild(this._saveBtn);
 			this.addChild(this._previewBtn);
 			this.addChild(this._publishBtn);
+			this.addChild(this._gridPanel);
 			this.addChild(this._componentPanel);
 			this.addChild(this._obstaclePanel);
-			this.addChild(this._gridPanel);
 			this.addChild(this._scoreBoard);
 			
 			this._componentPanel.alpha = 0;
@@ -184,6 +187,7 @@ package screen
 			this._saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
 			this._previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
 			this._publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
+			PreviewGameInfo._isSaved = false;
 		}
 		
 		private function onChangeMenu(event:Event):void
@@ -231,10 +235,13 @@ package screen
 		private function onSaveBtnTrigger(event:Event):void
 		{
 			var data:Object = new Object();
+			var enemy:Array = this._componentPanel.getEnemyInfo();
+			enemy[0].endPts = [].concat(this._gridPanel.Enemy1EndPts);
+			enemy[1].endPts = [].concat(this._gridPanel.Enemy2EndPts);
 			data.id 		= Assets.gameID;
 			data.title 		= this._componentPanel.getTitle();
 			data.player		= this._componentPanel.getPlayerInfo();
-			data.enemy		= this._componentPanel.getEnemyInfo();
+			data.enemy		= enemy;
 			data.obstacles	= this._gridPanel.getObsList();
 			data.screen		= this._scoreBoard.getScreen();
 			data.scoreboard	= this._scoreBoard.getScoreBoardInfo();
@@ -289,7 +296,7 @@ package screen
 				});
 				return;
 			}
-			
+			PreviewGameInfo._gameTitle = "Preview Game";
 			PreviewGameInfo._gameScreen.isUserDef = this._scoreBoard.getScreen().isUserDef;
 			PreviewGameInfo._gameScreen.textureIndex = this._scoreBoard.getScreen().textureIndex;
 			PreviewGameInfo.storeObstaclesInfo(this._gridPanel.getObsList());
@@ -338,12 +345,45 @@ package screen
 				});
 				return;
 			}
+			var titlePanel	:Panel = new Panel();
+			titlePanel..headerFactory = function():Header
+			{
+				var header:Header = new Header();
+				header.title = "Title";
+				return header;
+			}
+			titlePanel.width = 500;
+			titlePanel.height = 300;
+				
+			var title	:TextInput = new TextInput();
+			title.width = 300;
+			title.height = 100;
+			titlePanel.addChild(title);
 			
+			var closeButton :feathers.controls.Button = new feathers.controls.Button();
+			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void {
+				if(title.text != null)
+					publishData(title.text);
+				//else
+					//showError
+			});
+			closeButton.x = 75;
+			closeButton.y = 150;
+			closeButton.label = "Ok";
+			titlePanel.addChild(closeButton);
+			this.addChild(titlePanel);
+		}
+		
+		private function publishData(title:String):void
+		{
 			var data:Object = new Object();
-			data.id 		= null;
-			data.title 		= this._componentPanel.getTitle();
+			var enemy:Array = this._componentPanel.getEnemyInfo();
+			enemy[0].endPts = [].concat(this._gridPanel.Enemy1EndPts);
+			enemy[1].endPts = [].concat(this._gridPanel.Enemy2EndPts);
+			data.id 		= Assets.gameID;
+			data.title 		= title;
 			data.player		= this._componentPanel.getPlayerInfo();
-			data.enemy		= this._componentPanel.getEnemyInfo();
+			data.enemy		= enemy;
 			data.obstacles	= this._gridPanel.getObsList();
 			data.screen		= this._scoreBoard.getScreen();
 			data.scoreboard	= this._scoreBoard.getScoreBoardInfo();

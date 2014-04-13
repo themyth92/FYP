@@ -314,11 +314,6 @@ package object.CreateGameObject
 			inputGender.addChild(this._genderInput);
 			infoGetter.addChild(inputGender);
 			
-			/* Add eventlistener for player info input */
-			this._playerPosInput.addEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
-			this._playerPosInput.addEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
-			this._genderInput.addEventListener	 (Event.CHANGE, 				onSwitch);
-			
 			/* Get enemies information */
 			this._enemy1InputType 	= new PickerList();
 			var enemyType	:Array = new Array(Constant.FOLLOW_TYPE, Constant.PATROL_TYPE, "None");
@@ -354,12 +349,6 @@ package object.CreateGameObject
 				return renderer;
 			};
 			this._enemy1InputImage.selectedIndex = 0;
-			this._enemy1InputType.addEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
-			this._enemy1InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
-			this._enemy1InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
-			this._enemy1InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
-			this._enemy1InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
-			this._enemy1InputImage.addEventListener (Event.CHANGE,				 onEnemy1ImgChange);
 			
 			this._enemy2InputType 	= new PickerList();
 			this._enemy2InputType.dataProvider = new ListCollection(enemyType);
@@ -387,14 +376,6 @@ package object.CreateGameObject
 				return renderer;
 			};
 			this._enemy2InputImage.selectedIndex = 0;
-
-			this._enemy2InputType.addEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
-			this._enemy2InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
-			this._enemy2InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
-			this._enemy2InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
-			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
-			this._enemy2InputImage.addEventListener (Event.CHANGE,				 onEnemy2ImgChange);
-			
 			
 			this._enemy1InputType.width = 40;	this._enemy1InputType.height= 40;
 			this._enemy1InputPos.width = 55;	this._enemy1InputPos.height = 30;
@@ -503,6 +484,25 @@ package object.CreateGameObject
 			this.addChild(infoGetter);
 			if(PreviewGameInfo._isSaved)
 				this.initializeInfo();
+			
+			/* Add eventlistener for player info input */
+			this._playerPosInput.addEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
+			this._playerPosInput.addEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
+			this._genderInput.addEventListener	 (Event.CHANGE, 				onSwitch);
+			
+			this._enemy1InputType.addEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
+			this._enemy1InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
+			this._enemy1InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
+			this._enemy1InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
+			this._enemy1InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
+			this._enemy1InputImage.addEventListener (Event.CHANGE,				 onEnemy1ImgChange);
+			
+			this._enemy2InputType.addEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
+			this._enemy2InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
+			this._enemy2InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
+			this._enemy2InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
+			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
+			this._enemy2InputImage.addEventListener (Event.CHANGE,				 onEnemy2ImgChange);
 		}
 		
 		private function initializeInfo():void
@@ -530,14 +530,7 @@ package object.CreateGameObject
 			var pos		:Array = PreviewGameInfo._enemyPos;
 			var spd		:Array = PreviewGameInfo._enemySpd;
 			var img		:Array = PreviewGameInfo._enemyImg;
-			
-			if(type[0] == "None")
-				this._enemy1InputType.selectedIndex = 2;
-			else if(type[0] == "Patrol Enemy")
-				this._enemy1InputType.selectedIndex = 1;
-			else 
-				this._enemy1InputType.selectedIndex = 0;
-			
+						
 			if(type[1] == "None")
 				this._enemy2InputType.selectedIndex = 2;
 			else if(type[1] == "Patrol Enemy")
@@ -551,6 +544,13 @@ package object.CreateGameObject
 			this._enemy2InputSpeed.text = spd[1].toString();
 			this._enemy1InputImage.selectedIndex = img[0] - 1;
 			this._enemy2InputImage.selectedIndex = img[1] - 1;
+			
+			if(type[0] == "None")
+				this._enemy1InputType.selectedIndex = 2;
+			else if(type[0] == "Patrol Enemy")
+				this._enemy1InputType.selectedIndex = 1;
+			else 
+				this._enemy1InputType.selectedIndex = 0;
 		}
 		
 		/**====================================================================

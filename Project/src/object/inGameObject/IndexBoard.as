@@ -464,6 +464,7 @@ package object.inGameObject
 				if(PreviewGameInfo._enemyType[0] == "Patrol Enemy")
 				{
 					this._enemy1.setEndPoints(indexToPoint(PreviewGameInfo._enemyPos[0]));
+					trace(PreviewGameInfo._enemy1EndPts);
 					for(var i:uint=0; i<PreviewGameInfo._enemy1EndPts.length ;i++)
 					{
 						this._enemy1.setEndPoints(indexToPoint(PreviewGameInfo._enemy1EndPts[i]));

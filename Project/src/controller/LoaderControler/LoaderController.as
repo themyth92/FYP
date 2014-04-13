@@ -104,6 +104,7 @@ package controller.LoaderControler
 					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
 					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
 					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
+					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
