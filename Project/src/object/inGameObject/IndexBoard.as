@@ -410,12 +410,15 @@ package object.inGameObject
 				
 				//Count collectible obstacles
 				//Update to Main Controller => ScoreBoard
-				if(type[i] == "02")
+				if(type[i] == Constant.COLLECT_OBS)
 					this._maxCollectObs ++;
+				else
+					this._tileVector[pos.x/40][pos.y/40].walkable = false;
 				
 				this._obsList.push(obstacles);
 				this.addChild(obstacles);
 			}
+			this._controller.getGameStat("max coin", _maxCollectObs);
 		}
 		
 		private function createEnemy():void

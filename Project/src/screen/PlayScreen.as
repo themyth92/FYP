@@ -223,7 +223,11 @@ package screen
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon()){
-				
+				var winImg	:Image = new Image(Assets.getTexture('WinScreen'));
+				winImg.x = 400 - winImg.width/2;
+				winImg.y = 300 - winImg.height/2;
+				this.addChild(winImg);
+				this._controller.changeState(Constant.PAUSE_STATE);
 			}
 			if(isLost())
 			{

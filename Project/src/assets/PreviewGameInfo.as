@@ -105,7 +105,7 @@ package assets
 				_obsType.push(formatLeadingZero(obsObj[i].type));
 				
 				//Store obstacles' question
-				if(obsObj[i].qnsIndex != -1)
+				if(obsObj[i].qnsIndex != 0 && obsObj[i].qnsIndex != -1)
 				{
 					qns 	 = new Object();
 					qns.gotQns	 = true;
@@ -115,7 +115,7 @@ package assets
 				{
 					qns		 = new Object();
 					qns.gotQns 	 = false;
-					qns.qnsIndex = -1;
+					qns.qnsIndex = 0;
 				}
 				_obsQns.push(qns);
 			}
