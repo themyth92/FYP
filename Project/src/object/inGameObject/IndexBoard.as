@@ -1291,7 +1291,9 @@ package object.inGameObject
 				this._hitCounter = 0;
 			}
 			if(this._currLife == 0)
+			{
 				this._controller.isLost = true;
+			}
 		}
 		
 		/*-----------------------------------------------------------------------
