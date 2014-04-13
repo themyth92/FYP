@@ -81,6 +81,7 @@ package object.CreateGameObject
 			var items:Array = [];
 			
 			//put in all the question of user here
+			items.push("None");
 			for (var i:uint = 0 ; i < this._questionList.length ; i++){
 				var item:Object = {text: this._questionList[i].title};
 				items.push(item);	
@@ -95,7 +96,7 @@ package object.CreateGameObject
 			this._list.useHandCursor   	= true; 
 			
 			this._list.dataProvider 	= new ListCollection(items);
-			this._list.selectedIndex 	= -1;
+			this._list.selectedIndex 	= 0;
 			
 			this._list.typicalItem 			= { text: "Delete" };
 			this._list.labelField 			= "text";

@@ -88,7 +88,12 @@ package assets
 				if(obsObj[i].isUserDef)
 					obsTexture = new Image(Assets.getUserTexture()[obsObj[i].textureIndex].texture);
 				else
-					obsTexture = new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("pattern_" + formatLeadingZero(obsObj[i].textureIndex)));
+				{
+					if(obsObj[i].textureIndex != 17)
+						obsTexture = new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("pattern_" + formatLeadingZero(obsObj[i].textureIndex)));
+					else
+						obsTexture = new Image(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("Goal"));
+				}
 				//Store images into vector
 				_obsCollection.push(obsTexture);
 				_obsTexture.push({isUserDef:obsObj[i].isUserDef,textureIndex:obsObj[i].textureIndex});

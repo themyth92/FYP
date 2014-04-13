@@ -59,7 +59,7 @@ package object.inGameObject
 			
 			this._questionDiv = new TextField(500, 150, null, Constant.GROBOLD_FONT, 18, 0xFF0000);
 			
-			if(index != -1)
+			if(index != 0)
 			{
 				this._questionDiv.text = "Question :" + Assets.getUserQuestion()[index].title;
 				this._choices = Assets.getUserQuestion()[index].answers;
