@@ -69,10 +69,10 @@ package object.CreateGameObject
 			
 			//initialize the vector whenever added to stage
 			this._obstacleObjects = new Vector.<ObstacleObj>();
-			
+			var obj:ObstacleObj;
 			for(var i:uint = 0 ; i < 17 ; i++){
 				
-				var obj:ObstacleObj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + formatLeadingZero(i)), false, i);
+				 obj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture(PATTERN_PREFIX + formatLeadingZero(i)), false, i);
 				
 				this._obstacleObjects.push(obj);
 				if(i == 3)
@@ -83,7 +83,7 @@ package object.CreateGameObject
 				this.addChild(this._obstacleObjects[i]);
 			}
 			
-			var obj:ObstacleObj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("Goal"), false, 5);
+			obj = new ObstacleObj(Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("Goal"), false, 17, null, 5);
 			this._obstacleObjects.push(obj);
 			this.addChild(obj);
 			
