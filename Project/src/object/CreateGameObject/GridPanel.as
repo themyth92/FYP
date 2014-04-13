@@ -285,30 +285,41 @@ package object.CreateGameObject
 			else
 				endPts2Length = 0;
 			var occupiedPt 		:Object;
-			
-			for(var i:uint=0; i<endPts1Length-1; i++)
+			if(this._enemy1Img != null)
 			{
-				occupiedPt = new Object();
-				occupiedPt.row = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).row;
-				occupiedPt.column = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).column;
-				this._occupiedList.push(occupiedPt);
-				this._currEndPt.row = occupiedPt.row;
-				this._currEndPt.column = occupiedPt.column;
-				setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).row);
+				this._currEndPt.row = this._enemy1Img.y/40;
+				this._currEndPt.column = this._enemy1Img.x/40;
+				for(var i:uint=0; i<endPts1Length-1; i++)
+				{
+					setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[i]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[i]).row);
+					occupiedPt = new Object();
+					occupiedPt.row = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).row;
+					occupiedPt.column = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).column;
+					this._occupiedList.push(occupiedPt);
+					
+					this._currEndPt.row = occupiedPt.row;
+					this._currEndPt.column = occupiedPt.column;
+				}
 			}
 			
 			this._enemy1EndPts = PreviewGameInfo._enemy1EndPts;
-			
 			this._currEndPt = new Object();
-			for(var j:uint=0; j<endPts2Length-1; j++)
+			
+			if(this._enemy2Img != null)
 			{
-				occupiedPt = new Object();
-				occupiedPt.row = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).row;
-				occupiedPt.column = indexToPoints(PreviewGameInfo._enemy1EndPts[i]).column;
-				this._occupiedList.push(occupiedPt);
-				this._currEndPt.row = occupiedPt.row;
-				this._currEndPt.column = occupiedPt.column;
-				setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[i+1]).row);
+				this._currEndPt.row = this._enemy2Img.y/40;
+				this._currEndPt.column = this._enemy2Img.x/40;
+				for(var j:uint=0; j<endPts2Length-1; j++)
+				{
+					setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[j]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[j]).row);
+					occupiedPt = new Object();
+					occupiedPt.row = indexToPoints(PreviewGameInfo._enemy1EndPts[j]).row;
+					occupiedPt.column = indexToPoints(PreviewGameInfo._enemy1EndPts[j]).column;
+					this._occupiedList.push(occupiedPt);
+					
+					this._currEndPt.row = occupiedPt.row;
+					this._currEndPt.column = occupiedPt.column;
+				}
 			}
 			this._enemy2EndPts = PreviewGameInfo._enemy2EndPts;
 			this._currEndPt = new Object();
@@ -317,7 +328,6 @@ package object.CreateGameObject
 		//event happen when the object is dropped inside the drop range
 		private function onDragDrop(event:DragDropEvent, dragData:DragData):void
 		{
-
 			var dataReturn:ObstacleObj 			= dragData.getDataForFormat(this._dragFormat);
 			var xPos:Number 					= event.localX;
 			var yPos:Number 					= event.localY;
