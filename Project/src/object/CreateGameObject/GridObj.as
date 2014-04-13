@@ -151,6 +151,7 @@ package object.CreateGameObject
 					this._quad.alpha = 0;
 					
 					this.removeChild(this._obstacleObj);
+					this._obstacleObj = null;
 					this.addChild(this._quad);
 				}
 		}

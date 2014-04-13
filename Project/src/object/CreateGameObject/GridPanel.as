@@ -160,7 +160,11 @@ package object.CreateGameObject
 		public function reset():void
 		{
 			this.clearQuad();
-			this.initGridObjects();
+			for(var i:uint=0; i<11; i++)
+			{
+				for(var j:uint=0; j<9; j++)
+					this._gridObjects[i][j].changeStateToNormal();
+			}
 			this.removeChild(this._playerImg);
 			this.removeChild(this._enemy1Img);
 			this.removeChild(this._enemy2Img);
