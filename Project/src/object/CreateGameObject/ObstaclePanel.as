@@ -52,7 +52,7 @@ package object.CreateGameObject
 			const layout:TiledRowsLayout  		= new TiledRowsLayout();
 			layout.paging                		= TiledRowsLayout.PAGING_NONE;
 			layout.gap							= 20;
-			layout.padding						= 20;
+			layout.padding						= 15;
 			layout.horizontalAlign         	 	= TiledRowsLayout.HORIZONTAL_ALIGN_LEFT;
 			layout.verticalAlign            	= TiledRowsLayout.VERTICAL_ALIGN_TOP;
 			layout.tileHorizontalAlign  	    = TiledRowsLayout.TILE_HORIZONTAL_ALIGN_LEFT;
@@ -66,7 +66,7 @@ package object.CreateGameObject
 		private function onAddedToStage(event:Event):void{
 			
 			this.initPanel();
-			
+			this.scrollBarDisplayMode = SCROLL_BAR_DISPLAY_MODE_FIXED;
 			//initialize the vector whenever added to stage
 			this._obstacleObjects = new Vector.<ObstacleObj>();
 			var obj:ObstacleObj;
@@ -100,6 +100,8 @@ package object.CreateGameObject
 				this.addChild(this._obstacleObjects[i]);
 				i++;
 			}
+			
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		private function onTouch(event:TouchEvent):void{

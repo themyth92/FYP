@@ -69,7 +69,6 @@ package controller.LoaderControler
 				
 				//keep the pageID somewhere
 				Assets.pageID	=	this._serverData.pageID;
-				
 				//if the server repond with attributes pageID = 1
 				if(this._serverData.pageID == STORY_PAGE){
 					

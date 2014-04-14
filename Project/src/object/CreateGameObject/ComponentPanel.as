@@ -101,6 +101,11 @@ package object.CreateGameObject
 			this._enemy2InputType.selectedIndex = 2;
 		}
 		
+		public function test():String
+		{
+			return this._enemy1InputPos.text;
+		}
+		
 		public function disableInput():void
 		{
 			this._playerPosInput.clearFocus();
@@ -416,7 +421,6 @@ package object.CreateGameObject
 			this._enemy1InputPos.maxChars 	= 2;
 			this._enemy1InputSpeed.maxChars = 5;
 			
-			//this._enemy2InputType.maxChars 	= 2;
 			this._enemy2InputPos.maxChars 	= 2;
 			this._enemy2InputSpeed.maxChars = 5;
 			
@@ -517,9 +521,11 @@ package object.CreateGameObject
 			this._enemy2InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
 			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
 			this._enemy2InputImage.addEventListener (Event.CHANGE,				 onEnemy2ImgChange);
+			
+			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
-		private function initializeInfo():void
+		public function initializeInfo():void
 		{
 			this.initializePlayerInfo();
 			this.initializeEnemyInfo();
@@ -533,9 +539,9 @@ package object.CreateGameObject
 			if(pos != 0)
 				this._playerPosInput.text = pos.toString();
 			if(gender == "Male")
-				this._genderInput.isSelected = true;
-			else(gender == "Female")
 				this._genderInput.isSelected = false;
+			else(gender == "Female")
+				this._genderInput.isSelected = true;
 		}
 		
 		private function initializeEnemyInfo():void

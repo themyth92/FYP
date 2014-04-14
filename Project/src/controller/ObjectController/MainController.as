@@ -227,6 +227,11 @@ package controller.ObjectController
 				this._scoreBoard.updateCoinText();
 			}
 		}
+		
+		public function doneQuiz():void
+		{
+			this._indexBoard.isDisplayedQuiz = false;
+		}
 	
 		/**====================================================================
 		 * |                      GAME STATE HANDLER			              | *
@@ -278,7 +283,7 @@ package controller.ObjectController
 			this._scoreBoard.state 	= Constant.PAUSE_STATE;
 			this._dialogue.state 	= Constant.PAUSE_STATE;
 			this._indexBoard.state  = Constant.PAUSE_STATE;
-			this._indexBoard.stopEnemies();
+			this._indexBoard.stopCharacters();
 			if(this._screen != Constant.STORY_SCREEN_1)
 			{
 				this._console.state 	= Constant.PAUSE_STATE;

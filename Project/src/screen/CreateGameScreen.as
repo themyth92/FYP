@@ -160,7 +160,7 @@ package screen
 				//obstacle panel
 				this._obstaclePanel        	= new ObstaclePanel(DRAG_FORMAT);
 				this._obstaclePanel.width  	= 216;
-				this._obstaclePanel.height 	= 190;
+				this._obstaclePanel.height 	= 400;
 				this._obstaclePanel.x      	= Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x + 10; 
 				this._obstaclePanel.y      	= Constant.INFOBOARD_POS.y + 100;
 				
@@ -258,7 +258,6 @@ package screen
 				this._isCreated	= true;
 			}
 			else{
-				
 			}
 		}
 		

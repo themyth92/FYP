@@ -277,13 +277,16 @@ package screen
 		
 		private function onMenuEvent(event:Event):void
 		{
+			this._controller.changeState(Constant.PAUSE_STATE);
 			switch(event.data.event){
 				case RESUME_GAME_EVENT:
 					this.removeChild(this._menuScreen);
 					this._menuScreen = null;
+					this._controller.changeState(Constant.PLAYING_STATE);
 					break;
 				case RESET_PLAY_GAME_EVENT:
 					this.reset();
+					this._controller.changeState(Constant.PLAYING_STATE);
 					break;
 				case QUIT_PREVIEW_GAME_EVENT:
 					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.PLAY_SCREEN, to :Constant.CREATE_GAME_SCREEN}, true));

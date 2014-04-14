@@ -160,6 +160,10 @@ package object.inGameObject
 		public function set state(value:String):void{
 			this._state = value;
 		}
+		
+		public function set isDisplayedQuiz(value:Boolean):void{
+			this._isDisplayedQuiz = value;
+		}
 
 		/**====================================================================
 		 * |	                     EVENT HANDLERS			                  | *
@@ -851,7 +855,7 @@ package object.inGameObject
 		/**====================================================================
 		 * |	                     AI HANDLERS			                  | *
 		 * ====================================================================**/
-		public function stopEnemies():void
+		public function stopCharacters():void
 		{
 			if(this._enemy1 != null)
 			{
@@ -864,6 +868,9 @@ package object.inGameObject
 				this._enemy2.moveX = 0;
 				this._enemy2.moveY = 0;
 			}
+			
+			this._player.moveX = 0;
+			this._player.moveY = 0;
 		}
 		private function makeTiles():void
 		{
