@@ -187,7 +187,7 @@ package screen.subStoryScreen
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon())
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.STORY_SCREEN_5}, true));
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.GAME_SUCCESS_SCREEN}, true));
 			else if(isLost())
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.GAME_OVER_SCREEN}, true));
 		}

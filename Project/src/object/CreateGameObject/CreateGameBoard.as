@@ -27,6 +27,8 @@ package object.CreateGameObject
 	import object.CreateGameObject.ObstaclePanel;
 	import object.SoundObject;
 	
+	import screen.GameOverScreen;
+	
 	import starling.core.RenderSupport;
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
@@ -55,7 +57,9 @@ package object.CreateGameObject
 		
 		//sound
 		private var _soundObject		: SoundObject;
-	
+		
+		private var _gameOver			: GameOverScreen;
+		
 		//need to pass in here the user 
 		//defined image and question list
 		public function CreateGameBoard(serverData:Object = null)	
@@ -134,6 +138,7 @@ package object.CreateGameObject
 			
 			this._soundObject			= new SoundObject();
 			this._soundObject.playBackgroundMusic(Constant.CREATE_GAME_SCREEN);
+
 			
 			this.addChild(background);
 			this.addChild(gridFrame);

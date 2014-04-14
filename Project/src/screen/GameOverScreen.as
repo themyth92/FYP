@@ -60,6 +60,17 @@ package screen
 					this._retryBtn.addEventListener(Event.TRIGGERED, 	onRetryBtnTrigger);
 					
 					break;
+				case Constant.PLAY_SCREEN:
+					
+					this._retryBtn				= new Button();
+					this._retryBtn.label		= 'Retry';
+					this._retryBtn.width		= 200;
+					this._retryBtn.x 			= 300;
+					this._retryBtn.y			= 400;
+					
+					this._retryBtn.addEventListener(Event.TRIGGERED, 	onRetryBtnTrigger);
+					this.addChild(this._retryBtn);
+					break;
 				default:
 					break;
 			}
@@ -71,9 +82,13 @@ package screen
 		private function onRemoveFromStage(event:Event):void
 		{
 			this.removeChild(this._background);
+			this.removeChild(this._retryBtn);
+			this.removeChild(this._quitBtn);
 			
 			this._background 	= null;
-		
+			this._retryBtn		= null;
+			this._quitBtn		= null;
+			
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);			
 		}
 		

@@ -204,9 +204,9 @@ package main
 					//to continue create their game
 					this.addChild(this._createGameScreen);
 					//must create something to retrieve all 
-					//the event in create game screen	
+					//the event in create game screen
 					this.removeChild(this._playScreen);
-					this._playScreen 		= null;
+					this._playScreen = null;
 				default:
 					break;
 			}

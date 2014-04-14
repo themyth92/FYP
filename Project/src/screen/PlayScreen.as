@@ -15,6 +15,8 @@ package screen
 	
 	import gameData.GameData;
 	
+	import main.Game;
+	
 	import object.inGameObject.Console;
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.IndexBoard;
@@ -29,10 +31,19 @@ package screen
 	
 	public class PlayScreen extends Sprite
 	{
+		private static const STORY_PAGE 	: int = 1;
+		private static const SAVE_PAGE  	: int = 2;
+		private static const PLAY_PAGE  	: int = 3;
+		
 		private static const MENU_EVENT				: String = 'MenuEvent';
 		private static const RESUME_GAME_EVENT		: String = 'OptionMenuResumeButtonTrigger';
 		private static const RESET_PLAY_GAME_EVENT	: String = 'Reset play game';
 		private static const QUIT_PREVIEW_GAME_EVENT	: String = 'Quit preview';	
+		
+		private static const RESET_CURRENT_LEVEL_EVENT: String = 'ResetLevelButtonTrigger';
+		private static const GAME_OVER_EVENT			: String = 'GameOverEvent';
+		
+		private static const SUCCESS_EVENT			: String = 'SuccessEvent';
 		
 		private var _dialogue		:Dialogue;
 		private var _indexBoard		:IndexBoard;
@@ -49,6 +60,8 @@ package screen
 		private var _controller	 :MainController;
 		private var _menuButton    :feathers.controls.Button;
 		private var _menuScreen    :MenuScreen;
+		private var _gameOver		:GameOverScreen;
+		private var _successScreen : SucessScreen;
 		
 		public function PlayScreen()
 		{
@@ -120,6 +133,8 @@ package screen
 			this.addEventListener(Event.TRIGGERED, onButtonClicked);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.addEventListener(GAME_OVER_EVENT, onGameOverEvent);
+			this.addEventListener(SUCCESS_EVENT, onSuccessEvent);
 		}
 		
 		private function placeImageOnScreen():void
@@ -200,7 +215,6 @@ package screen
 			this.removeChild(this._indexBoard);
 			this.removeChild(this._scoreBoard);
 			this.removeChild(this._menuButton);
-			this.removeChild(this._menuScreen);
 			
 			this._background		= null;
 			this._frameIMG			= null;
@@ -217,21 +231,37 @@ package screen
 			this.removeEventListener(Event.TRIGGERED, onButtonClicked);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.removeEventListener(MENU_EVENT, onMenuEvent);
+			this.removeEventListener(GAME_OVER_EVENT, onGameOverEvent);
+			this.removeEventListener(SUCCESS_EVENT, onSuccessEvent);
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
 		private function onEnterFrame(event:Event):void
 		{
 			if(isWon()){
-				var winImg	:Image = new Image(Assets.getTexture('WinScreen'));
-				winImg.x = 400 - winImg.width/2;
-				winImg.y = 300 - winImg.height/2;
-				this.addChild(winImg);
-				this._controller.changeState(Constant.PAUSE_STATE);
+				if(Assets.pageID == PLAY_PAGE){
+					this._controller.changeState(Constant.PAUSE_STATE);
+					this.gameSuccess();
+				}
+				else{
+					//return to the create game screen 
+					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.PLAY_SCREEN, to :Constant.CREATE_GAME_SCREEN}, true));
+				}
+				
 			}
 			if(isLost())
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {to: Constant.GAME_OVER_SCREEN}, true));
+				if(Assets.pageID == PLAY_PAGE){
+					//return a gameover screen
+					//pause gem first
+					this._controller.changeState(Constant.PAUSE_STATE);
+					this.gameOver();
+				}
+				else
+				{
+					//return to the create game screen 
+					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.PLAY_SCREEN, to :Constant.CREATE_GAME_SCREEN}, true));
+				}
 			}
 		}
 		
@@ -303,6 +333,76 @@ package screen
 			
 			//Display Game Title
 			this.displayGameTitle();
+		}
+		
+		
+		//do this for game over or game success
+		//remove the game state permantly due to laggy game
+		private function disposeState():void
+		{
+			this.removeChild(this._background);
+			this.removeChild(this._frameIMG);
+			this.removeChild(this._dialogueIMG);
+			this.removeChild(this._screen);
+			this.removeChild(this._guiderIMG);
+			
+			this.removeChild(this._dialogue);
+			this.removeChild(this._console);
+			this.removeChild(this._indexBoard);
+			this.removeChild(this._scoreBoard);
+			this.removeChild(this._menuButton);
+			this.removeChild(this._menuScreen);
+			
+			this._background		= null;
+			this._frameIMG			= null;
+			this._dialogueIMG		= null;
+			this._screen			= null;
+			this._guiderIMG			= null;
+			this._dialogue			= null;
+			this._console			= null;
+			this._indexBoard		= null;
+			this._scoreBoard		= null;
+			this._menuButton		= null;
+			this._menuScreen		= null;
+			
+			this.removeEventListener(Event.TRIGGERED, onButtonClicked);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.removeEventListener(MENU_EVENT, onMenuEvent);
+			this.removeEventListener(SUCCESS_EVENT, onSuccessEvent);
+		}
+		
+		private function gameOver():void
+		{
+			//pause game first
+			//remove the whole game also
+			this.disposeState();
+			this._gameOver			= new GameOverScreen(Constant.PLAY_SCREEN);
+			this.addChild(this._gameOver);
+		}
+		
+		private function onGameOverEvent(event:Event):void
+		{
+			if(event.data.event == RESET_CURRENT_LEVEL_EVENT){
+				this.reset();
+				this.removeChild(this._gameOver);
+				this._gameOver	= null;
+			}		
+		}
+		
+		private function gameSuccess():void
+		{
+			this.disposeState();
+			this._successScreen			= new SucessScreen();
+			this.addChild(this._successScreen);
+		}
+		
+		private function onSuccessEvent(event:Event):void
+		{
+			if(event.data.event == RESET_CURRENT_LEVEL_EVENT){
+				this.reset();
+				this.removeChild(this._successScreen);
+				this._successScreen	= null;
+			}
 		}
 	}
 }

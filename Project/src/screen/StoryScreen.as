@@ -8,6 +8,8 @@ package screen
 	
 	import feathers.controls.Button;
 	
+	import main.Game;
+	
 	import manager.ServerClientManager;
 	
 	import object.SoundObject;
@@ -24,6 +26,8 @@ package screen
 	
 	public class StoryScreen extends Sprite
 	{	
+		private static const SUCCESS_EVENT			: String = 'SuccessEvent';
+		
 		private static const RESET_CURRENT_LEVEL_EVENT: String = 'ResetLevelButtonTrigger';
 		private static const RESET_STORY_EVENT		: String = 'OptionMenuResetStoryButtonTrigger';
 		private static const RESUME_GAME_EVENT		: String = 'OptionMenuResumeButtonTrigger';
@@ -46,6 +50,7 @@ package screen
 		private var _menuButton			: Button;
 		private var _menuScreen			: MenuScreen;
 		private var _gameOverScreen		: GameOverScreen;
+		private var _gameSuccessScreen    	: SucessScreen;
 		private var _soundObject			: SoundObject;
 		private var _serverClientManager 	: ServerClientManager;
 		
@@ -106,8 +111,51 @@ package screen
 			this.addEventListener(NavigationEvent.CHANGE_SCREEN, 	onChangeScreen);
 			this.addEventListener(MENU_EVENT, 						onMenuTrigger);
 			this.addEventListener(GAME_OVER_EVENT,					onGameOverTrigger);
+			this.addEventListener(SUCCESS_EVENT, 					onSuccessEvent);
 			this._menuButton.addEventListener(Event.TRIGGERED, 		onMenuScreenBtnTrigger);
 
+		}
+		
+		private function onSuccessEvent(event:Event):void
+		{
+			switch(event.data.event){
+				case QUIT_GAME_EVENT:
+					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.STORY_SCREEN, to :Constant.NAVIGATION_SCREEN}, true));
+					break;
+				case RESET_CURRENT_LEVEL_EVENT:
+					
+					//for this we reset the story
+					//misunderstand of the words
+					
+					//reset everything
+					//reset the current stage to stage 1
+					Assets.userCurrentStoryStage	= STORY_STAGE_1;
+					//remove current stage
+					this.removeChild(this._currentStage);
+					this.removeChild(this._menuScreen);
+					this.removeChild(this._menuButton);
+					
+					this._currentStage	= null;
+					this._menuScreen	= null;
+					
+					//reset object
+					this._storyStage1	= null;
+					
+					//add stage 1
+					this._storyStage1	= new StoryStage1();
+					this._currentStage	= this._storyStage1;
+					
+					this.addChild(this._currentStage);
+					this.addChild(this._menuButton);
+					
+					this._serverClientManager.saveUserIngameState(STORY_STAGE_1);
+					
+					this.removeChild(this._gameSuccessScreen);
+					this._gameSuccessScreen = null;
+					break;
+				default :
+					break;
+			}	
 		}
 		
 		private function onRemoveFromStage(event:Event):void
@@ -149,6 +197,12 @@ package screen
 				
 				this._gameOverScreen			= new GameOverScreen(Constant.STORY_SCREEN);
 				this.addChild(this._gameOverScreen);
+			}
+			
+			if(event.screenID.to == Constant.GAME_SUCCESS_SCREEN){
+				
+				this._gameSuccessScreen			= new SucessScreen();
+				this.addChild(this._gameSuccessScreen);
 			}
 			
 			switch(event.screenID.to){
@@ -208,7 +262,7 @@ package screen
 			this.addChild(this._currentStage);
 			
 			//prevent menu button add on top of the game over screen
-			if(event.screenID.to != Constant.GAME_OVER_SCREEN)
+			if(event.screenID.to != Constant.GAME_OVER_SCREEN || event.screenID.to != Constant.GAME_SUCCESS_SCREEN)
 				this.addChild(this._menuButton);
 		}
 		

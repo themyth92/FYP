@@ -74,13 +74,15 @@ package screen
 		//sound
 		private var _soundObject		: SoundObject;
 		
+		//check whether the the create game screen is created
+		//the problem happens when from the preview game to create game
+		//we no need to addchild all the element
+		private var _isCreated			:Boolean	=false;
+		
 		//need to pass in here the user 
 		//defined image and question list
 		public function CreateGameScreen(serverData:Object = null)	
-		{
-			if(serverData){
-				//if got the server data then decode it into grids here		
-			}		
+		{		
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.addEventListener('displayCharacters', onDisplayCharacter);
 			this.addEventListener('startChoosingEndPt', onChoosingEndPt);
@@ -88,6 +90,7 @@ package screen
 			this.addEventListener('popUpDisplay', onPopUpDisplayed);
 			this.addEventListener('popUpClose', onPopUpClosed);
 			this.addEventListener(MENU_EVENT, onMenuEvent);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
 		//dispose the screen when wanna quit this create game screen
@@ -128,6 +131,12 @@ package screen
 			this.removeEventListener('popUpClose', onPopUpClosed);
 			this.removeEventListener(MENU_EVENT, onMenuEvent);
 			this.removeEventListener(Event.TRIGGERED, onChangeMenu);
+			this.removeEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+		}
+		
+		private function onRemoveFromStage(event:Event):void
+		{
+			
 		}
 		
 		private function onPopUpDisplayed(event:Event):void{
@@ -140,111 +149,117 @@ package screen
 		
 		private function onAddedToStage(event:Event):void{
 			
-			new MetalWorksMobileTheme();
-			
-			this._com					= new ServerClientManager();
-			this._com.registerSaveGameCallBack(this.onSaveButtonTriggerCallBack);
-			
-			this._scoreBoard			= new CreateGameScoreBoard();
-			
-			//obstacle panel
-			this._obstaclePanel        	= new ObstaclePanel(DRAG_FORMAT);
-			this._obstaclePanel.width  	= 216;
-			this._obstaclePanel.height 	= 190;
-			this._obstaclePanel.x      	= Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x + 10; 
-			this._obstaclePanel.y      	= Constant.INFOBOARD_POS.y + 100;
-			
-			//index grid panel
-			this._gridPanel            	= new GridPanel(DRAG_FORMAT);
-			this._gridPanel.width  	    = 440;
-			this._gridPanel.height 	    = 360;
-			this._gridPanel.x          	= Constant.GRID_CREATE_POS.x;
-			this._gridPanel.y          	= Constant.GRID_CREATE_POS.y;
-			
-			//component right side panel
-			this._componentPanel      	= new ComponentPanel();
-			this._componentPanel.width 	= 440;
-			this._componentPanel.height	= 600;
-			this._componentPanel.x 		= Constant.INFOBOARD_POS.x;
-			this._componentPanel.y		= 0;
-			
-			this._gameInfoBtn = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('Obstacles'));
-			this._gameInfoBtn.x = Constant.INFOBOARD_POS.x + 18;
-			this._gameInfoBtn.y = 17;
-			this._gameInfoBtn.filter = this._glow;
-			
-			this._charactersInfoBtn = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('Characters'));
-			this._charactersInfoBtn.x  = Constant.INFOBOARD_POS.x + 145;
-			this._charactersInfoBtn.y = 17;
-			
-			//background
-			var background:Image 		= new Image(Assets.getAtlas(Constant.BACKGROUND_SPRITE).getTexture('CreateBackground'));
-			var gridFrame :Image      	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('CreateFrame'));	
-			var rightBox  :Image      	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.INFO_BOARD));
-			
-			gridFrame.x                 = Constant.FRAME_CREATE_POS.x;
-			gridFrame.y 				= Constant.FRAME_CREATE_POS.y;
-			rightBox.x   				= Constant.INFOBOARD_POS.x;
-			rightBox.y 					= 0;
-			
-			//button
-			this._saveBtn   		    = new feathers.controls.Button();
-			this._saveBtn.useHandCursor	= true;
-			this._saveBtn.x		 		= Constant.STARTB_POS.x;
-			this._saveBtn.y 			= Constant.STARTB_POS.y;
-			this._saveBtn.height	    = 45;
-			this._saveBtn.width			= 130;
-			this._saveBtn.label			= 'Save';
-			
-			this._previewBtn			= new feathers.controls.Button();
-			this._previewBtn.useHandCursor	= true;
-			this._previewBtn.x 			= Constant.PREVIEWB_POS.x;
-			this._previewBtn.y 			= Constant.PREVIEWB_POS.y;
-			this._previewBtn.height    	= 45;
-			this._previewBtn.width    	= 130;
-			this._previewBtn.label    	= 'Preview';
-			
-			this._publishBtn			= new feathers.controls.Button();
-			this._publishBtn.useHandCursor	= true;
-			this._publishBtn.x 			= Constant.PUBLISHB_POS.x;
-			this._publishBtn.y 			= Constant.PUBLISHB_POS.y; 
-			this._publishBtn.height    	= 45;
-			this._publishBtn.width		= 130;
-			this._publishBtn.label		= 'Publish';
-			
-			this._soundObject			= new SoundObject();
-			this._soundObject.playBackgroundMusic(Constant.CREATE_GAME_SCREEN);
-			
-			this._menuButton				= new feathers.controls.Button();
-			this._menuButton.label			= 'Option';
-			this._menuButton.width			= 50;
-			this._menuButton.height			= 50;
-			this._menuButton.x				= 2;
-			this._menuButton.y				= 2;
-			
-			this.addChild(background);
-			this.addChild(gridFrame);
-			this.addChild(rightBox);
-			this.addChild(this._gameInfoBtn);
-			this.addChild(this._charactersInfoBtn);
-			this.addChild(this._saveBtn);
-			this.addChild(this._previewBtn);
-			this.addChild(this._publishBtn);
-			this.addChild(this._gridPanel);
-			this.addChild(this._componentPanel);
-			this.addChild(this._obstaclePanel);
-			this.addChild(this._scoreBoard);
-			this.addChild(this._menuButton);
-			
-			this._componentPanel.alpha = 0;
-			this._componentPanel.disableInput();
-			
-			this.addEventListener(Event.TRIGGERED, onChangeMenu);
-			this._saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
-			this._previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
-			this._publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
-			this._menuButton.addEventListener(Event.TRIGGERED, onMenuBtnTrigger);
-			PreviewGameInfo._isSaved = false;
+			if(!this._isCreated){
+				new MetalWorksMobileTheme();
+				
+				this._com					= new ServerClientManager();
+				this._com.registerSaveGameCallBack(this.onSaveButtonTriggerCallBack);
+				
+				this._scoreBoard			= new CreateGameScoreBoard();
+				
+				//obstacle panel
+				this._obstaclePanel        	= new ObstaclePanel(DRAG_FORMAT);
+				this._obstaclePanel.width  	= 216;
+				this._obstaclePanel.height 	= 190;
+				this._obstaclePanel.x      	= Constant.INFOBOARD_POS.x + Constant.OBSBOARD_POS.x + 10; 
+				this._obstaclePanel.y      	= Constant.INFOBOARD_POS.y + 100;
+				
+				//index grid panel
+				this._gridPanel            	= new GridPanel(DRAG_FORMAT);
+				this._gridPanel.width  	    = 440;
+				this._gridPanel.height 	    = 360;
+				this._gridPanel.x          	= Constant.GRID_CREATE_POS.x;
+				this._gridPanel.y          	= Constant.GRID_CREATE_POS.y;
+				
+				//component right side panel
+				this._componentPanel      	= new ComponentPanel();
+				this._componentPanel.width 	= 440;
+				this._componentPanel.height	= 600;
+				this._componentPanel.x 		= Constant.INFOBOARD_POS.x;
+				this._componentPanel.y		= 0;
+				
+				this._gameInfoBtn = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('Obstacles'));
+				this._gameInfoBtn.x = Constant.INFOBOARD_POS.x + 18;
+				this._gameInfoBtn.y = 17;
+				this._gameInfoBtn.filter = this._glow;
+				
+				this._charactersInfoBtn = new starling.display.Button(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('Characters'));
+				this._charactersInfoBtn.x  = Constant.INFOBOARD_POS.x + 145;
+				this._charactersInfoBtn.y = 17;
+				
+				//background
+				var background:Image 		= new Image(Assets.getAtlas(Constant.BACKGROUND_SPRITE).getTexture('CreateBackground'));
+				var gridFrame :Image      	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture('CreateFrame'));	
+				var rightBox  :Image      	= new Image(Assets.getAtlas(Constant.COMMON_ASSET_SPRITE).getTexture(Constant.INFO_BOARD));
+				
+				gridFrame.x                 = Constant.FRAME_CREATE_POS.x;
+				gridFrame.y 				= Constant.FRAME_CREATE_POS.y;
+				rightBox.x   				= Constant.INFOBOARD_POS.x;
+				rightBox.y 					= 0;
+				
+				//button
+				this._saveBtn   		    = new feathers.controls.Button();
+				this._saveBtn.useHandCursor	= true;
+				this._saveBtn.x		 		= Constant.STARTB_POS.x;
+				this._saveBtn.y 			= Constant.STARTB_POS.y;
+				this._saveBtn.height	    = 45;
+				this._saveBtn.width			= 130;
+				this._saveBtn.label			= 'Save';
+				
+				this._previewBtn			= new feathers.controls.Button();
+				this._previewBtn.useHandCursor	= true;
+				this._previewBtn.x 			= Constant.PREVIEWB_POS.x;
+				this._previewBtn.y 			= Constant.PREVIEWB_POS.y;
+				this._previewBtn.height    	= 45;
+				this._previewBtn.width    	= 130;
+				this._previewBtn.label    	= 'Preview';
+				
+				this._publishBtn			= new feathers.controls.Button();
+				this._publishBtn.useHandCursor	= true;
+				this._publishBtn.x 			= Constant.PUBLISHB_POS.x;
+				this._publishBtn.y 			= Constant.PUBLISHB_POS.y; 
+				this._publishBtn.height    	= 45;
+				this._publishBtn.width		= 130;
+				this._publishBtn.label		= 'Publish';
+				
+				this._soundObject			= new SoundObject();
+				this._soundObject.playBackgroundMusic(Constant.CREATE_GAME_SCREEN);
+				
+				this._menuButton				= new feathers.controls.Button();
+				this._menuButton.label			= 'Option';
+				this._menuButton.width			= 50;
+				this._menuButton.height			= 50;
+				this._menuButton.x				= 2;
+				this._menuButton.y				= 2;
+				
+				this.addChild(background);
+				this.addChild(gridFrame);
+				this.addChild(rightBox);
+				this.addChild(this._gameInfoBtn);
+				this.addChild(this._charactersInfoBtn);
+				this.addChild(this._saveBtn);
+				this.addChild(this._previewBtn);
+				this.addChild(this._publishBtn);
+				this.addChild(this._gridPanel);
+				this.addChild(this._componentPanel);
+				this.addChild(this._obstaclePanel);
+				this.addChild(this._scoreBoard);
+				this.addChild(this._menuButton);
+				
+				this._componentPanel.alpha = 0;
+				this._componentPanel.disableInput();
+				
+				this.addEventListener(Event.TRIGGERED, onChangeMenu);
+				this._saveBtn.addEventListener(Event.TRIGGERED, onSaveBtnTrigger);
+				this._previewBtn.addEventListener(Event.TRIGGERED, onPreviewBtnTrigger);
+				this._publishBtn.addEventListener(Event.TRIGGERED, onPublishBtnTrigger);
+				this._menuButton.addEventListener(Event.TRIGGERED, onMenuBtnTrigger);
+				PreviewGameInfo._isSaved = false;
+				this._isCreated	= true;
+			}
+			else{
+				
+			}
 		}
 		
 		private function onChangeMenu(event:Event):void
