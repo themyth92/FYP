@@ -33,6 +33,7 @@ package screen
 			this._background 			= new Image(Assets.getTexture('WinScreen'));
 			this._background.x 			= 400 - this._background.width/2;
 			this._background.y 			= 300 - this._background.height/2;
+			this.addChild(this._background);
 			
 			switch(Assets.pageID){
 				case STORY_PAGE:
@@ -65,7 +66,9 @@ package screen
 					
 					break;
 			}
-			this.addChild(this._background);
+
+			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
+			this.removeEventListener(Event.ADDED_TO_STAGE, 	onAddedToStage);
 		}
 		
 		private function onRetryBtnTrigger(event:Event):void
@@ -76,6 +79,16 @@ package screen
 		private function onQuitBtnTrigger(event:Event):void
 		{
 			this.dispatchEventWith(SUCCESS_EVENT, true, {event : QUIT_GAME_EVENT});
+		}
+		
+		private function onRemoveFromStage(event:Event):void
+		{
+			this.removeChild(this._retryBtn);
+			this.removeChild(this._quitBtn);
+			this._retryBtn	= null;
+			this._quitBtn	= null;
+			
+			this.removeEventListener(Event.REMOVED_FROM_STAGE,	onRemoveFromStage);
 		}
 	}
 }

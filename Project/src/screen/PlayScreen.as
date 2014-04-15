@@ -68,6 +68,7 @@ package screen
 			super();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
 		
 		private function onAddedToStage(event:Event):void
@@ -127,11 +128,16 @@ package screen
 			this._menuButton.x				= 2;
 			this._menuButton.y				= 2;
 			this.addChild(this._menuButton);
+			
+			//resume the game
+			//happens when reset
+			
+			this._controller.changeState(Constant.PLAYING_STATE);
+			
 			this._menuButton.addEventListener(Event.TRIGGERED, onMenuBtnTrigger);
 			
 			this.addEventListener(MENU_EVENT, onMenuEvent);
 			this.addEventListener(Event.TRIGGERED, onButtonClicked);
-			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.addEventListener(GAME_OVER_EVENT, onGameOverEvent);
 			this.addEventListener(SUCCESS_EVENT, onSuccessEvent);
@@ -190,6 +196,10 @@ package screen
 			this._scoreBoard.x 	= 160;
 			
 			this.addChild(this._console);
+			
+			//there is some problem with cosole
+			//therefore hide it
+			this._console.alpha	= 0;
 			this.addChild(this._dialogue);
 			this.addChild(this._indexBoard);
 			this.addChild(this._scoreBoard);
@@ -199,7 +209,7 @@ package screen
 		private function onButtonClicked(event:Event):void
 		{
 			var buttonClicked	:Button = event.target as Button;
-
+			
 		}
 		
 		private function onRemoveFromStage(event:Event):void
@@ -286,7 +296,6 @@ package screen
 					break;
 				case RESET_PLAY_GAME_EVENT:
 					this.reset();
-					this._controller.changeState(Constant.PLAYING_STATE);
 					break;
 				case QUIT_PREVIEW_GAME_EVENT:
 					Starling.current.stage.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {from : Constant.PLAY_SCREEN, to :Constant.CREATE_GAME_SCREEN}, true));
@@ -298,6 +307,12 @@ package screen
 		
 		private function reset():void
 		{
+			this.removeEventListener(Event.TRIGGERED, onButtonClicked);
+			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			this.removeEventListener(MENU_EVENT, onMenuEvent);
+			this.removeEventListener(GAME_OVER_EVENT, onGameOverEvent);
+			this.removeEventListener(SUCCESS_EVENT, onSuccessEvent);
+			
 			this.removeChild(this._background);
 			this.removeChild(this._frameIMG);
 			this.removeChild(this._dialogueIMG);
