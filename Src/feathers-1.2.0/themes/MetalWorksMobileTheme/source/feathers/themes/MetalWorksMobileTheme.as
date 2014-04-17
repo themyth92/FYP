@@ -1165,7 +1165,7 @@ package feathers.themes
 			input.paddingBottom = 2 * this.scale;
 			input.paddingLeft = input.paddingRight = 7 * this.scale;
 			input.textEditorProperties.fontFamily = "Helvetica";
-			input.textEditorProperties.fontSize = 12 * this.scale;
+			input.textEditorProperties.fontSize = 16 * this.scale;
 			input.textEditorProperties.color = LIGHT_TEXT_COLOR;
 
 			input.promptProperties.textFormat = this.lightTextFormat;

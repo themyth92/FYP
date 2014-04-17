@@ -55,6 +55,8 @@ package screen.subStoryScreen
 			this.removeChild(this._console);
 			this.removeChild(this._indexBoard);
 			this.removeChild(this._scoreBoard);
+			this.removeEventListener(Event.ENTER_FRAME, 			onEnterFrame);
+
 			
 			this._background 	= null;
 			this._frameIMG 		= null;
@@ -78,6 +80,9 @@ package screen.subStoryScreen
 			
 			this.placeImageOnScreen();
 			this.setupGameObject();
+			
+			this.addEventListener(Event.ENTER_FRAME, 			onEnterFrame);
+			this.addEventListener(Event.REMOVED_FROM_STAGE, 	onRemoveFromStage);
 		}
 		
 		override public function pauseGame():void
@@ -87,7 +92,7 @@ package screen.subStoryScreen
 		
 		override public function unpauseGame():void
 		{
-			this._controller.changeState(Constant.PLAYING_STATE);
+			this._controller.changeState(Constant.PAUSE_STATE);
 		}
 		
 		private function onAddedToStage(event:Event):void

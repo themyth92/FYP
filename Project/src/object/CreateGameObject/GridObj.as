@@ -152,6 +152,7 @@ package object.CreateGameObject
 					
 					this.removeChild(this._obstacleObj);
 					this._obstacleObj = null;
+					this.selectedIndex = -1;
 					this.addChild(this._quad);
 				}
 		}

@@ -22,6 +22,7 @@ package object.CreateGameObject
 	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.events.Event;
+	import starling.events.KeyboardEvent;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -41,15 +42,29 @@ package object.CreateGameObject
 		private var _occupiedList		: Vector.<Object>;
 		private var _enemy1Img			: Image;
 		private var _enemy2Img			: Image;
-		private var _enemy				: Object;
 		private var _playerImg			: Image;
+		
+		//Use to keep track of the index of the characters in the occupied list
+		private var _playerIndex		: Object;
+		private var _enemy1Index		: Object;
+		private var _enemy2Index		: Object;
+		
+		//Use to keep the enemy info: type, position
+		private var _enemy				: Object;
+		
+		//This is the list of tiles that user can choose from
 		private var _chooseableList		: Vector.<Object>;
+		
+		//Use to store the enemy end points
 		private var _enemy1EndPts		: Vector.<Number>;
 		private var _enemy2EndPts		: Vector.<Number>;
+		
 		private var _isChoosing			: Boolean = false;
 		private var _endPtType			: String;
 		private var _currEndPt			: Object;
 		private var _endPtNotifier		: TextField;
+		private var _hasGoal			: Boolean = false;
+		private var _numOfGoal			: Number = 0;
 		
 		//check whether the option panel box has been opene or not
 		private var _state            	: Number;
@@ -64,6 +79,9 @@ package object.CreateGameObject
 			this._chooseableList	= new Vector.<Object>();
 			this._enemy1EndPts		= new Vector.<Number>();
 			this._enemy2EndPts		= new Vector.<Number>();
+			this._enemy1Index = new Object();
+			this._enemy2Index = new Object();
+			this._playerIndex = new Object();
 			
 			for(var i:uint = 0 ; i < Assets.getUserQuestion().length ; i++){
 				var question:Object   	= new Object();
@@ -83,6 +101,10 @@ package object.CreateGameObject
 			
 			//keep track of the click from user on touch event
 			this.addEventListener(TouchEvent.TOUCH, onTouch);
+		}
+		
+		public function get hasGoal():Boolean{
+			return this._hasGoal;
 		}
 		
 		public function getObsList():Array{
@@ -155,6 +177,22 @@ package object.CreateGameObject
 			this.removeChildAt(0);
 			this._background = image;
 			this.addChildAt(this._background, 0);
+		}
+		
+		public function removeEndPts(id:Number):void{
+			if(id == 1)
+			{
+				this._enemy1EndPts.length=0;
+				resetOccupiedList(1);
+			}
+			else if(id == 2)
+			{
+				this._enemy2EndPts.length=0;
+				resetOccupiedList(2);
+			}
+			clearQuad();
+			highlightOccupiedTiles();
+			this.dispatchEventWith("popUpClose", true);
 		}
 		
 		public function reset():void
@@ -363,6 +401,11 @@ package object.CreateGameObject
 				
 				//if not then add child to the grid object
 				this._gridObjects[xIndex][yIndex].changeStateToObstacle(droppedObject);
+				if(droppedObject.obstacleType == Number(Constant.GOAL_OBS))
+				{
+					this._hasGoal = true;
+					this._numOfGoal ++;
+				}
 			}
 		}
 		
@@ -455,6 +498,13 @@ package object.CreateGameObject
 			//change the state of the current grid to normal
 			//reset the state of the  whole panel 
 			//so user can select another grid
+			if(this._curGridObjSelect.getObstacle().obstacleType == Number(Constant.GOAL_OBS))
+			{	
+				this._numOfGoal --;
+				if(this._numOfGoal == 0)
+					this._hasGoal = false;
+			}
+			
 			this._curGridObjSelect.changeStateToNormal();
 			this._state = 0;
 		}
@@ -478,13 +528,14 @@ package object.CreateGameObject
 				{
 					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
+						if(this._enemy1Index.pos != undefined)
+							this._occupiedList.splice(this._enemy1Index.pos, 1);
 						this.removeChild(this._enemy1Img);
 						this._enemy1Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
 						this._enemy1Img.x = xIndex*40;
 						this._enemy1Img.y = yIndex*40;
-						
+						this._enemy1Index.pos = this._occupiedList.length;
 						this.addChild(this._enemy1Img);
-						return;
 					}
 					else
 					{
@@ -499,14 +550,15 @@ package object.CreateGameObject
 				{
 					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
+						if(this._enemy2Index.pos != undefined)
+							this._occupiedList.splice(this._enemy2Index.pos, 1);
 						this.removeChild(this._enemy2Img);
 						this._enemy2Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
 						this._enemy2Img.x = xIndex*40;
 						this._enemy2Img.y = yIndex*40;
 						this._enemy2EndPts.push(data.pos);
-						
+						this._enemy2Index.pos = this._occupiedList.length;
 						this.addChild(this._enemy2Img);
-						return;
 					}
 					else
 					{
@@ -522,6 +574,8 @@ package object.CreateGameObject
 					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
 						this.removeChild(this._playerImg);
+						if(this._playerIndex.pos != undefined)
+							this._occupiedList.splice(this._playerIndex.pos, 1);
 						if(data.gender)
 							this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Male/male_down_01"));
 						else
@@ -529,6 +583,7 @@ package object.CreateGameObject
 						
 						this._playerImg.x = xIndex*40;
 						this._playerImg.y = yIndex*40;
+						this._playerIndex.pos = this._occupiedList.length;
 						this.addChild(this._playerImg);
 					}
 					else
@@ -545,6 +600,9 @@ package object.CreateGameObject
 				occupiedPt.row = yIndex;
 				occupiedPt.column = xIndex;
 				this._occupiedList.push(occupiedPt);
+				
+				clearQuad();
+				highlightOccupiedTiles();
 			}
 		}
 		
@@ -553,23 +611,28 @@ package object.CreateGameObject
 			this._endPtNotifier = new TextField(440, 25, null, "Grobold", 13, 0xffffff, false);
 			this._endPtNotifier.y = 450;
 			if(data.option == "Circle")
-				this._endPtNotifier.text = "Please choose next end. Click on the enemy's position to end choosing.";
+				this._endPtNotifier.text = "Please choose next end. Click on the enemy's position to end choosing.\n Press Esc to stop.";
 			else if(data.option == "Reverse")
-				this._endPtNotifier.text = "Please choose next end. Click on the last point to end choosing.";
+				this._endPtNotifier.text = "Please choose next end. Click on the last point to end choosing.\n Press Esc to stop.";
 			this.addChild(this._endPtNotifier);
 			
 			if(data.id == "enemy1")
 			{
 				this._currEndPt.row 	= this._enemy1Img.y / 40;
 				this._currEndPt.column 	= this._enemy1Img.x / 40;
+				resetOccupiedList(1);
+				this._enemy1Index.start = this._occupiedList.length;
 				this._enemy.row 		= this._enemy1Img.y / 40;
 				this._enemy.column 		= this._enemy1Img.x / 40;
 				this._enemy.type 		= "enemy1";
+				
 			}
 			else if(data.id == "enemy2")
 			{
 				this._currEndPt.row 	= this._enemy2Img.y / 40;
 				this._currEndPt.column 	= this._enemy2Img.x / 40;
+				resetOccupiedList(2);
+				this._enemy2Index.start = this._occupiedList.length;
 				this._enemy.row 		= this._enemy2Img.y / 40;
 				this._enemy.column 		= this._enemy2Img.x / 40;
 				this._enemy.type 		= "enemy2";
@@ -581,7 +644,57 @@ package object.CreateGameObject
 			this._endPtType = data.option;
 			
 			this.removeEventListener(TouchEvent.TOUCH, onTouch);
+			this.addEventListener(KeyboardEvent.KEY_DOWN, onEscPressed);
 			this.addEventListener(TouchEvent.TOUCH, onChoosingEndTouch);
+		}
+		
+		private function resetOccupiedList(id:Number):void{
+			if(id == 1)
+			{
+				this._enemy1EndPts.length = 0;
+				this._occupiedList.splice(this._enemy1Index.start, this._enemy1Index.end - this._enemy1Index.start);
+				this._enemy1Index.start = 0;
+				this._enemy1Index.end = 0;
+				
+			}
+			else if (id == 2)
+			{
+				this._enemy2EndPts.length = 0;
+				this._occupiedList.splice(this._enemy2Index.start, this._enemy2Index.end - this._enemy2Index.start);
+				this._enemy2Index.start = 0;
+				this._enemy2Index.end = 0;
+			}
+			clearQuad();
+			highlightOccupiedTiles();
+		}
+		
+		private function onEscPressed(e:KeyboardEvent):void{
+			var key:uint = e.keyCode;
+			if(key == 27)
+			{
+				if(this._enemy.type == "enemy1")
+				{
+					this._enemy1Index.end = this._occupiedList.length;
+					resetOccupiedList(1);
+				}
+				else if(this._enemy.type == "enemy2")
+				{
+					this._enemy2Index.end = this._occupiedList.length;
+					resetOccupiedList(2);
+				}
+				
+				this.removeChild(this._endPtNotifier);
+				Alert.show("You've stopped choosing end points.", "Notification", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				this.removeEventListener(TouchEvent.TOUCH, onChoosingEndTouch);
+				this.addEventListener(TouchEvent.TOUCH, onTouch);
+				this.dispatchEventWith("popUpClose", true, {id:"changeType", enemy:this._enemy.type});
+				this.removeEventListener(KeyboardEvent.KEY_DOWN, onEscPressed);
+			}
+			else
+				return;
 		}
 		
 		private function onChoosingEndTouch(event:TouchEvent):void
@@ -613,11 +726,17 @@ package object.CreateGameObject
 								
 								if(this._enemy.type == "enemy1")
 									this._enemy1EndPts.push(savedPt);
-								else
+								else if(this._enemy.type == "enemy2")
 									this._enemy2EndPts.push(savedPt);
 								
 								clearQuad();
 								setOccupiedList(xIndex, yIndex);
+								
+								if(this._enemy.type == "enemy1")
+									this._enemy1Index.end = this._occupiedList.length;
+								else if(this._enemy.type == "enemy2")
+									this._enemy2Index.end = this._occupiedList.length;
+								
 								highlightOccupiedTiles();
 								this.removeChild(this._endPtNotifier);
 								Alert.show("You've done choosing end points for enemy.", "Notification", new ListCollection(
@@ -627,6 +746,7 @@ package object.CreateGameObject
 								this.removeEventListener(TouchEvent.TOUCH, onChoosingEndTouch);
 								this.addEventListener(TouchEvent.TOUCH, onTouch);
 								this.dispatchEventWith("popUpClose", true);
+								this.removeEventListener(KeyboardEvent.KEY_DOWN, onEscPressed);
 								return;
 							}
 							
@@ -738,7 +858,7 @@ package object.CreateGameObject
 			{
 				for(var m:Number = row-1; m >= 0; m--)
 				{
-					if(this._gridObjects[column][m].getObstacle() == null)
+					if(this._gridObjects[column][m].getObstacle() == null || this._gridObjects[column][m].getObstacle().obstacleType == 1)
 					{
 						savePt = new Object();
 						savePt.row = m;
@@ -753,7 +873,7 @@ package object.CreateGameObject
 				
 				for(var n:uint = row+1; n < 9; n++)
 				{
-					if(this._gridObjects[column][n].getObstacle() == null)
+					if(this._gridObjects[column][n].getObstacle() == null || this._gridObjects[column][n].getObstacle().obstacleType == 1)
 					{
 						savePt = new Object();
 						savePt.row = n;
@@ -769,7 +889,7 @@ package object.CreateGameObject
 			{
 				for(var i:Number = column-1; i >= 0; i--)
 				{
-					if(this._gridObjects[i][row].getObstacle() == null)
+					if(this._gridObjects[i][row].getObstacle() == null || this._gridObjects[i][row].getObstacle().obstacleType == 1)
 					{
 						savePt = new Object();
 						savePt.row = row;
@@ -783,7 +903,7 @@ package object.CreateGameObject
 				
 				for(var j:uint = column+1; j < 11; j++)
 				{
-					if(this._gridObjects[j][row].getObstacle() == null)
+					if(this._gridObjects[j][row].getObstacle() == null || this._gridObjects[j][row].getObstacle().obstacleType == 1)
 					{
 						savePt = new Object();
 						savePt.row = row;
@@ -816,7 +936,7 @@ package object.CreateGameObject
 			
 			for(var i:Number = column-1; i >= 0; i--)
 			{
-				if(this._gridObjects[i][row].getObstacle() == null)
+				if(this._gridObjects[i][row].getObstacle() == null || this._gridObjects[i][row].getObstacle().obstacleType == 1)
 				{
 					savePt = new Object();
 					savePt.row = row;
@@ -830,7 +950,7 @@ package object.CreateGameObject
 			
 			for(var j:Number = column+1; j < 11; j++)
 			{
-				if(this._gridObjects[j][row].getObstacle() == null)
+				if(this._gridObjects[j][row].getObstacle() == null || this._gridObjects[j][row].getObstacle().obstacleType == 1)
 				{
 					savePt = new Object();
 					savePt.row = row;
@@ -844,7 +964,7 @@ package object.CreateGameObject
 			
 			for(var m:Number = row-1; m >= 0; m--)
 			{
-				if(this._gridObjects[column][m].getObstacle() == null)
+				if(this._gridObjects[column][m].getObstacle() == null || this._gridObjects[column][m].getObstacle().obstacleType == 1)
 				{
 					savePt = new Object();
 					savePt.row = m;
@@ -859,7 +979,7 @@ package object.CreateGameObject
 			
 			for(var n:Number = row+1; n < 9; n++)
 			{
-				if(this._gridObjects[column][n].getObstacle() == null)
+				if(this._gridObjects[column][n].getObstacle() == null || this._gridObjects[column][n].getObstacle().obstacleType == 1)
 				{
 					savePt = new Object();
 					savePt.row = n;

@@ -17,7 +17,7 @@ package screen
 	public class GameOverScreen extends Sprite
 	{		
 		private static const QUIT_GAME_EVENT			: String = 'QuitButtonTrigger';
-		private static const RESET_CURRENT_LEVEL_EVENT: String = 'ResetLevelButtonTrigger';
+		private static const RESET_CURRENT_LEVEL_EVENT	: String = 'ResetLevelButtonTrigger';
 		private static const GAME_OVER_EVENT			: String = 'GameOverEvent';
 		
 		private var _background 	:Image;

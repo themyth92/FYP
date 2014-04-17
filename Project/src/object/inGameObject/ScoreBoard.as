@@ -80,7 +80,8 @@ package object.inGameObject
 		private var _markTime				: int = 0;
 		private var _minutesOn				: int;
 		private var _secondsOn				: int;
-		
+		private var _curMin					: int;
+		private var _curSec					: int;
 
 		public function ScoreBoard(controller:MainController)
 		{
@@ -171,6 +172,12 @@ package object.inGameObject
 		
 		private function onEnterFrame(event:Event):void{
 			updateTimeText();
+			if(_state == Constant.PAUSE_STATE && _startPlaying == false)
+			{
+				_startPlaying = true;
+				this._secondsOn = this._curSec;
+				this._minutesOn = this._curMin;
+			}
 		}
 		
 		//Setup starting text for scoreboard display
@@ -218,20 +225,20 @@ package object.inGameObject
 			if(this._isLifeEnabled)
 			{
 				_panel = new Panel();
-				_panel.width = 250;
-				_panel.height = 300;
+				_panel.width = 200;
+				_panel.height = 250;
 				
 				var lifeEdit:TextInput = new TextInput();
-				lifeEdit.x = 70;
+				lifeEdit.x = 55;
 				lifeEdit.width = 80;
-				lifeEdit.height = 100;
-				lifeEdit.prompt = formatLeadingZero(_maxLife);
+				lifeEdit.height = 40;
+				lifeEdit.text = formatLeadingZero(_maxLife);
 				_panel.addChild(lifeEdit);
 				
 				var closeButton :feathers.controls.Button = new feathers.controls.Button();
 				closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseLifeWindow(lifeEdit)});
-				closeButton.x = 75;
-				closeButton.y = 150;
+				closeButton.x = 65;
+				closeButton.y = 100;
 				closeButton.label = "Ok";
 				
 				_panel.headerFactory = function():Header
@@ -293,33 +300,33 @@ package object.inGameObject
 			if(this._isTimeEnabled)
 			{
 				_panel = new Panel();
-				_panel.width = 250;
-				_panel.height = 300;
+				_panel.width = 200;
+				_panel.height = 250;
 							
 				var colonText :TextField = new TextField(100, 30, ":",'Verdana', 24, 0xffffff, false);
-				colonText.x = 65;
+				colonText.x = 45;
 				colonText.y = 10;
 				var minuteText:TextInput = new TextInput();
-				minuteText.x = 30;
+				minuteText.x = 10;
 				minuteText.textEditorProperties.fontSize = 20;
 				minuteText.width = 75;
 				minuteText.height = 100;
 				var secondText:TextInput = new TextInput();
-				secondText.x = 125;
+				secondText.x = 110;
 				secondText.textEditorProperties.fontSize = 20;
 				secondText.width = 75;
 				secondText.height = 100;
 	
-				minuteText.prompt = formatLeadingZero(_minutesOn);
-				secondText.prompt = formatLeadingZero(_secondsOn);
+				minuteText.text = formatLeadingZero(_minutesOn);
+				secondText.text = formatLeadingZero(_secondsOn);
 				_panel.addChild(colonText);
 				_panel.addChild(minuteText);
 				_panel.addChild(secondText);
 				
 				var closeButton :feathers.controls.Button = new feathers.controls.Button();
 				closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseTimeWindow(minuteText, secondText)});
-				closeButton.x = 75;
-				closeButton.y = 150;
+				closeButton.x = 65;
+				closeButton.y = 100;
 				closeButton.label = "Ok";
 				
 				_panel.headerFactory = function():Header
@@ -406,6 +413,8 @@ package object.inGameObject
 						seconds = seconds + 60;
 					}
 					_timeText.text = formatLeadingZero(minutes) + " : " + formatLeadingZero(seconds);
+					this._curSec = seconds;
+					this._curMin = minutes;
 				}
 				else
 					this._controller.isLost = true;

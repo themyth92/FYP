@@ -38,14 +38,6 @@ package assets
 		
 		public static var _screenIndex	:Number;
 		
-		public static function storeScreenInfo(playerObj:Object, enemyObj:Array, scoreObj:Object, obstaclesObj:Array):void
-		{
-			storeScoreInfo(scoreObj);
-			//storeEnemyInfo(enemyObj);
-			storePlayerInfo(playerObj);
-			storeObstaclesInfo(obstaclesObj);
-		}
-		
 		public static function storeScoreInfo(scoreObj:Object):void
 		{
 			_maxCoin 	= scoreObj.maxCoin;
@@ -82,6 +74,13 @@ package assets
 		{
 			var obsTexture	: Image;
 			var qns			: Object;
+			
+			_obsCollection = new Vector.<Image>();
+			_obsIndex = new Vector.<uint>();
+			_obsQns = new Vector.<Object>();
+			_obsTexture = new Vector.<Object>();
+			_obsType = new Vector.<String>();
+			
 			for(var i:uint = 0; i < obsObj.length; i++)
 			{
 				//Get obstalces' image

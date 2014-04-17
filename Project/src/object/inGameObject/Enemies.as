@@ -296,14 +296,14 @@ package object.inGameObject
 					if(this._x > this._targetPt.x)
 						this._moveX = -(this._x - this._targetPt.x);
 					else
-						this._moveX = distance * (this._speed/100);						
+						this._moveX = distance * (this._speed/1000);						
 				}
 				else if (distance < 0)
 				{
 					if(this._x < this._targetPt.x)
 						this._moveX = -(this._x - this._targetPt.x);
 					else
-						this._moveX = distance * (this._speed/100);	
+						this._moveX = distance * (this._speed/1000);	
 				}
 				return;
 			}
@@ -317,14 +317,14 @@ package object.inGameObject
 					if(this._y > this._targetPt.y)
 						this._moveY = -(this._y - this._targetPt.y);
 					else
-						this._moveY = distance * (this._speed/100);						
+						this._moveY = distance * (this._speed/1000);						
 				}
 				else if (distance < 0)
 				{
 					if(this._y < this._targetPt.y)
 						this._moveY = -(this._y - this._targetPt.y);
 					else
-						this._moveY = distance * (this._speed/100);	
+						this._moveY = distance * (this._speed/1000);	
 				}
 				return;
 			}

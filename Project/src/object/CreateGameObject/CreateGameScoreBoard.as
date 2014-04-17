@@ -286,31 +286,33 @@ package object.CreateGameObject
 		private function onTimeClicked(event:Event):void
 		{
 			_popUpPanel = new Panel();
-			_popUpPanel.width = 250;
-			_popUpPanel.height = 300;
+			_popUpPanel.width = 200;
+			_popUpPanel.height = 250;
 			
 			var colonText :TextField = new TextField(100, 30, ":",'Verdana', 24, 0xffffff, false);
-			colonText.x = 65;
+			colonText.x = 45;
 			colonText.y = 10;
 			var minuteText:TextInput = new TextInput();
-			minuteText.x = 30;
+			minuteText.x = 10;
 			minuteText.textEditorProperties.fontSize = 20;
 			minuteText.width = 75;
+			minuteText.height = 40;
 			var secondText:TextInput = new TextInput();
-			secondText.x = 125;
+			secondText.x = 110;
 			secondText.textEditorProperties.fontSize = 20;
 			secondText.width = 75;
+			secondText.height = 40;
 			
-			minuteText.prompt = formatLeadingZero(_minStart);
-			secondText.prompt = formatLeadingZero(_secStart);
+			minuteText.text = formatLeadingZero(_minStart);
+			secondText.text = formatLeadingZero(_secStart);
 			_popUpPanel.addChild(colonText);
 			_popUpPanel.addChild(minuteText);
 			_popUpPanel.addChild(secondText);
 			
 			var closeButton :feathers.controls.Button = new feathers.controls.Button();
 			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseTimeWindow(minuteText, secondText)});
-			closeButton.x = 75;
-			closeButton.y = 150;
+			closeButton.x = 65;
+			closeButton.y = 100;
 			closeButton.label = "Ok";
 			
 			_popUpPanel.headerFactory = function():Header
@@ -345,20 +347,21 @@ package object.CreateGameObject
 		private function onLifeClicked(event:Event):void
 		{
 			_popUpPanel = new Panel();
-			_popUpPanel.width = 250;
-			_popUpPanel.height = 300;
+			_popUpPanel.width = 200;
+			_popUpPanel.height = 250;
 			
 			var lifeEdit:TextInput = new TextInput();
-			lifeEdit.x = 70;
+			lifeEdit.x = 55;
 			lifeEdit.width = 80;
-			
-			lifeEdit.prompt = formatLeadingZero(_maxLife);
+			lifeEdit.height = 40;
+
+			lifeEdit.text = formatLeadingZero(_maxLife);
 			_popUpPanel.addChild(lifeEdit);
 			
 			var closeButton :feathers.controls.Button = new feathers.controls.Button();
 			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void { onCloseLifeWindow(lifeEdit)});
-			closeButton.x = 75;
-			closeButton.y = 150;
+			closeButton.x = 65;
+			closeButton.y = 100;
 			closeButton.label = "Ok";
 			
 			_popUpPanel.headerFactory = function():Header

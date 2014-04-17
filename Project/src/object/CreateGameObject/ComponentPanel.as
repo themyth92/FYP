@@ -71,6 +71,8 @@ package object.CreateGameObject
 		private var _enemy2InputPos		:TextInput;
 		private var _enemy2InputSpeed	:TextInput;
 		private var _enemy2InputImage	:PickerList;
+		
+		private var _hasPatrol			:Array = new Array(false, false);
 		private var _message:Label;		
 		private var _callout	:Callout;
 		private var _alert		:Alert;
@@ -83,6 +85,22 @@ package object.CreateGameObject
 		}
 		
 		private function onAlertClosed(event:Event):void{
+			if(event.data != null)
+			{
+				if(event.data.id == "changeType")
+				{
+					if(event.data.enemy == "enemy1")
+					{
+						this._hasPatrol[0] = false;
+						this._enemy1InputType.selectedIndex = 2;
+					}
+					else if(event.data.enemy == "enemy2")
+					{
+						this._hasPatrol[1] = false;
+						this._enemy2InputType.selectedIndex = 2;
+					}
+				}
+			}
 			this.dispatchEventWith('popUpClose', true);
 			this.removeEventListener(Event.CLOSE, onAlertClosed);
 		}
@@ -108,6 +126,29 @@ package object.CreateGameObject
 		
 		public function disableInput():void
 		{
+			this._playerPosInput.removeEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
+			this._playerPosInput.removeEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
+			this._playerPosInput.removeEventListener(FeathersEventType.FOCUS_OUT, 	onPlayerPosEnter);
+			this._genderInput.removeEventListener	 (Event.CHANGE, 				onSwitch);
+			
+			this._enemy1InputType.removeEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
+			this._enemy1InputPos.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
+			this._enemy1InputPos.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
+			this._enemy1InputPos.removeEventListener	(FeathersEventType.FOCUS_OUT, 	 onEnemy1PosEnter);
+			this._enemy1InputSpeed.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
+			this._enemy1InputSpeed.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
+			this._enemy1InputSpeed.removeEventListener	(FeathersEventType.FOCUS_OUT, 	 onEnemy1SpeedEnter);
+			this._enemy1InputImage.removeEventListener (Event.CHANGE,				 onEnemy1ImgChange);
+			
+			this._enemy2InputType.removeEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
+			this._enemy2InputPos.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
+			this._enemy2InputPos.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
+			this._enemy2InputPos.removeEventListener	(FeathersEventType.FOCUS_OUT, 	 onEnemy2PosEnter);
+			this._enemy2InputSpeed.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
+			this._enemy2InputSpeed.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
+			this._enemy2InputSpeed.removeEventListener	(FeathersEventType.FOCUS_OUT, 	 onEnemy2SpeedEnter);
+			this._enemy2InputImage.removeEventListener (Event.CHANGE,				 onEnemy2ImgChange);
+			
 			this._playerPosInput.clearFocus();
 			this._enemy1InputPos.clearFocus();
 			this._enemy1InputSpeed.clearFocus();
@@ -142,23 +183,7 @@ package object.CreateGameObject
 			this._enemy2InputPos.isFocusEnabled = false;
 			this._enemy2InputSpeed.isFocusEnabled = false;
 			
-			this._playerPosInput.removeEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
-			this._playerPosInput.removeEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
-			this._genderInput.removeEventListener	 (Event.CHANGE, 				onSwitch);
 			
-			this._enemy1InputType.removeEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
-			this._enemy1InputPos.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
-			this._enemy1InputPos.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
-			this._enemy1InputSpeed.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
-			this._enemy1InputSpeed.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
-			this._enemy1InputImage.removeEventListener (Event.CHANGE,				 onEnemy1ImgChange);
-			
-			this._enemy2InputType.removeEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
-			this._enemy2InputPos.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
-			this._enemy2InputPos.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
-			this._enemy2InputSpeed.removeEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
-			this._enemy2InputSpeed.removeEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
-			this._enemy2InputImage.removeEventListener (Event.CHANGE,				 onEnemy2ImgChange);
 		}
 		
 		public function enableInput():void
@@ -506,20 +531,25 @@ package object.CreateGameObject
 			/* Add eventlistener for player info input */
 			this._playerPosInput.addEventListener(FeathersEventType.ENTER, 		onPlayerPosEnter);
 			this._playerPosInput.addEventListener(FeathersEventType.FOCUS_IN, 	onPlayerPosFocus);
+			this._playerPosInput.addEventListener(FeathersEventType.FOCUS_OUT, 	onPlayerPosEnter);
 			this._genderInput.addEventListener	 (Event.CHANGE, 				onSwitch);
 			
 			this._enemy1InputType.addEventListener	(Event.CHANGE, 				 onEnemy1TypeChange);
 			this._enemy1InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1PosEnter);
 			this._enemy1InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1PosFocus);
+			this._enemy1InputPos.addEventListener	(FeathersEventType.FOCUS_OUT, onEnemy1PosEnter);
 			this._enemy1InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy1SpeedEnter);
 			this._enemy1InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy1SpeedFocus);
+			this._enemy1InputSpeed.addEventListener	(FeathersEventType.FOCUS_OUT, onEnemy1SpeedEnter);
 			this._enemy1InputImage.addEventListener (Event.CHANGE,				 onEnemy1ImgChange);
 			
 			this._enemy2InputType.addEventListener	(Event.CHANGE, 				 onEnemy2TypeChange);
 			this._enemy2InputPos.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2PosEnter);
 			this._enemy2InputPos.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2PosFocus);
+			this._enemy2InputPos.addEventListener	(FeathersEventType.FOCUS_OUT, onEnemy2PosEnter);
 			this._enemy2InputSpeed.addEventListener	(FeathersEventType.ENTER, 	 onEnemy2SpeedEnter);
 			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_IN, onEnemy2SpeedFocus);
+			this._enemy2InputSpeed.addEventListener	(FeathersEventType.FOCUS_OUT, onEnemy2SpeedEnter);
 			this._enemy2InputImage.addEventListener (Event.CHANGE,				 onEnemy2ImgChange);
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -585,6 +615,19 @@ package object.CreateGameObject
 				else
 					enemyPatrolNotify(2);
 			}
+			else
+			{
+				if(this._hasPatrol[1])
+				{
+					this._alert = Alert.show("You changed the enemy type.\n Continue will delete your previous process.", "Notification", new ListCollection(
+						[
+							{ label: "Yes" , triggered: function(e:Event):void{onChangeEnemyType(2)}},
+							{ label: "No" , triggered: function(e:Event):void{onKeepEnemyType(2)}},
+							
+						]));
+					this.dispatchEventWith('gotPopUp', true);
+				}
+			}
 		}
 		
 		private function onEnemy1TypeChange(event:Event):void
@@ -596,6 +639,41 @@ package object.CreateGameObject
 				else
 					enemyPatrolNotify(1);
 			}
+			else
+			{
+				if(this._hasPatrol[0])
+				{
+					this._alert = Alert.show("You changed the enemy type.\n Continue will delete your previous process.", "Notification", new ListCollection(
+						[
+							{ label: "Yes" , triggered: function(e:Event):void{onChangeEnemyType(1)}},
+							{ label: "No" , triggered: function(e:Event):void{onKeepEnemyType(1)}},
+							
+						]));
+					this.dispatchEventWith('gotPopUp', true);
+				}
+			}
+		}
+						
+		private function onChangeEnemyType(id:Number):void{
+			this._hasPatrol[id-1] = false;			
+			this.dispatchEventWith("removeEndPts", true, {enemy:id});	
+		}
+		
+		private function onKeepEnemyType(id:Number):void{
+
+			if(id==1)
+			{
+				this._enemy1InputType.removeEventListener(Event.CHANGE, onEnemy1TypeChange);
+				this._enemy1InputType.selectedIndex = 1;
+				this._enemy1InputType.addEventListener(Event.CHANGE, onEnemy1TypeChange);
+			}
+			else if(id==2)
+			{
+				this._enemy2InputType.removeEventListener(Event.CHANGE, onEnemy2TypeChange);
+				this._enemy2InputType.selectedIndex = 1;
+				this._enemy2InputType.addEventListener(Event.CHANGE, onEnemy2TypeChange);
+			}
+			this.dispatchEventWith('popUpClose', true);
 		}
 		
 		private function posFillInNotify(id:Number):void
@@ -689,10 +767,17 @@ package object.CreateGameObject
 		private function onStartChoosingEndPts(id:Number, type:String):void
 		{
 			PopUpManager.removePopUp(_endPtChoosePanel);
+			this.disableInput();
 			if(id == 1)
+			{
+				this._hasPatrol[0] = true;
 				this.dispatchEventWith('startChoosingEndPt', true, {id:"enemy1", option:type, pos:Number(this._enemy1InputPos.text)});
+			}
 			else if(id == 2)
+			{
+				this._hasPatrol[1] = true;
 				this.dispatchEventWith('startChoosingEndPt', true, {id:"enemy2", option:type, pos:Number(this._enemy2InputPos.text)});
+			}
 		}
 		
 		private function onEnemy2SpeedFocus(event:Event):void

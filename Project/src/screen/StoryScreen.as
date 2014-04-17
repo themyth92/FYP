@@ -262,7 +262,7 @@ package screen
 			this.addChild(this._currentStage);
 			
 			//prevent menu button add on top of the game over screen
-			if(event.screenID.to != Constant.GAME_OVER_SCREEN || event.screenID.to != Constant.GAME_SUCCESS_SCREEN)
+			if(event.screenID.to != Constant.GAME_OVER_SCREEN && event.screenID.to != Constant.GAME_SUCCESS_SCREEN)
 				this.addChild(this._menuButton);
 		}
 		

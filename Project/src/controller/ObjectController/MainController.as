@@ -7,9 +7,11 @@
 package controller.ObjectController
 {
 	//Import library
+	import assets.PreviewGameInfo;
+	
 	import constant.Constant;
 	import constant.StoryConstant;
-		
+	
 	import object.inGameObject.Console;
 	import object.inGameObject.Dialogue;
 	import object.inGameObject.Enemies;
@@ -44,6 +46,8 @@ package controller.ObjectController
 		private var _isWon					:Boolean = false;
 		private var _isLost					:Boolean = false;
 		private var _screen					:String;
+		private var _isPaused				:Boolean = false;
+		private var _currState				:String;
 		private var _currDialogPos			:uint = 0;
 		
 		/*--------------------------------------
@@ -198,7 +202,10 @@ package controller.ObjectController
 		public function getGameStat(type:String, value:Number):void
 		{
 			if(type == "max coin")
+			{
+				PreviewGameInfo._maxCoin = value;
 				_maxCoin = value;
+			}
 			if(type == "coin")
 			{
 				_coinCollected = value;
@@ -267,6 +274,7 @@ package controller.ObjectController
 			this._scoreBoard.state	= Constant.INSTRUCTING_STATE;
 			this._dialogue.state 	= Constant.INSTRUCTING_STATE;
 			this._indexBoard.state  = Constant.INSTRUCTING_STATE;
+			this._currState			= Constant.INSTRUCTING_STATE;
 		}
 		
 		private function changeToEdittingState():void
@@ -280,13 +288,22 @@ package controller.ObjectController
 		
 		private function changeToPauseState():void
 		{
-			this._scoreBoard.state 	= Constant.PAUSE_STATE;
-			this._dialogue.state 	= Constant.PAUSE_STATE;
-			this._indexBoard.state  = Constant.PAUSE_STATE;
-			this._indexBoard.stopCharacters();
-			if(this._screen != Constant.STORY_SCREEN_1)
+			if(!this._isPaused)
 			{
-				this._console.state 	= Constant.PAUSE_STATE;
+				this._scoreBoard.state 	= Constant.PAUSE_STATE;
+				this._dialogue.state 	= Constant.PAUSE_STATE;
+				this._indexBoard.state  = Constant.PAUSE_STATE;
+				this._indexBoard.stopCharacters();
+				if(this._screen != Constant.STORY_SCREEN_1)
+				{
+					this._console.state 	= Constant.PAUSE_STATE;
+				}
+				this._isPaused = true;
+			}
+			else
+			{
+				this._isPaused = false;
+				this.changeState(this._currState);
 			}
 		}
 		
@@ -308,6 +325,7 @@ package controller.ObjectController
 			this._indexBoard.updateMaxLife(_maxLife);
 			notifyScoreBoard("coin");
 			notifyScoreBoard("life");
+			this._currState			= Constant.PLAYING_STATE;
 		}
 		
 		private function changeToEndingState():void

@@ -44,6 +44,7 @@ package screen
 	import starling.display.Stage;
 	import starling.events.Event;
 	import starling.filters.BlurFilter;
+	import starling.text.TextField;
 	
 	public class CreateGameScreen extends Sprite
 	{	
@@ -89,6 +90,7 @@ package screen
 			this.addEventListener('GameFieldChanged', onGameFieldChange);
 			this.addEventListener('popUpDisplay', onPopUpDisplayed);
 			this.addEventListener('popUpClose', onPopUpClosed);
+			this.addEventListener('removeEndPts', onRemoveEndPts);
 			this.addEventListener(MENU_EVENT, onMenuEvent);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
@@ -144,7 +146,11 @@ package screen
 		}
 		
 		private function onPopUpClosed(event:Event):void{
-			this.broadcastEventWith('closedPopUp');
+			this.broadcastEventWith('closedPopUp', event.data);
+		}
+		
+		private function onRemoveEndPts(event:Event):void{
+			this._gridPanel.removeEndPts(event.data.enemy);
 		}
 		
 		private function onAddedToStage(event:Event):void{
@@ -369,6 +375,15 @@ package screen
 				});
 				return;
 			}
+			
+			if(!this._gridPanel.hasGoal)
+			{
+				alert = Alert.show("There is no 'Goal'.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				return;
+			}
 			PreviewGameInfo._gameTitle = "Preview Game";
 			PreviewGameInfo._gameScreen.isUserDef = this._scoreBoard.getScreen().isUserDef;
 			PreviewGameInfo._gameScreen.textureIndex = this._scoreBoard.getScreen().textureIndex;
@@ -418,37 +433,52 @@ package screen
 				});
 				return;
 			}
+			
+			if(!this._gridPanel.hasGoal)
+			{
+				alert = Alert.show("There is no 'Goal'.", "Error", new ListCollection(
+					[
+						{ label: "OK" }
+					]));
+				return;
+			}
+			
 			var titlePanel	:Panel = new Panel();
-			titlePanel..headerFactory = function():Header
+			titlePanel.headerFactory = function():Header
 			{
 				var header:Header = new Header();
 				header.title = "Title";
 				return header;
 			}
+			titlePanel.x = 150;
+			titlePanel.y = 150;
+			
 			titlePanel.width = 500;
-			titlePanel.height = 300;
+			titlePanel.height = 250;
 				
 			var title	:TextInput = new TextInput();
+			title.x = 100;
 			title.width = 300;
-			title.height = 100;
+			title.height = 50;
+			title.textEditorProperties.@fontSize = 30;
 			titlePanel.addChild(title);
 			
 			var closeButton :feathers.controls.Button = new feathers.controls.Button();
 			closeButton.addEventListener(Event.TRIGGERED, function(e:Event):void {
 				if(title.text != null)
-					publishData(title.text);
-				//else
-					//showError
+					publishData(titlePanel, title.text);
 			});
-			closeButton.x = 75;
-			closeButton.y = 150;
+			closeButton.x = 225;
+			closeButton.y = 100;
 			closeButton.label = "Ok";
 			titlePanel.addChild(closeButton);
 			this.addChild(titlePanel);
 		}
 		
-		private function publishData(title:String):void
+		private function publishData(panel:Panel, title:String):void
 		{
+			this.removeChild(panel);
+			
 			var data:Object = new Object();
 			var enemy:Array = this._componentPanel.getEnemyInfo();
 			enemy[0].endPts = [].concat(this._gridPanel.Enemy1EndPts);
@@ -463,6 +493,7 @@ package screen
 			data.scoreboard	= this._scoreBoard.getScoreBoardInfo();
 			data.screenShot = this.takeScreenShot(DisplayObject(this._gridPanel));
 			this._com.publishGame(data);
+			this.resetGameCreation();
 		}
 		
 		//change the xindex and yindex inside the 2D array

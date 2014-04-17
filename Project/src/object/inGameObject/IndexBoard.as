@@ -254,7 +254,22 @@ package object.inGameObject
 				
 				/* Player's checking functions */
 				if(_hitCounter >= 30)
-					this._isHit = false;
+				{
+					if(this._isHit)
+					{
+						this._isHit = false;
+						if(this._enemy1 != null && this._enemy1.type == Constant.FOLLOW_TYPE && this._enemy1.playerFound)
+						{
+							this._enemy1.playerFound = false;
+							this._enemy1.counter = 30;
+						}
+						if(this._enemy2 != null && this._enemy2.type == Constant.FOLLOW_TYPE && this._enemy2.playerFound)
+						{
+							this._enemy2.playerFound = false;
+							this._enemy2.counter = 30;
+						}
+					}
+				}
 				checkCollisionWithObstacles();
 				checkCollisionWithEnemy();
 				checkPlayerOutOfArea();
@@ -315,7 +330,7 @@ package object.inGameObject
 				if(this._obsList[i].pos.equals(indexToPoint(index)))
 				{
 					this.removeChild(this._obsList[i])
-					this._obsList.slice(i, 1);
+					this._obsList.splice(i, 1);
 				}
 			}
 		}
@@ -985,11 +1000,13 @@ package object.inGameObject
 						
 						if(savedPoint)
 						{
+							var m:Number;
+							var n:Number;
 							if((savedPoint.x != _endPoint.x) || (savedPoint.y != _endPoint.y))
 							{
 								enemy.targetPt = savedPoint;
-								var m:Number = savedPoint.x / 40;
-								var n:Number = savedPoint.y / 40;
+								m = savedPoint.x / 40;
+								n = savedPoint.y / 40;
 								if(enemy.id == 1)
 									_tileVector[m][n].visited1 = true;
 								else if(enemy.id == 2)
@@ -999,7 +1016,16 @@ package object.inGameObject
 							enemy.path.push(enemy.currPoint);
 							
 							if((savedPoint.x == _endPoint.x) && (savedPoint.y == _endPoint.y))
+							{
 								enemy.playerFound = true;
+								enemy.targetPt = savedPoint;
+								m = savedPoint.x / 40;
+								n = savedPoint.y / 40;
+								if(enemy.id == 1)
+									_tileVector[m][n].visited1 = true;
+								else if(enemy.id == 2)
+									_tileVector[m][n].visited2 = true;
+							}
 						}
 						else
 						{
@@ -1282,11 +1308,12 @@ package object.inGameObject
 			//Remove obstacles from display
 			this.removeChild(this._obsList[index]);
 			//Remove obstacles from the obstacles list
-			this._obsList.slice(index, 1);
+			this._obsList.splice(index, 1);
 			//Increase the stats
 			this._currCollectObs ++;
 			//Report to main controller to display on scoreboard
 			this._controller.currCollectedObs = this._currCollectObs;
+			this._controller.getGameStat("coin", this._currCollectObs);
 		}
 		
 		/*-----------------------------------------------------------------------
@@ -1317,7 +1344,7 @@ package object.inGameObject
 		| @Finish the stage														|
 		| @Report back to server												|
 		-------------------------------------------------------------------------*/
-		private function finishStage():void{
+		private function finishStage():void{		
 			this._controller.isWon = true;
 		}
 		

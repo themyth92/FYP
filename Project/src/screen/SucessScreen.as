@@ -52,6 +52,9 @@ package screen
 					
 					this.addChild(this._quitBtn);
 					this.addChild(this._retryBtn);
+					
+					this._quitBtn.addEventListener(Event.TRIGGERED, onQuitBtnTrigger);
+					this._retryBtn.addEventListener(Event.TRIGGERED, onRetryBtnTrigger);
 					break;
 				case PLAY_PAGE:
 					
