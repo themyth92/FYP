@@ -92,6 +92,7 @@ package controller.LoaderControler
 					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
 					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
 					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
+					Assets.gameID	= this._serverData.id;
 					this._questionList 	= this.getQsList (this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
@@ -106,6 +107,7 @@ package controller.LoaderControler
 					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
 					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
 					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
+					Assets.gameID	= this._serverData.id;
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();

@@ -386,7 +386,6 @@ package screen
 			this.removeEventListener(Event.TRIGGERED, onButtonClicked);
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			this.removeEventListener(MENU_EVENT, onMenuEvent);
-			this.removeEventListener(SUCCESS_EVENT, onSuccessEvent);
 		}
 		
 		private function gameOver():void
