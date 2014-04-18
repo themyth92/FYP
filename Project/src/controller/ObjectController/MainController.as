@@ -235,9 +235,11 @@ package controller.ObjectController
 			}
 		}
 		
-		public function doneQuiz():void
+		public function doneQuiz(index:Number, isCorrect:Boolean):void
 		{
 			this._indexBoard.isDisplayedQuiz = false;
+			if(this._screen == Constant.PLAY_SCREEN)
+				this._indexBoard.obsCollect(index, isCorrect);
 		}
 	
 		/**====================================================================

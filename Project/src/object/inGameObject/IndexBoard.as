@@ -1232,14 +1232,24 @@ package object.inGameObject
 						{
 							var overlapX	:Number = this._player.width/2 + obsList[i].width/2 - Math.abs(vx);
 							var overlapY	:Number = this._player.height/2 + obsList[i].height/2 - Math.abs(vy);
-							
-							if(obsList[i].gotQns)
-								showQuestion(obsList[i].qnsIndex);
+							if(this._screen != Constant.PLAY_SCREEN)
+							{
+								if(obsList[i].gotQns)
+									showQuestion(i, obsList[i].qnsIndex);
+							}
 							
 							if(obsList[i].type == Constant.COLLECT_OBS)
 							{
-								obsCollect(i);
-								break;
+								if(obsList[i].gotQns)
+								{
+									showQuestion(i, obsList[i].qnsIndex);
+									break;
+								}
+								else
+								{
+									obsCollect(i, true);
+									break;
+								}
 							}
 							else if(overlapX >= overlapY)
 							{
@@ -1304,13 +1314,14 @@ package object.inGameObject
 		/*-----------------------------------------------------------------------
 		| @Collect obstacles upon contact										|
 		-------------------------------------------------------------------------*/
-		private function obsCollect(index:Number):void{
+		public function obsCollect(index:Number, isCorrect:Boolean):void{
 			//Remove obstacles from display
 			this.removeChild(this._obsList[index]);
 			//Remove obstacles from the obstacles list
 			this._obsList.splice(index, 1);
 			//Increase the stats
-			this._currCollectObs ++;
+			if(isCorrect)
+				this._currCollectObs ++;
 			//Report to main controller to display on scoreboard
 			this._controller.currCollectedObs = this._currCollectObs;
 			this._controller.getGameStat("coin", this._currCollectObs);
@@ -1351,10 +1362,10 @@ package object.inGameObject
 		/*-----------------------------------------------------------------------
 		| @If obstacles got qns => show											|
 		-------------------------------------------------------------------------*/
-		private function showQuestion(index:Number):void{
+		private function showQuestion(id:Number, index:Number):void{
 			if(!_isDisplayedQuiz)
 			{
-				var qns: Question = new Question(this._controller, index);
+				var qns: Question = new Question(this._controller, index, id);
 				this._isDisplayedQuiz = true;
 				this.addChild(qns);
 			}

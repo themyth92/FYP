@@ -50,9 +50,10 @@ package object.inGameObject
 		private var _mcqLayout	:VerticalLayout;
 		private var _controller	:MainController;
 		private var _index		:Number;
+		private var _id			:Number;
 		private var _serverClient	:ServerClientManager;
 		
-		public function Question(controller:MainController, index:Number)
+		public function Question(controller:MainController, index:Number, id:Number)
 		{
 			this._controller = controller;
 			this._isDisplayed = true;
@@ -68,6 +69,7 @@ package object.inGameObject
 					this._hint = Assets.getUserQuestion()[index].hint;
 					this._correctAns = Assets.getUserQuestion()[index].select;
 					this._index = index;
+					this._id = id;
 				}
 			}
 			
@@ -180,13 +182,6 @@ package object.inGameObject
 			hint.addEventListener(Event.TRIGGERED, showHint);
 			buttonGroup.addChild(hint);
 			
-			var closeButton :Button = new Button();
-			closeButton.label = "Exit";
-			closeButton.height = 50;
-			closeButton.width = 150;
-			closeButton.addEventListener(Event.TRIGGERED, onCloseQuestionWindow);
-			buttonGroup.addChild(closeButton);
-			
 			this._questionArea.addChildAt(buttonGroup, 4);
 			this.dispatchEventWith('doingQuiz', true);
 			this.addChild(_questionArea);
@@ -242,7 +237,7 @@ package object.inGameObject
 			this.dispatchEventWith('doneQuiz', true);
 			PopUpManager.removePopUp(_questionArea, true );
 			_isPoppedUp = false;
-			this._controller.doneQuiz();
+			this._controller.doneQuiz(this._id, this._isCorrect);
 		}
 	}
 }

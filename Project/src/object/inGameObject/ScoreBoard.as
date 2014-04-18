@@ -310,12 +310,12 @@ package object.inGameObject
 				minuteText.x = 10;
 				minuteText.textEditorProperties.fontSize = 20;
 				minuteText.width = 75;
-				minuteText.height = 100;
+				minuteText.height = 40;
 				var secondText:TextInput = new TextInput();
 				secondText.x = 110;
 				secondText.textEditorProperties.fontSize = 20;
 				secondText.width = 75;
-				secondText.height = 100;
+				secondText.height = 40;
 	
 				minuteText.text = formatLeadingZero(_minutesOn);
 				secondText.text = formatLeadingZero(_secondsOn);

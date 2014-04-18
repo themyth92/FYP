@@ -244,7 +244,15 @@ package object.CreateGameObject
 				if(PreviewGameInfo._obsTexture[i].isUserDef)
 					texture = Assets.getUserTexture()[PreviewGameInfo._obsTexture[i].textureIndex];
 				else
-					texture = Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("pattern_"+formatLeadingZero(PreviewGameInfo._obsTexture[i].textureIndex));
+				{
+					if(Number(PreviewGameInfo._obsType[i]) != 5)
+						texture = Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("pattern_"+formatLeadingZero(PreviewGameInfo._obsTexture[i].textureIndex));
+					else
+					{
+						this._hasGoal = true;
+						texture = Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("Goal");
+					}
+				}
 				droppedObject = new ObstacleObj(texture, PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, Number(PreviewGameInfo._obsType[i]));
 				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
 				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;

@@ -292,7 +292,7 @@ package screen
 				case RESUME_GAME_EVENT:
 					this.removeChild(this._menuScreen);
 					this._menuScreen = null;
-					this._controller.changeState(Constant.PLAYING_STATE);
+					this._controller.changeState(Constant.PAUSE_STATE);
 					break;
 				case RESET_PLAY_GAME_EVENT:
 					this.reset();
