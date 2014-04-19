@@ -18,6 +18,7 @@ package screen
 	import feathers.controls.TextInput;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
+	import feathers.layout.HorizontalLayout;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.MetalWorksMobileTheme;
 	
@@ -311,6 +312,7 @@ package screen
 		
 		private function onSaveBtnTrigger(event:Event):void
 		{
+			var alert : Alert = new Alert();
 			var data:Object = new Object();
 			var enemy:Array = this._componentPanel.getEnemyInfo();
 			enemy[0].endPts = [].concat(this._gridPanel.Enemy1EndPts);
@@ -329,6 +331,12 @@ package screen
 			//save game button is clicked, all the information will be stored on server
 			
 			this._com.saveUserGameCreation(data, onSaveButtonTriggerCallBack);
+			
+			alert = Alert.show("Your creation is saved", "Notification", new ListCollection(
+				[
+					{ label: "OK" }
+				]));
+			
 		}
 		
 		private function onSaveButtonTriggerCallBack(data: String):void
@@ -477,6 +485,7 @@ package screen
 		
 		private function publishData(panel:Panel, title:String):void
 		{
+			var alert:Alert;
 			this.removeChild(panel);
 			
 			var data:Object = new Object();
@@ -493,6 +502,10 @@ package screen
 			data.scoreboard	= this._scoreBoard.getScoreBoardInfo();
 			data.screenShot = this.takeScreenShot(DisplayObject(this._gridPanel));
 			this._com.publishGame(data);
+			alert = Alert.show("Your game is published", "Notification", new ListCollection(
+				[
+					{ label: "OK" }
+				]));
 			this.resetGameCreation();
 		}
 		
