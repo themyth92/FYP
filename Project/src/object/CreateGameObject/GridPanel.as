@@ -80,7 +80,9 @@ package object.CreateGameObject
 			this._enemy1EndPts		= new Vector.<Number>();
 			this._enemy2EndPts		= new Vector.<Number>();
 			this._enemy1Index = new Object();
+			this._enemy1Index.pos = null;
 			this._enemy2Index = new Object();
+			this._enemy2Index.pos = null;
 			this._playerIndex = new Object();
 			
 			for(var i:uint = 0 ; i < Assets.getUserQuestion().length ; i++){
@@ -193,6 +195,57 @@ package object.CreateGameObject
 			clearQuad();
 			highlightOccupiedTiles();
 			this.dispatchEventWith("popUpClose", true);
+		}
+		
+		public function removeEnemy(id:Number):void{
+			var pos: Number;
+			if(id == 1)
+			{
+				if(this._enemy1Index.pos != null)
+				{
+					this._occupiedList.splice(this._enemy1Index.pos, 1);
+					pos = this._enemy1Index.pos;
+					this._enemy1Index.pos = null;
+					moveIndexTracker(pos, 1);
+				}
+				this.removeChild(this._enemy1Img);
+			
+				resetOccupiedList(1);
+			}
+			else if(id == 2)
+			{
+				if(this._enemy2Index.pos != null)
+				{
+					this._occupiedList.splice(this._enemy2Index.pos, 1);
+					pos = this._enemy2Index.pos;
+					this._enemy2Index.pos = null;
+					moveIndexTracker(pos, 1);
+				}
+				this.removeChild(this._enemy2Img);
+
+				resetOccupiedList(2);
+			}
+			clearQuad();
+			highlightOccupiedTiles();
+		}
+		
+		private function moveIndexTracker(index:Number, amount:Number):void{
+			if(this._playerIndex.pos != null && this._playerIndex.pos > index)
+				this._playerIndex.pos -= amount;
+			
+			if(this._enemy1Index.pos != null && this._enemy1Index.pos > index)
+				this._enemy1Index.pos -= amount;
+			if(this._enemy1Index.start != null && this._enemy1Index.start > index)
+				this._enemy1Index.start -= amount;
+			if(this._enemy1Index.end != null && this._enemy1Index.end > index)
+				this._enemy1Index.end -= amount;
+			
+			if(this._enemy2Index.pos != null && this._enemy2Index.pos > index)
+				this._enemy2Index.pos -= amount;
+			if(this._enemy2Index.start != null && this._enemy2Index.start > index)
+				this._enemy2Index.start -= amount;
+			if(this._enemy2Index.end != null && this._enemy2Index.end > index)
+				this._enemy2Index.end -= amount;
 		}
 		
 		public function reset():void
@@ -536,8 +589,13 @@ package object.CreateGameObject
 				{
 					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
-						if(this._enemy1Index.pos != undefined)
+						if(this._enemy1Index.pos != null)
+						{
 							this._occupiedList.splice(this._enemy1Index.pos, 1);
+							this._enemy1Index.pos = null;
+							this._enemy1Index.start --;
+							this._enemy1Index.end --;
+						}
 						this.removeChild(this._enemy1Img);
 						this._enemy1Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
 						this._enemy1Img.x = xIndex*40;
@@ -558,8 +616,11 @@ package object.CreateGameObject
 				{
 					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
-						if(this._enemy2Index.pos != undefined)
+						if(this._enemy2Index.pos != null)
+						{
 							this._occupiedList.splice(this._enemy2Index.pos, 1);
+							this._enemy2Index.pos = null;
+						}
 						this.removeChild(this._enemy2Img);
 						this._enemy2Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
 						this._enemy2Img.x = xIndex*40;
@@ -657,20 +718,28 @@ package object.CreateGameObject
 		}
 		
 		private function resetOccupiedList(id:Number):void{
+			var start:Number;
+			var end	:Number;
 			if(id == 1)
 			{
 				this._enemy1EndPts.length = 0;
 				this._occupiedList.splice(this._enemy1Index.start, this._enemy1Index.end - this._enemy1Index.start);
-				this._enemy1Index.start = 0;
-				this._enemy1Index.end = 0;
+				start = this._enemy1Index.start;
+				end = this._enemy1Index.end;
 				
+				this._enemy1Index.start = null;
+				this._enemy1Index.end = null;
+				moveIndexTracker(start, end-start);
 			}
 			else if (id == 2)
 			{
 				this._enemy2EndPts.length = 0;
 				this._occupiedList.splice(this._enemy2Index.start, this._enemy2Index.end - this._enemy2Index.start);
-				this._enemy2Index.start = 0;
-				this._enemy2Index.end = 0;
+				start = this._enemy2Index.start;
+				end = this._enemy2Index.end;
+				this._enemy2Index.start = null;
+				this._enemy2Index.end = null;
+				moveIndexTracker(start, end-start);
 			}
 			clearQuad();
 			highlightOccupiedTiles();

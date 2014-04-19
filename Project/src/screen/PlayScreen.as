@@ -90,6 +90,7 @@ package screen
 		
 		private function onMenuBtnTrigger(event:Event):void
 		{
+			this._controller.changeState(Constant.PAUSE_STATE);
 			this._menuScreen				= new MenuScreen(Constant.PLAY_SCREEN);
 			this.addChild(this._menuScreen);
 		}
@@ -286,8 +287,7 @@ package screen
 		}
 		
 		private function onMenuEvent(event:Event):void
-		{
-			this._controller.changeState(Constant.PAUSE_STATE);
+		{	
 			switch(event.data.event){
 				case RESUME_GAME_EVENT:
 					this.removeChild(this._menuScreen);

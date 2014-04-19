@@ -569,9 +569,9 @@ package object.CreateGameObject
 			if(pos != 0)
 				this._playerPosInput.text = pos.toString();
 			if(gender == "Male")
-				this._genderInput.isSelected = false;
-			else(gender == "Female")
 				this._genderInput.isSelected = true;
+			else(gender == "Female")
+				this._genderInput.isSelected = false;
 		}
 		
 		private function initializeEnemyInfo():void
@@ -608,7 +608,7 @@ package object.CreateGameObject
 		 * ====================================================================**/
 		private function onEnemy2TypeChange(event:Event):void
 		{
-			if(this._enemy2InputType.selectedIndex == 1)
+			if(this._enemy2InputType.selectedIndex == 1 || this._enemy2InputPos.text == "0")
 			{
 				if(this._enemy2InputPos.text == "")
 					posFillInNotify(2);
@@ -627,6 +627,9 @@ package object.CreateGameObject
 						]));
 					this.dispatchEventWith('gotPopUp', true);
 				}
+				
+				if(this._enemy2InputType.selectedIndex == 2)
+					this.dispatchEventWith('deleteEnemy', true, {id:2});
 			}
 		}
 		
@@ -634,7 +637,7 @@ package object.CreateGameObject
 		{
 			if(this._enemy1InputType.selectedIndex == 1)
 			{
-				if(this._enemy1InputPos.text == "")
+				if(this._enemy1InputPos.text == "" || this._enemy1InputPos.text == "0")
 					posFillInNotify(1);
 				else
 					enemyPatrolNotify(1);
@@ -651,6 +654,9 @@ package object.CreateGameObject
 						]));
 					this.dispatchEventWith('gotPopUp', true);
 				}
+				
+				if(this._enemy1InputType.selectedIndex == 2)
+					this.dispatchEventWith('deleteEnemy', true, {id:1});
 			}
 		}
 						

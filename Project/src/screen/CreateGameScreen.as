@@ -92,6 +92,7 @@ package screen
 			this.addEventListener('popUpDisplay', onPopUpDisplayed);
 			this.addEventListener('popUpClose', onPopUpClosed);
 			this.addEventListener('removeEndPts', onRemoveEndPts);
+			this.addEventListener('deleteEnemy', onDeleteEnemy);
 			this.addEventListener(MENU_EVENT, onMenuEvent);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, onRemoveFromStage);
 		}
@@ -140,6 +141,10 @@ package screen
 		private function onRemoveFromStage(event:Event):void
 		{
 			
+		}
+		
+		private function onDeleteEnemy(event:Event):void{
+			this._gridPanel.removeEnemy(event.data.id);
 		}
 		
 		private function onPopUpDisplayed(event:Event):void{
