@@ -269,7 +269,7 @@ package object.CreateGameObject
 					this._selectedScreen.textureIndex = this._screenList[i].textureIndex;
 					this._screenSelect.removeChildren();
 					this.removeChild(this._screenSelect);
-					this._screenSelectBtn.addEventListener(Event.TRIGGERED, showScreenSelection);
+					this._screenSelectBtn.addEventListener(TouchEvent.TOUCH, showScreenSelection);
 					this._screenImg.length = 0;
 					this._screenList.length = 0;
 					this.dispatchEventWith('GameFieldChanged', true, this._selectedScreen);
