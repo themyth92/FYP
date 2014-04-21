@@ -171,6 +171,9 @@ package object.CreateGameObject
 			this._secStart = PreviewGameInfo._secStart;
 			this.reviewTime();
 			this.reviewLife();
+			
+			this._selectedScreen.isUserDef = PreviewGameInfo._gameScreen.isUserDef;
+			this._selectedScreen.textureIndex = PreviewGameInfo._gameScreen.textureIndex;
 		}
 		
 		private function showScreenSelection(e:TouchEvent):void{
