@@ -96,9 +96,10 @@ package object.CreateGameObject
 				
 				
 				this._obstacleObjects.push(obj);
+				i++;
 				obj 				= null;
 				this.addChild(this._obstacleObjects[i]);
-				i++;
+				
 			}
 			
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);

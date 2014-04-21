@@ -176,12 +176,12 @@ package controller.LoaderControler
 				var address 	: String = _imgList[_fileIndex].address;
 				
 				if(_imgList[_fileIndex].type == 'Obstacles'){
-					Assets.storeUserTexture(texture, title, 1, address, this._obstaclesTexIndex);
+					Assets.storeUserTexture(texture, title, 2, address, this._obstaclesTexIndex);
 					this._obstaclesTexIndex ++;
 				}
 				else{
 					if(_imgList[_fileIndex].type == 'Rewards'){
-						Assets.storeUserTexture(texture, title, 2, address, this._obstaclesTexIndex);
+						Assets.storeUserTexture(texture, title, 1, address, this._obstaclesTexIndex);
 						this._obstaclesTexIndex ++;
 					}	
 					else

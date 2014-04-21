@@ -486,6 +486,9 @@ package screen
 			closeButton.label = "Ok";
 			titlePanel.addChild(closeButton);
 			this.addChild(titlePanel);
+			
+			//must reset the id
+			Assets.gameID	= null;
 		}
 		
 		private function publishData(panel:Panel, title:String):void
