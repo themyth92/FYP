@@ -569,9 +569,9 @@ package object.CreateGameObject
 			if(pos != 0)
 				this._playerPosInput.text = pos.toString();
 			if(gender == "Male")
-				this._genderInput.isSelected = true;
-			else(gender == "Female")
 				this._genderInput.isSelected = false;
+			else(gender == "Female")
+				this._genderInput.isSelected = true;
 		}
 		
 		private function initializeEnemyInfo():void
