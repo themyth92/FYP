@@ -92,7 +92,6 @@ package controller.LoaderControler
 				
 				else if(this._serverData.pageID == PLAY_PAGE)
 				{
-					
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
