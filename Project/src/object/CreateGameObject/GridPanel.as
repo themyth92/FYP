@@ -310,6 +310,7 @@ package object.CreateGameObject
 				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
 				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;
 				this._gridObjects[xIndex][yIndex].changeStateToObstacle(droppedObject);
+				this._gridObjects[xIndex][yIndex].selectedIndex = PreviewGameInfo._obsQns[i].qnsIndex;
 			}
 		}
 		
@@ -424,10 +425,10 @@ package object.CreateGameObject
 				this._currEndPt.column = this._enemy2Img.x/40;
 				for(var j:uint=0; j<endPts2Length-1; j++)
 				{
-					setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[j]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[j]).row);
+					setOccupiedList(indexToPoints(PreviewGameInfo._enemy2EndPts[j]).column, indexToPoints(PreviewGameInfo._enemy2EndPts[j]).row);
 					occupiedPt = new Object();
-					occupiedPt.row = indexToPoints(PreviewGameInfo._enemy1EndPts[j]).row;
-					occupiedPt.column = indexToPoints(PreviewGameInfo._enemy1EndPts[j]).column;
+					occupiedPt.row = indexToPoints(PreviewGameInfo._enemy2EndPts[j]).row;
+					occupiedPt.column = indexToPoints(PreviewGameInfo._enemy2EndPts[j]).column;
 					this._occupiedList.push(occupiedPt);
 					
 					this._currEndPt.row = occupiedPt.row;
