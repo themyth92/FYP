@@ -85,14 +85,6 @@ package controller.LoaderControler
 				else if(this._serverData.pageID == SAVE_PAGE)
 				{
 					PreviewGameInfo._isSaved = true;
-					PreviewGameInfo._gameID 	= this._serverData.id;
-					PreviewGameInfo._gameScreen = this._serverData.screen;
-					PreviewGameInfo._gameTitle 	= this._serverData.title;
-					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
-					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
-					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
-					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
-					Assets.gameID	= this._serverData.id;
 					this._questionList 	= this.getQsList (this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
@@ -100,14 +92,7 @@ package controller.LoaderControler
 				
 				else if(this._serverData.pageID == PLAY_PAGE)
 				{
-					PreviewGameInfo._gameID 	= this._serverData.id;
-					PreviewGameInfo._gameScreen = this._serverData.screen;
-					PreviewGameInfo._gameTitle 	= this._serverData.title;
-					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
-					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
-					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
-					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
-					Assets.gameID	= this._serverData.id;
+					
 					this._questionList 	= this.getQsList(this._serverData);
 					this._imgList	  	= this.getImgList(this._serverData);
 					this.loadUserTexture();
@@ -130,6 +115,17 @@ package controller.LoaderControler
 			}
 			else{
 				this._loadedPcent = 100;
+				if(this._serverData.pageID != STORY_PAGE)
+				{
+					PreviewGameInfo._gameID 	= this._serverData.id;
+					PreviewGameInfo._gameScreen = this._serverData.screen;
+					PreviewGameInfo._gameTitle 	= this._serverData.title;
+					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
+					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
+					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
+					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
+					Assets.gameID	= this._serverData.id;
+				}
 				//dispatch event when load complete
 				this.dispatchEventWith(LOAD_COMPLETE, false, {pageID : this._serverData.pageID});
 			}
@@ -181,6 +177,7 @@ package controller.LoaderControler
 				}
 				else{
 					if(_imgList[_fileIndex].type == 'Rewards'){
+						
 						Assets.storeUserTexture(texture, title, 2, address, this._obstaclesTexIndex);
 						this._obstaclesTexIndex ++;
 					}	
@@ -204,7 +201,18 @@ package controller.LoaderControler
 				loadEachTexure();
 			}
 			else{
-				
+				trace("go here");
+				if(this._serverData.pageID != STORY_PAGE)
+				{
+					PreviewGameInfo._gameID 	= this._serverData.id;
+					PreviewGameInfo._gameScreen = this._serverData.screen;
+					PreviewGameInfo._gameTitle 	= this._serverData.title;
+					PreviewGameInfo.storePlayerInfo		 (this._serverData.player);
+					PreviewGameInfo.storeObstaclesInfo	 (this._serverData.obstacles);
+					PreviewGameInfo.storeScoreInfo		 (this._serverData.scoreBoard);
+					PreviewGameInfo.storeEnemyInfo(this._serverData.enemy, null, null);
+					Assets.gameID	= this._serverData.id;
+				}
 				//when load complete
 				this.dispatchEventWith(LOAD_COMPLETE, false, {pageID : this._serverData.pageID});
 			}

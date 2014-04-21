@@ -295,7 +295,7 @@ package object.CreateGameObject
 			for(var i:uint=0; i<obsListLength; i++)
 			{
 				if(PreviewGameInfo._obsTexture[i].isUserDef)
-					texture = Assets.getUserTexture()[PreviewGameInfo._obsTexture[i].textureIndex];
+					texture = Assets.getUserTexture()[PreviewGameInfo._obsTexture[i].textureIndex].texture;
 				else
 				{
 					if(Number(PreviewGameInfo._obsType[i]) != 5)
