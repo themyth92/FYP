@@ -486,9 +486,6 @@ package screen
 			closeButton.label = "Ok";
 			titlePanel.addChild(closeButton);
 			this.addChild(titlePanel);
-			
-			//must reset the id
-			Assets.gameID	= null;
 		}
 		
 		private function publishData(panel:Panel, title:String):void
@@ -514,7 +511,10 @@ package screen
 				[
 					{ label: "OK" }
 				]));
+			trace(Assets.gameID);
+			Assets.gameID = null;
 			this.resetGameCreation();
+			
 		}
 		
 		//change the xindex and yindex inside the 2D array
