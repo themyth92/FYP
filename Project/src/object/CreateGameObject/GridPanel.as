@@ -333,6 +333,7 @@ package object.CreateGameObject
 				this._playerImg.y = yIndex*40;
 				this.addChild(this._playerImg);
 				
+				this._playerIndex.pos = this._occupiedList.length;
 				var occupiedPt :Object = new Object();
 				occupiedPt.row = yIndex;
 				occupiedPt.column = xIndex;
@@ -364,6 +365,7 @@ package object.CreateGameObject
 							this._enemy1Img.y = yIndex*40;
 							
 							this.addChild(this._enemy1Img);
+							this._enemy1Index.pos = this._occupiedList.length;
 						}
 						else if (i == 1)
 						{
@@ -375,6 +377,7 @@ package object.CreateGameObject
 							this._enemy2Img.y = yIndex*40;
 							
 							this.addChild(this._enemy2Img);
+							this._enemy2Index.pos = this._occupiedList.length;
 						}
 						var occupiedPt :Object = new Object();
 						occupiedPt.row = yIndex;
@@ -403,6 +406,10 @@ package object.CreateGameObject
 			{
 				this._currEndPt.row = this._enemy1Img.y/40;
 				this._currEndPt.column = this._enemy1Img.x/40;
+				if(endPts1Length != 0)
+					this._enemy1Index.start = this._occupiedList.length;
+				else
+					this._enemy1Index.start = null;
 				for(var i:uint=0; i<endPts1Length-1; i++)
 				{
 					setOccupiedList(indexToPoints(PreviewGameInfo._enemy1EndPts[i]).column, indexToPoints(PreviewGameInfo._enemy1EndPts[i]).row);
@@ -414,6 +421,10 @@ package object.CreateGameObject
 					this._currEndPt.row = occupiedPt.row;
 					this._currEndPt.column = occupiedPt.column;
 				}
+				if(endPts1Length != 0)
+					this._enemy1Index.end = this._occupiedList.length;
+				else
+					this._enemy1Index.end = null;
 			}
 			
 			this._enemy1EndPts = PreviewGameInfo._enemy1EndPts;
@@ -423,6 +434,10 @@ package object.CreateGameObject
 			{
 				this._currEndPt.row = this._enemy2Img.y/40;
 				this._currEndPt.column = this._enemy2Img.x/40;
+				if(endPts2Length != 0)
+					this._enemy2Index.start = this._occupiedList.length;
+				else
+					this._enemy2Index.start = null;
 				for(var j:uint=0; j<endPts2Length-1; j++)
 				{
 					setOccupiedList(indexToPoints(PreviewGameInfo._enemy2EndPts[j]).column, indexToPoints(PreviewGameInfo._enemy2EndPts[j]).row);
@@ -434,6 +449,10 @@ package object.CreateGameObject
 					this._currEndPt.row = occupiedPt.row;
 					this._currEndPt.column = occupiedPt.column;
 				}
+				if(endPts2Length != 0)
+					this._enemy2Index.end = this._occupiedList.length;
+				else
+					this._enemy2Index.end = null;
 			}
 			this._enemy2EndPts = PreviewGameInfo._enemy2EndPts;
 			this._currEndPt = new Object();
@@ -585,6 +604,7 @@ package object.CreateGameObject
 				var pos		:Object = indexToPoints(data.pos);
 				var yIndex	:Number = pos.row;
 				var xIndex	:Number = pos.column;
+				var track	:Number;
 				
 				if(data.id == "enemy1")
 				{
@@ -593,9 +613,9 @@ package object.CreateGameObject
 						if(this._enemy1Index.pos != null)
 						{
 							this._occupiedList.splice(this._enemy1Index.pos, 1);
+							track = this._enemy1Index.pos;
 							this._enemy1Index.pos = null;
-							this._enemy1Index.start --;
-							this._enemy1Index.end --;
+							moveIndexTracker(track,1);
 						}
 						this.removeChild(this._enemy1Img);
 						this._enemy1Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
@@ -620,7 +640,9 @@ package object.CreateGameObject
 						if(this._enemy2Index.pos != null)
 						{
 							this._occupiedList.splice(this._enemy2Index.pos, 1);
+							track = this._enemy2Index.pos;
 							this._enemy2Index.pos = null;
+							moveIndexTracker(track,1);
 						}
 						this.removeChild(this._enemy2Img);
 						this._enemy2Img = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Enemy/Enemy_" + data.textureIndex));
@@ -644,8 +666,12 @@ package object.CreateGameObject
 					if(this._gridObjects[xIndex][yIndex].getObstacle() == null)
 					{
 						this.removeChild(this._playerImg);
-						if(this._playerIndex.pos != undefined)
+						if(this._playerIndex.pos != null)
+						{
+							track = this._playerIndex.pos;
 							this._occupiedList.splice(this._playerIndex.pos, 1);
+							moveIndexTracker(track, 1);
+						}
 						if(data.gender)
 							this._playerImg = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture("Player - Male/male_down_01"));
 						else
@@ -723,24 +749,29 @@ package object.CreateGameObject
 			var end	:Number;
 			if(id == 1)
 			{
-				this._enemy1EndPts.length = 0;
-				this._occupiedList.splice(this._enemy1Index.start, this._enemy1Index.end - this._enemy1Index.start);
-				start = this._enemy1Index.start;
-				end = this._enemy1Index.end;
-				
-				this._enemy1Index.start = null;
-				this._enemy1Index.end = null;
-				moveIndexTracker(start, end-start);
+				if(this._enemy1Index.start != null)
+				{
+					this._enemy1EndPts.length = 0;
+					this._occupiedList.splice(this._enemy1Index.start, this._enemy1Index.end - this._enemy1Index.start);
+					start = this._enemy1Index.start;
+					end = this._enemy1Index.end;
+					this._enemy1Index.start = null;
+					this._enemy1Index.end = null;
+					moveIndexTracker(start, end-start);
+				}
 			}
 			else if (id == 2)
 			{
-				this._enemy2EndPts.length = 0;
-				this._occupiedList.splice(this._enemy2Index.start, this._enemy2Index.end - this._enemy2Index.start);
-				start = this._enemy2Index.start;
-				end = this._enemy2Index.end;
-				this._enemy2Index.start = null;
-				this._enemy2Index.end = null;
-				moveIndexTracker(start, end-start);
+				if(this._enemy2Index.start != null)
+				{
+					this._enemy2EndPts.length = 0;
+					this._occupiedList.splice(this._enemy2Index.start, this._enemy2Index.end - this._enemy2Index.start);
+					start = this._enemy2Index.start;
+					end = this._enemy2Index.end;
+					this._enemy2Index.start = null;
+					this._enemy2Index.end = null;
+					moveIndexTracker(start, end-start);
+				}
 			}
 			clearQuad();
 			highlightOccupiedTiles();
