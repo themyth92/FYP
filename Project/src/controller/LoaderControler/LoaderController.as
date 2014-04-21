@@ -199,7 +199,7 @@ package controller.LoaderControler
 				loadEachTexure();
 			}
 			else{
-				trace("go here");
+				
 				if(this._serverData.pageID != STORY_PAGE)
 				{
 					PreviewGameInfo._gameID 	= this._serverData.id;
