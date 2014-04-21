@@ -310,6 +310,7 @@ package object.CreateGameObject
 				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
 				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;
 				this._gridObjects[xIndex][yIndex].changeStateToObstacle(droppedObject);
+				this._gridObjects[xIndex][yIndex].selectedIndex = PreviewGameInfo._obsQns[i].qnsIndex;
 			}
 		}
 		
