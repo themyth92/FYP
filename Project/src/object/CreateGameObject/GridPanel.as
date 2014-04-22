@@ -705,7 +705,7 @@ package object.CreateGameObject
 		public function startChoosingEndPt(data:Object):void
 		{
 			this._endPtNotifier = new TextField(440, 25, null, "Grobold", 13, 0xffffff, false);
-			this._endPtNotifier.y = 450;
+			this._endPtNotifier.y = 475;
 			if(data.option == "Circle")
 				this._endPtNotifier.text = "Please choose next end. Click on the enemy's position to end choosing.\n Press Esc to stop.";
 			else if(data.option == "Reverse")

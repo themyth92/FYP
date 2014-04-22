@@ -244,12 +244,11 @@ package object.inGameObject
 			
 			this._image = new Image(Assets.getAtlas(Constant.PLAYER_SPRITE).getTexture('Enemy/Enemy_' + _imageNo.toString()));
 			if(this._type == "Patrol Enemy")
-			{
-				if(this._endPoints[this._endPoints.length-1].equals(this._endPoints[0]))
-					this._patrolType = "Circle";
-				else
+			{	
+				if(this._endPoints[this._endPoints.length-1].equals(this._endPoints[this._endPoints.length-2]))
 					this._patrolType = "Reverse";
-				
+				else if(this._endPoints[this._endPoints.length-1].equals(this._endPoints[0]))
+					this._patrolType = "Circle";
 				this._endPoints.pop();
 			}
 				
