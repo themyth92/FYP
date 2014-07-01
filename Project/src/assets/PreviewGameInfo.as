@@ -35,6 +35,7 @@ package assets
 		public static var _obsIndex		:Vector.<uint> 		= new Vector.<uint>();
 		public static var _obsType		:Vector.<String> 	= new Vector.<String>();
 		public static var _obsQns		:Vector.<Object> 	= new Vector.<Object>();
+		public static var _obsPara		:Vector.<Number>	= new Vector.<Number>();
 		
 		public static var _screenIndex	:Number;
 		
@@ -80,6 +81,7 @@ package assets
 			_obsQns = new Vector.<Object>();
 			_obsTexture = new Vector.<Object>();
 			_obsType = new Vector.<String>();
+			_obsPara = new Vector.<Number>();
 			
 			for(var i:uint = 0; i < obsObj.length; i++)
 			{
@@ -102,6 +104,29 @@ package assets
 				
 				//Store obstacles' type
 				_obsType.push(formatLeadingZero(obsObj[i].type));
+				_obsPara.push(0);
+				if(formatLeadingZero(obsObj[i].type) == "02")
+				{
+					if(obsObj[i].prop.type == 2)
+					{
+						_obsType.pop();
+						_obsType.push("03");
+					}
+					else if(obsObj[i].prop.type == 3)
+					{
+						_obsType.pop();
+						_obsType.push("06");
+						_obsPara.pop();
+						_obsPara.push(obsObj[i].prop.para);
+					}
+					else if(obsObj[i].prop.type == 4)
+					{
+						_obsType.pop();
+						_obsType.push("04");
+						_obsPara.pop();
+						_obsPara.push(obsObj[i].prop.para);
+					}
+				}
 				
 				//Store obstacles' question
 				if(obsObj[i].qnsIndex != 0 && obsObj[i].qnsIndex != -1)

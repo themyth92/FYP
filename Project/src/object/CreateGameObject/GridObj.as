@@ -23,6 +23,8 @@ package object.CreateGameObject
 		private var _quad     		:Quad;
 		private var _obstacleObj   	:ObstacleObj;
 		
+		private var _obsProp		:Object;
+		
 		//used for obstacle panel to know the index of question
 		//that have been selected by user
 		private var _selectedIndex    	:Number;
@@ -35,10 +37,23 @@ package object.CreateGameObject
 			this._walkable  	= true;
 			this._visited  		= false;
 			this._selectedIndex = -1;
+			this._obsProp		= new Object();
+			this._obsProp.prop	= 1;
+			this._obsProp.para	= null;
 	
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
+		public function set obsProp(value:Object):void
+		{
+			this._obsProp.prop = value.prop;
+			this._obsProp.para = value.para;
+		}
+		
+		public function get obsProp():Object{
+			return this._obsProp;
+		}
+		
 		public function get selectedIndex():Number
 		{
 			return _selectedIndex;

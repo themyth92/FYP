@@ -8,11 +8,19 @@ package object.CreateGameObject
 	import feathers.controls.Alert;
 	import feathers.controls.Button;
 	import feathers.controls.LayoutGroup;
+	import feathers.controls.Panel;
+	import feathers.controls.Radio;
+	import feathers.controls.ScrollContainer;
+	import feathers.controls.TextInput;
+	import feathers.core.PopUpManager;
+	import feathers.core.ToggleGroup;
 	import feathers.data.ListCollection;
 	import feathers.dragDrop.DragData;
 	import feathers.dragDrop.DragDropManager;
 	import feathers.dragDrop.IDropTarget;
 	import feathers.events.DragDropEvent;
+	import feathers.layout.HorizontalLayout;
+	import feathers.layout.VerticalLayout;
 	
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
@@ -66,6 +74,15 @@ package object.CreateGameObject
 		private var _hasGoal			: Boolean = false;
 		private var _numOfGoal			: Number = 0;
 		
+		private var _para1				: TextInput;
+		private var _para2				: TextInput;
+		private var _para3				: TextInput;
+		private var _para4				: TextInput;
+		private var _para5				: TextInput;
+		
+		private var _prop				: Object;
+		private var propPanel			: Panel;
+		
 		//check whether the option panel box has been opene or not
 		private var _state            	: Number;
 		
@@ -100,6 +117,7 @@ package object.CreateGameObject
 			this.addEventListener('GridOptionDeleteBtnClicked', onDeleteBtnClick);
 			this.addEventListener('GridOptionCloseBtnClicked', onCloseBtnClick);
 			this.addEventListener('GridOptionChangeBtnClicked', onGridChangeClick);
+			this.addEventListener('GridOptionPropBtnClicked', onPropBtnClick);
 			
 			//keep track of the click from user on touch event
 			this.addEventListener(TouchEvent.TOUCH, onTouch);
@@ -123,6 +141,10 @@ package object.CreateGameObject
 						obj.pos = (i+1)+(j*11);
 						obj.type = this._gridObjects[i][j].getObstacle().obstacleType;
 						obj.qnsIndex = this._gridObjects[i][j].selectedIndex;
+						obj.prop = new Object();
+						obj.prop.type = this._gridObjects[i][j].obsProp.prop;
+						obj.prop.para = this._gridObjects[i][j].obsProp.para;
+						
 						list.push(obj);
 					}
 				}
@@ -306,11 +328,23 @@ package object.CreateGameObject
 						texture = Assets.getAtlas(Constant.OBSTACLES_SPRITE).getTexture("Goal");
 					}
 				}
-				droppedObject = new ObstacleObj(texture, PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, Number(PreviewGameInfo._obsType[i]));
+				if(Number(PreviewGameInfo._obsType[i]) == 3 || Number(PreviewGameInfo._obsType[i]) == 4 || Number(PreviewGameInfo._obsType[i]) == 6)
+					droppedObject = new ObstacleObj(texture, PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, 2);
+				else
+					droppedObject = new ObstacleObj(texture, PreviewGameInfo._obsTexture[i].isUserDef, PreviewGameInfo._obsTexture[i].textureIndex, null, Number(PreviewGameInfo._obsType[i]));
+				
 				yIndex = Math.ceil(PreviewGameInfo._obsIndex[i]/11)-1;
 				xIndex = (PreviewGameInfo._obsIndex[i] - yIndex*11)-1;
 				this._gridObjects[xIndex][yIndex].changeStateToObstacle(droppedObject);
 				this._gridObjects[xIndex][yIndex].selectedIndex = PreviewGameInfo._obsQns[i].qnsIndex;
+				if(Number(PreviewGameInfo._obsType[i])==3)
+					this._gridObjects[xIndex][yIndex].obsProp.prop = 2;
+				else if(Number(PreviewGameInfo._obsType[i])==6)
+					this._gridObjects[xIndex][yIndex].obsProp.prop = 3;
+				else if(Number(PreviewGameInfo._obsType[i])==4)
+					this._gridObjects[xIndex][yIndex].obsProp.prop = 4;
+				
+				this._gridObjects[xIndex][yIndex].obsProp.para = PreviewGameInfo._obsPara[i];
 			}
 		}
 		
@@ -595,6 +629,205 @@ package object.CreateGameObject
 			//set the current selected grid with the selected index
 			//question from user
 			this._curGridObjSelect.selectedIndex = event.data.index;
+		}
+		
+		private function onPropBtnClick(event:Event):void
+		{
+			propPanel = new Panel();
+			propPanel.width = 600;
+			propPanel.height = 600;
+			
+			var propContainer	:ScrollContainer = new ScrollContainer();
+			var paraContainer	:ScrollContainer = new ScrollContainer();
+			var mainContainer	:ScrollContainer = new ScrollContainer();
+			
+			var group:ToggleGroup = new ToggleGroup();
+			
+			var radio1:Radio = new Radio();
+			radio1.label = "blockPlayer()";
+			radio1.toggleGroup = group;
+			propContainer.addChild( radio1 );
+			
+			var radio2:Radio = new Radio();
+			radio2.label = "takeDamage()";
+			radio2.toggleGroup = group;
+			propContainer.addChild( radio2 );
+			
+			var radio3:Radio = new Radio();
+			radio3.label = "disappear(index)";
+			radio3.toggleGroup = group;
+			propContainer.addChild( radio3 );
+				
+			var radio4:Radio = new Radio();
+			radio4.label = "teleport(toIndex)";
+			radio4.toggleGroup = group;
+			propContainer.addChild( radio4 );
+			
+			group.selectedIndex = this._curGridObjSelect.obsProp.prop - 1;
+			var layout	:VerticalLayout = new VerticalLayout();
+			layout.gap = 20;
+			layout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_LEFT;
+			layout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
+			propContainer.layout = layout;
+
+			mainContainer.addChild(propContainer);
+			
+			_para1 = new TextInput();
+			_para1.height = 40;
+			_para1.width  = 100;
+			_para1.isEnabled = false;
+			_para2 = new TextInput();
+			_para2.height = 40;
+			_para2.width  = 100;
+			_para2.isEnabled = false;
+			_para3 = new TextInput();
+			_para3.height = 40;
+			_para3.width  = 100;
+			_para3.isEnabled = false;
+			_para3.restrict = "0-9";
+			_para3.maxChars = 2;
+			_para4 = new TextInput();
+			_para4.height = 40;
+			_para4.width  = 100;
+			_para4.isEnabled = false;
+			_para3.restrict = "0-9";
+			_para4.maxChars = 2;
+			
+			if(this._curGridObjSelect.obsProp.prop == 3)
+			{
+				_para3.text = this._curGridObjSelect.obsProp.para;
+				_para3.isEnabled = true;
+			}
+			else if(this._curGridObjSelect.obsProp.prop == 4)
+			{
+				_para4.text = this._curGridObjSelect.obsProp.para;
+				_para4.isEnabled = true;	
+			}
+			
+			var paraLayout : VerticalLayout = new VerticalLayout();
+			paraLayout.gap = 10;
+			paraLayout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_RIGHT;
+			paraLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
+			
+			paraContainer.layout = paraLayout;
+			paraContainer.addChild(_para1);
+			paraContainer.addChild(_para2);
+			paraContainer.addChild(_para3);
+			paraContainer.addChild(_para4);	
+			
+			mainContainer.addChild(paraContainer);
+						
+			var mainLayout	: HorizontalLayout = new HorizontalLayout();
+			mainLayout.gap = 200;
+			mainLayout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_CENTER;
+			mainLayout.verticalAlign = HorizontalLayout.VERTICAL_ALIGN_MIDDLE;
+			mainContainer.layout = mainLayout;
+			
+			var comfirmBtn	: Button = new Button;
+			comfirmBtn.label = "Comfirm";
+			
+			var panelLayout : VerticalLayout = new VerticalLayout();
+			panelLayout.gap = 75;
+			panelLayout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_MIDDLE;
+			propPanel.layout = panelLayout;
+			
+			propPanel.addChild(mainContainer);
+			propPanel.addChild(comfirmBtn);
+			group.addEventListener(Event.CHANGE,function(event:Event):void {
+				onPropChanged(group.selectedIndex)});
+			comfirmBtn.addEventListener(Event.TRIGGERED, function(event:Event):void {
+				onComfirmProp(group.selectedIndex)});
+			PopUpManager.addPopUp(propPanel);
+		}
+		
+		private function onPropChanged(selectedProp:Number):void
+		{
+			switch(selectedProp){
+				case 0:
+					_para1.isEnabled = false;
+					_para2.isEnabled = false;
+					_para3.isEnabled = false;
+					_para4.isEnabled = false;
+					clearPara();
+					break;
+				case 1:
+					_para1.isEnabled = false;
+					_para2.isEnabled = false;
+					_para3.isEnabled = false;
+					_para4.isEnabled = false;
+					clearPara();
+					break;
+				case 2:
+					_para1.isEnabled = false;
+					_para2.isEnabled = false;
+					_para3.isEnabled = true;
+					_para4.isEnabled = false;
+					clearPara();
+					break;
+				case 3:
+					_para1.isEnabled = false;
+					_para2.isEnabled = false;
+					_para3.isEnabled = false;
+					_para4.isEnabled = true;
+					clearPara();
+					break;
+			}
+		}
+		
+		private function clearPara():void
+		{
+			_para1.text = "";
+			_para2.text = "";
+			_para3.text = "";
+			_para4.text = "";
+		}
+		
+		private function onComfirmProp(selected:Number):void{
+			var para:Number;
+			var alert:Alert;
+			if(selected == 2)
+				if(!isNaN(Number(_para3.text)) && _para3.text!="" && Number(_para3.text) > 0)
+				{
+					_gridOptionPanel.changeStateGrid(0, this._curGridObjSelect.x, this._curGridObjSelect.y, -1);
+					this._state = 0;
+					PopUpManager.removePopUp(propPanel);
+					para = Number(_para3.text);
+				}
+				else
+				{
+					alert = Alert.show("Invalid parameter", "Error", new ListCollection(
+						[
+							{ label: "OK" }
+						]));
+				}
+							
+			if(selected == 3)
+				if(!isNaN(Number(_para4.text)) && _para4.text!="" && Number(_para4.text) > 0)
+				{
+					_gridOptionPanel.changeStateGrid(0, this._curGridObjSelect.x, this._curGridObjSelect.y, -1);
+					this._state = 0;
+					PopUpManager.removePopUp(propPanel);
+					para = Number(_para4.text);
+				}
+				else
+				{
+					alert = Alert.show("Invalid parameter", "Error", new ListCollection(
+						[
+							{ label: "OK" }
+						]));
+				}
+				
+			if(selected == 0 || selected == 1)
+			{
+				_gridOptionPanel.changeStateGrid(0, this._curGridObjSelect.x, this._curGridObjSelect.y, -1);
+				this._state = 0;
+				PopUpManager.removePopUp(propPanel);
+			}
+
+			var prop	:Object = new Object();
+			prop.prop = selected + 1;
+			prop.para = para;
+			this._curGridObjSelect.obsProp = prop;
 		}
 			
 		public function onShowCharacterEvent(data:Object):void

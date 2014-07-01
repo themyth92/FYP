@@ -66,6 +66,7 @@ package object.inGameObject
 		private var _patternType	    :Vector.<String>;
 		private var _patternIndex       :Vector.<uint>;
 		private var _obsList			:Vector.<Obstacles>;
+		private var _obsPara			:Vector.<Number>;
 		private var _maxCoin		 	:Number = 0;
 		private var _screen				:String;
 		private var _gameArea			:Rectangle;
@@ -414,6 +415,7 @@ package object.inGameObject
 			var pos		:Point;
 			var obstacles	:Obstacles;
 			this._obsList = new Vector.<Obstacles>();
+			this._obsPara = new Vector.<Number>();
 			for(var i:uint=0; i<collection.length; i++)
 			{
 				pos = indexToPoint(index[i]);
@@ -435,6 +437,7 @@ package object.inGameObject
 					this._tileVector[pos.x/40][pos.y/40].walkable = false;
 				
 				this._obsList.push(obstacles);
+				this._obsPara.push(PreviewGameInfo._obsPara[i]);
 				this.addChild(obstacles);
 			}
 			this._controller.getGameStat("max coin", _maxCollectObs);
@@ -1269,9 +1272,11 @@ package object.inGameObject
 							if(obsList[i].type == Constant.DAMAGE_OBS)
 								takeDamage();
 							else if(obsList[i].type == Constant.TELE_OBS)
-								teleport();
+								teleport(this._obsPara[i]);
 							else if(obsList[i].type == Constant.GOAL_OBS)
 								finishStage();
+							else if(obsList[i].type == Constant.DISAPPEAR_OBS)
+								disappearObs(this._obsPara[i]);
 							break;
 						}
 					}
@@ -1347,8 +1352,45 @@ package object.inGameObject
 		/*-----------------------------------------------------------------------
 		| @Teleport to certain location											|
 		-------------------------------------------------------------------------*/
-		private function teleport():void{
-			
+		private function teleport(location:Number):void{
+			var validTile:Boolean = true;
+			for(var i:uint =0; i<this._obsList.length; i++)
+			{
+				if(this._obsList[i].pos.equals(indexToPoint(location)))
+				{
+					validTile = false;
+					break;
+				}
+			}
+			if(validTile)
+			{
+				var yIndex	:Number;
+				var xIndex	:Number;
+				yIndex = Math.ceil(location/11)-1;
+				xIndex = location - yIndex*11 -1;
+				this._player.x = xIndex * 40;
+				this._player.y = yIndex * 40;			
+			}
+		}
+		
+		private function disappearObs(index:Number):void{
+			for(var i:uint = 0; i<this._obsList.length; i++)
+			{
+				if(this._obsList[i].pos.equals(indexToPoint(index)))
+				{
+					if(this._obsList[i].type != "05")
+					{
+						if(this._obsList[i].type != "01")
+						{
+							//Remove obstacles from display
+							this.removeChild(this._obsList[i]);
+							//Remove obstacles from the obstacles list
+							this._obsList.splice(i, 1);
+						}
+					}
+					break;
+				}
+			}
 		}
 		
 		/*-----------------------------------------------------------------------

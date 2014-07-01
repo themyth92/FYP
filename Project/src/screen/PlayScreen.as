@@ -105,11 +105,11 @@ package screen
 			this._gameTitle.y = 100;
 			this._gameTitle.alpha = 0;
 			this.addChild(this._gameTitle);
-			var showTitle	:Tween = new Tween (this._gameTitle, 2.0);
+			var showTitle	:Tween = new Tween (this._gameTitle, 1.5);
 			showTitle.fadeTo(1);
 			showTitle.reverse = true;
 			showTitle.repeatCount = 2;
-			showTitle.repeatDelay = 1.0;
+			showTitle.repeatDelay = 0.5;
 			showTitle.onComplete = continueSetup;
 			Starling.juggler.add(showTitle);
 		}

@@ -11,21 +11,24 @@ package object.CreateGameObject
 	public class ObstacleObj extends Image
 	{
 		//keep track of the obstacle type 
-		// 0 : obstacle
-		// 1 : prize
-		// 3 : ...
-		private var _obstacleType 	: Number;
+		//0 : Objects
+		//1	: Enemy
+		//2 : Characters		
+		private var _obstacleType 	:Number;
 		
 		//boolean varaible to check whethere this
 		//texture is user defined or available in the system
-		private var _isUserDefText	: Boolean;
+		private var _isUserDefText	:Boolean;
 		
 		//variable to store the texture index in both user defined
 		//obstacle and texture available in the system
-		private var _textureIndex 	: Number;
+		private var _textureIndex 	:Number;
 		
 		//useful for publishing the game 
-		private var _textureAddress:String;
+		private var _textureAddress	:String;
+		
+		//used to set properties for the image
+		private var _properties		:Object;
 		
 		public function ObstacleObj(texture: Texture, 
 									  isUserDef: Boolean, 
@@ -49,7 +52,9 @@ package object.CreateGameObject
 			
 			this._obstacleType		= obstacleType;
 		}	
-		
+		/*************************/
+		/** GET - SET FUNCTIONS **/
+		/*************************/
 		public function get textureAddress():String
 		{
 			return _textureAddress;
@@ -89,5 +94,14 @@ package object.CreateGameObject
 		{
 			_obstacleType = value;
 		}
+	
+		public function setProperties(value:Object):void
+		{
+			for(var id:String in value)
+			{
+				_properties[id] = value[id];	
+			}
+		}
+		
 	}
 }

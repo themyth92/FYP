@@ -3,6 +3,7 @@ package object.CreateGameObject
 	import feathers.controls.Button;
 	import feathers.controls.Header;
 	import feathers.controls.List;
+	import feathers.controls.Panel;
 	import feathers.controls.PanelScreen;
 	import feathers.controls.PickerList;
 	import feathers.controls.Screen;
@@ -18,10 +19,11 @@ package object.CreateGameObject
 	{
 		
 		private var _list			:PickerList;
-		private var _deleteBtn 	:Button;
+		private var _deleteBtn 		:Button;
 		private var _obstacleType	:Number;
 		private var _questionList	:Vector.<Object>;
 		private var _closeBtn		:Button;
+		private var _propBtn		:Button; 
 		
 		public function GridOptionPanel(questionList : Vector.<Object>)
 		{
@@ -50,9 +52,11 @@ package object.CreateGameObject
 				this.y 						= yPos;
 				this._list.visible 			= false;
 				this._deleteBtn.visible 	= true;
-				this._deleteBtn.y			= 0;
-				this._closeBtn.y			= 47;
+				this._deleteBtn.y			= 47;
+				this._closeBtn.y			= 94;
 				this._closeBtn.visible		= true;
+				this._propBtn.y				= 0;
+				this._propBtn.visible		= true;
 				return;
 			}
 			else
@@ -74,6 +78,7 @@ package object.CreateGameObject
 					this._list.visible 			= false;
 					this._deleteBtn.visible		= false;
 					this._closeBtn.visible		= false;
+					this._propBtn.visible		= false;
 					return;
 				}
 		}
@@ -128,22 +133,33 @@ package object.CreateGameObject
 			//close button
 			this._closeBtn       	= new Button();
 			this._closeBtn.label 	= 'Close';
-			this._closeBtn.y 		= 95;
+			this._closeBtn.y 		= 152;
 			this._closeBtn.width	= 140; 
 			this._closeBtn.height	= 50;
 			this._closeBtn.useHandCursor = true;
 			
+			//Properties button
+			this._propBtn       	= new Button();
+			this._propBtn.label 	= 'Properties';
+			this._propBtn.y 		= 95;
+			this._propBtn.width		= 140; 
+			this._propBtn.height	= 50;
+			this._propBtn.useHandCursor = true;
+			
 			this._list.visible		= false;
 			this._deleteBtn.visible	= false;
 			this._closeBtn.visible 	= false;
+			this._propBtn.visible	= false;
 			
 			this.addChild(this._list);
 			this.addChild(this._deleteBtn);
 			this.addChild(this._closeBtn);
+			this.addChild(this._propBtn);
 			
 			this._deleteBtn.addEventListener(Event.TRIGGERED, onDeleteBtnTrigger);
 			this._closeBtn.addEventListener(Event.TRIGGERED, onCloseBtnTrigger);
-			this._list.addEventListener( Event.CHANGE, onListChange);
+			this._list.addEventListener(Event.CHANGE, onListChange);
+			this._propBtn.addEventListener(Event.TRIGGERED, onPropBtnTrigger);
 		}
 		
 		private function onDeleteBtnTrigger(event:Event):void
@@ -160,6 +176,12 @@ package object.CreateGameObject
 			//which still in the same postion of the panel
 			this.changeStateGrid(0, this.x, this.y, -1);
 			this.dispatchEventWith('GridOptionCloseBtnClicked', true);	
+		}
+		
+		private function onPropBtnTrigger(event:Event):void
+		{
+			//change the properties of the obstacles
+			this.dispatchEventWith('GridOptionPropBtnClicked', true);	
 		}
 		
 		private function onListChange(event:Event):void
