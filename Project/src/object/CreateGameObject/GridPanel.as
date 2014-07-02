@@ -142,7 +142,7 @@ package object.CreateGameObject
 						obj.type = this._gridObjects[i][j].getObstacle().obstacleType;
 						obj.qnsIndex = this._gridObjects[i][j].selectedIndex;
 						obj.prop = new Object();
-						obj.prop.type = this._gridObjects[i][j].obsProp.prop;
+						obj.prop.typ = this._gridObjects[i][j].obsProp.prop;
 						obj.prop.para = this._gridObjects[i][j].obsProp.para;
 						
 						list.push(obj);

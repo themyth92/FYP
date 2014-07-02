@@ -107,19 +107,19 @@ package assets
 				_obsPara.push(0);
 				if(formatLeadingZero(obsObj[i].type) == "02")
 				{
-					if(obsObj[i].prop.type == 2)
+					if(obsObj[i].prop.typ == 2)
 					{
 						_obsType.pop();
 						_obsType.push("03");
 					}
-					else if(obsObj[i].prop.type == 3)
+					else if(obsObj[i].prop.typ == 3)
 					{
 						_obsType.pop();
 						_obsType.push("06");
 						_obsPara.pop();
 						_obsPara.push(obsObj[i].prop.para);
 					}
-					else if(obsObj[i].prop.type == 4)
+					else if(obsObj[i].prop.typ == 4)
 					{
 						_obsType.pop();
 						_obsType.push("04");
