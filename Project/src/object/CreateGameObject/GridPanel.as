@@ -7,6 +7,8 @@ package object.CreateGameObject
 	
 	import feathers.controls.Alert;
 	import feathers.controls.Button;
+	import feathers.controls.Callout;
+	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
 	import feathers.controls.Panel;
 	import feathers.controls.Radio;
@@ -738,6 +740,7 @@ package object.CreateGameObject
 			comfirmBtn.addEventListener(Event.TRIGGERED, function(event:Event):void {
 				onComfirmProp(group.selectedIndex)});
 			PopUpManager.addPopUp(propPanel);
+			displayPropInfo(this._curGridObjSelect.obsProp.prop - 1);
 		}
 		
 		private function onPropChanged(selectedProp:Number):void
@@ -748,6 +751,7 @@ package object.CreateGameObject
 					_para2.isEnabled = false;
 					_para3.isEnabled = false;
 					_para4.isEnabled = false;
+					displayPropInfo(0);
 					clearPara();
 					break;
 				case 1:
@@ -755,6 +759,7 @@ package object.CreateGameObject
 					_para2.isEnabled = false;
 					_para3.isEnabled = false;
 					_para4.isEnabled = false;
+					displayPropInfo(1);
 					clearPara();
 					break;
 				case 2:
@@ -762,6 +767,7 @@ package object.CreateGameObject
 					_para2.isEnabled = false;
 					_para3.isEnabled = true;
 					_para4.isEnabled = false;
+					displayPropInfo(2);
 					clearPara();
 					break;
 				case 3:
@@ -769,6 +775,7 @@ package object.CreateGameObject
 					_para2.isEnabled = false;
 					_para3.isEnabled = false;
 					_para4.isEnabled = true;
+					displayPropInfo(3);
 					clearPara();
 					break;
 			}
@@ -780,6 +787,30 @@ package object.CreateGameObject
 			_para2.text = "";
 			_para3.text = "";
 			_para4.text = "";
+		}
+		
+		private function displayPropInfo(type:Number):void
+		{
+			var callout :Callout = new Callout();
+			var message :Label = new Label();
+			switch(type){
+				case 0:
+					message.text = "Player's movement\nwill be blocked.";
+					callout = Callout.show(DisplayObject(message), DisplayObject(_para1), Callout.DIRECTION_RIGHT);
+					break;
+				case 1:
+					message.text = "Player will\n lose 1 health.";
+					callout = Callout.show(DisplayObject(message), DisplayObject(_para2), Callout.DIRECTION_RIGHT);
+					break;
+				case 2:
+					message.text = "Obstacle at 'Index'\n will disappear.\n Goal and Reward \n will not disappear.";
+					callout = Callout.show(DisplayObject(message), DisplayObject(_para3), Callout.DIRECTION_RIGHT);
+					break;
+				case 3:
+					message.text = "Player will teleport\n to 'toIndex'.\n Teleportation will\n not happen if\n there is an object\n at 'toIndex'.";
+					callout = Callout.show(DisplayObject(message), DisplayObject(_para4), Callout.DIRECTION_RIGHT);
+					break;
+			}
 		}
 		
 		private function onComfirmProp(selected:Number):void{

@@ -437,7 +437,8 @@ package object.inGameObject
 					this._tileVector[pos.x/40][pos.y/40].walkable = false;
 				
 				this._obsList.push(obstacles);
-				this._obsPara.push(PreviewGameInfo._obsPara[i]);
+				if(this._screen == Constant.PLAY_SCREEN)
+					this._obsPara.push(PreviewGameInfo._obsPara[i]);
 				this.addChild(obstacles);
 			}
 			this._controller.getGameStat("max coin", _maxCollectObs);
@@ -1369,7 +1370,11 @@ package object.inGameObject
 				yIndex = Math.ceil(location/11)-1;
 				xIndex = location - yIndex*11 -1;
 				this._player.x = xIndex * 40;
-				this._player.y = yIndex * 40;			
+				this._player.y = yIndex * 40;
+				this._player.moveX = 0;
+				this._player.moveY = 0;
+				stopPlayer();
+			
 			}
 		}
 		

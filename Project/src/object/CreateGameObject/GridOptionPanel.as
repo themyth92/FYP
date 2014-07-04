@@ -47,8 +47,10 @@ package object.CreateGameObject
 					
 			//if the type is obstacle or goal
 			if(type == 2 || type == 5){
-				
-				this.x						= xPos;
+				if(xPos > 280)
+					this.x					= xPos - 180;
+				else
+					this.x					= xPos
 				this.y 						= yPos;
 				this._list.visible 			= false;
 				this._deleteBtn.visible 	= true;
@@ -64,7 +66,10 @@ package object.CreateGameObject
 				//we allow them to put in the question
 				if(type == 1)
 				{
-					this.x						= xPos;
+					if(xPos > 280)
+						this.x					= xPos - 180;
+					else
+						this.x					= xPos
 					this.y						= yPos;
 					this._list.visible 			= true;
 					this._deleteBtn.visible 	= true;
