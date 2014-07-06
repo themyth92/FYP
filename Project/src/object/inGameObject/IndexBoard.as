@@ -199,7 +199,7 @@ package object.inGameObject
 		}
 		
 		private function onFinishQuiz(event:Event):void{
-			this._controller.changeState(Constant.PLAYING_STATE);
+			this._controller.changeState(Constant.PAUSE_STATE);
 			this.removeEventListener('doneQuiz', onFinishQuiz);
 		}
 		
