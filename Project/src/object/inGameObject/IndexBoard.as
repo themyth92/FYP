@@ -195,12 +195,10 @@ package object.inGameObject
 		
 		private function onDoingQuiz(event:Event):void{
 			this._controller.changeState(Constant.PAUSE_STATE);
-			this.removeEventListener('doingQuiz', onDoingQuiz);
 		}
 		
 		private function onFinishQuiz(event:Event):void{
 			this._controller.changeState(Constant.PAUSE_STATE);
-			this.removeEventListener('doneQuiz', onFinishQuiz);
 		}
 		
 		/*-----------------------------------------------------------------------
